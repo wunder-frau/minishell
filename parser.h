@@ -39,8 +39,15 @@ typedef struct s_bracket
 {
 	int		type;
 	ASTNode	*left;
+	ASTNode *right;
 }	t_bracket;
 
+typedef struct s_pipe
+{
+	int		type;
+	ASTNode	*left;
+	ASTNode	*right;
+}	t_pipe;
 
 bool create_node(NodeType type, ASTNode **root);
 void free_tree(ASTNode **root);

@@ -1,6 +1,6 @@
 #include "parser.h"
 
-t_and* create_and_node(void) {
+t_and   *create_and_node(void) {
     t_and *node = (t_and *)calloc(1, sizeof(t_and));
     if (!node)
         return NULL;
@@ -8,7 +8,7 @@ t_and* create_and_node(void) {
     return node;
 }
 
-t_or* create_or_node(void) {
+t_or    *create_or_node(void) {
     t_or *node = (t_or *)calloc(1, sizeof(t_or));
     if (!node)
         return NULL;
@@ -16,7 +16,18 @@ t_or* create_or_node(void) {
     return node;
 }
 
-t_bracket* create_bracket_node(void) {
+t_pipe  *create_pipe_node(void)
+{
+	t_pipe	*node;
+
+	node = (t_pipe *)calloc(1, sizeof(t_pipe));
+	if (!node)
+		return (NULL);
+	node->type = T_PIPE;
+	return (node);
+}
+
+t_bracket *create_bracket_node(void) {
     t_bracket *node = (t_bracket *)calloc(1, sizeof(t_bracket));
     if (!node)
         return NULL;
@@ -35,6 +46,9 @@ bool create_node(NodeType type, ASTNode **root) {
             break;
         case T_BRACKET:
             node = (ASTNode *)create_bracket_node();
+            break;
+        case T_PIPE:
+            node = (ASTNode *)create_pipe_node();
             break;
         default:
             return false;
@@ -71,6 +85,9 @@ void print_ast(const ASTNode *root) {
         case T_BRACKET:
             printf("T_BRACKET\n");
             break;
+        case T_PIPE:
+            printf("T_PIPE\n");
+            break;
         default:
             printf("Unknown type\n");
             break;
@@ -94,7 +111,13 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    if (!create_node(T_BRACKET, &(root->right))) {
+    if (!create_node(T_PIPE, &(root->right))) {
+        fprintf(stderr, "Failed to create right child node\n");
+        free_tree(&root);
+        return EXIT_FAILURE;
+    }
+
+    if (!create_node(T_BRACKET, &(root->left->left))) {
         fprintf(stderr, "Failed to create right child node\n");
         free_tree(&root);
         return EXIT_FAILURE;
