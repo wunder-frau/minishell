@@ -1,0 +1,7 @@
+*.out
+.DS_Store
+*.pdf
+.vscode
+objs/
+README.md
+minishell
