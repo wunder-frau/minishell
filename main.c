@@ -3,9 +3,14 @@
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+# include "libft_/libft.h"
 
-typedef struct s_list t_list;
-typedef struct s_node t_node;
+typedef struct s_node
+{
+	int				type;
+	struct s_node	*left;
+	struct s_node	*right;
+}	t_node;
 typedef int t_bool;
 
 typedef struct s_minishell
@@ -20,9 +25,6 @@ typedef struct s_minishell
 	t_bool is_parent;
 	t_bool is_oldpwd_unset;
 } t_minishell;
-
-void signal_interceptor(int mode);
-void toggler(int mode);
 
 void ft_readline(char **cmdline, char *prompt)
 {
