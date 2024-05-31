@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-# include "libft_/libft.h"
+#include "libft_/libft.h"
 
 typedef struct s_node
 {
@@ -11,7 +12,6 @@ typedef struct s_node
 	struct s_node	*left;
 	struct s_node	*right;
 }	t_node;
-typedef int t_bool;
 
 typedef struct s_minishell
 {
@@ -22,18 +22,79 @@ typedef struct s_minishell
 	char *history_path;
 	int exit_status;
 	t_node *root;
-	t_bool is_parent;
-	t_bool is_oldpwd_unset;
+	bool is_parent;
+	bool is_oldpwd_unset;
 } t_minishell;
+
+// env.c
+
+size_t	ft_arrlen(void **arr)
+{
+	size_t	length;
+
+	length = 0;
+	while (arr[length] != NULL)
+		length++;
+	return (length);
+}
+
+void	ft_free(void *ptr)
+{
+	void	**arr;
+	size_t	i;
+
+	arr = (void **)ptr;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
+char	**env_c(char **envp)
+{
+	char	**env;
+	int		len;
+	int		i = 0;
+
+	len = ft_arrlen((void **)envp);
+	env = calloc(len + 1, sizeof(char *));
+	if (!env)
+		return (NULL);
+	while (i < len)
+	{
+		env[i] = strdup(envp[i]);
+		if (!env[i])
+		{
+			ft_free((void *)env);
+			return (NULL);
+		}
+		i++;
+	}
+	i = 0;
+
+	while(i < len && env[i] != NULL)
+	{
+		printf("%s\n", env[i]);
+		i++;
+	}
+	return (env);
+}
 
 void ft_readline(char **cmdline, char *prompt)
 {
 	*cmdline = readline(prompt);
 }
 
-void init_minishell(t_minishell *shell, char **envp)
+void init_minishell(t_minishell *shell)
 {
-	shell->env = envp;
+	extern char	**environ;
+	int			status;
+
+	status = 0;
+	shell = calloc(1, sizeof(t_minishell));
+	// if(!shell)
+	// 	return (0);
+	shell->env = env_c(environ);
 	shell->oldpwd = NULL;
 	shell->history = NULL;
 	shell->history_path = NULL;
@@ -43,6 +104,7 @@ void init_minishell(t_minishell *shell, char **envp)
 	shell->is_oldpwd_unset = 1;
 
 	char *cmdline = NULL;
+
 	// !! input check
 	while (1)
 	{
@@ -68,9 +130,10 @@ void init_minishell(t_minishell *shell, char **envp)
     }
 }
 
+
 int main(int argc, char **argv, char **envp)
 {
 	t_minishell shell;
-	init_minishell(&shell, envp);
+	init_minishell(&shell);
 	return 0;
 }
