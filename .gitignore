@@ -6,3 +6,4 @@ objs/
 README.md
 minishell
 libft_/
+*.o
