@@ -1,32 +1,26 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "libft_/libft.h"
+#include "minishell.h"
 
-typedef struct s_node
+// TO DO add `ft_strchr`, `ft_strcmp`, `ft_arrlen`, `free` to libft_
+char	*ft_strchr(const char *s, int c)
 {
-	int				type;
-	struct s_node	*left;
-	struct s_node	*right;
-}	t_node;
+	while (*s)
+	{
+		if (*s == (char)c)
+			return((char *)s);
+		s++;
+	}
+	return(NULL);
+}
 
-typedef struct s_minishell
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char **env;
-	char *pwd;
-	char *oldpwd;
-	t_list *history;
-	char *history_path;
-	int exit_status;
-	t_node *root;
-	bool is_parent;
-	bool is_oldpwd_unset;
-} t_minishell;
-
-// env.c
+	while(*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return(*s1 - *s2);
+}
 
 size_t	ft_arrlen(void **arr)
 {
@@ -57,12 +51,12 @@ char	**env_c(char **envp)
 	int		i = 0;
 
 	len = ft_arrlen((void **)envp);
-	env = calloc(len + 1, sizeof(char *));
+	env = ft_calloc(len + 1, sizeof(char *));
 	if (!env)
 		return (NULL);
 	while (i < len)
 	{
-		env[i] = strdup(envp[i]);
+		env[i] = ft_strdup(envp[i]);
 		if (!env[i])
 		{
 			ft_free((void *)env);
@@ -91,7 +85,7 @@ void init_minishell(t_minishell *shell)
 	int			status;
 
 	status = 0;
-	shell = calloc(1, sizeof(t_minishell));
+	shell = ft_calloc(1, sizeof(t_minishell));
 	// if(!shell)
 	// 	return (0);
 	shell->env = env_c(environ);
@@ -112,7 +106,7 @@ void init_minishell(t_minishell *shell)
 		ft_readline(&cmdline, "minishell> ");
 		if (cmdline)
 		{
-			if (strcmp(cmdline, "exit") == 0)
+			if (ft_strcmp(cmdline, "exit") == 0)
 			{
 				free(cmdline);
 				break;
@@ -131,9 +125,10 @@ void init_minishell(t_minishell *shell)
 }
 
 
-int main(int argc, char **argv, char **envp)
+int main(void)
 {
 	t_minishell shell;
+
 	init_minishell(&shell);
 	return 0;
 }
