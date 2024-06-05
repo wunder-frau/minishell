@@ -1,94 +1,80 @@
-#include "minishell.h"
+#include "libft_/libft.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <sys/wait.h>
+#include <errno.h>
 
-// TO DO add `ft_strchr`, `ft_strcmp`, `ft_arrlen`, `free` to libft_
-char	*ft_strchr(const char *s, int c)
+typedef struct s_node
 {
-	while (*s)
-	{
-		if (*s == (char)c)
-			return((char *)s);
-		s++;
-	}
-	return(NULL);
-}
+	int type;
+	struct s_node *left;
+	struct s_node *right;
+} t_node;
 
-int	ft_strcmp(const char *s1, const char *s2)
+typedef int t_bool;
+
+typedef struct s_minishell
 {
-	while(*s1 && *s2 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return(*s1 - *s2);
-}
-
-size_t	ft_arrlen(void **arr)
-{
-	size_t	length;
-
-	length = 0;
-	while (arr[length] != NULL)
-		length++;
-	return (length);
-}
-
-void	ft_free(void *ptr)
-{
-	void	**arr;
-	size_t	i;
-
-	arr = (void **)ptr;
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
-}
-
-char	**env_c(char **envp)
-{
-	char	**env;
-	int		len;
-	int		i = 0;
-
-	len = ft_arrlen((void **)envp);
-	env = ft_calloc(len + 1, sizeof(char *));
-	if (!env)
-		return (NULL);
-	while (i < len)
-	{
-		env[i] = ft_strdup(envp[i]);
-		if (!env[i])
-		{
-			ft_free((void *)env);
-			return (NULL);
-		}
-		i++;
-	}
-	i = 0;
-
-	while(i < len && env[i] != NULL)
-	{
-		printf("%s\n", env[i]);
-		i++;
-	}
-	return (env);
-}
+	char **env;
+	char *pwd;
+	char *oldpwd;
+	t_list *history;
+	char *history_path;
+	int exit_status;
+	t_node *root;
+	t_bool is_parent;
+	t_bool is_oldpwd_unset;
+} t_minishell;
 
 void ft_readline(char **cmdline, char *prompt)
 {
 	*cmdline = readline(prompt);
 }
 
-void init_minishell(t_minishell *shell)
+int check_if_executable(char *cmd)
 {
-	extern char	**environ;
-	int			status;
+	int res = access(cmd, X_OK | F_OK);
+	if (res == 0)
+		return 1;
+	return 0;
+}
 
-	status = 0;
-	shell = ft_calloc(1, sizeof(t_minishell));
-	// if(!shell)
-	// 	return (0);
-	shell->env = env_c(environ);
+char *find_command(char *cmd, char **envp)
+{
+	
+	if (!envp)
+		printf("AZAZA");
+	if (check_if_executable(cmd))
+		return cmd;
+	char *path_env = getenv("PATH");
+	if (!path_env)
+		return NULL;
+
+	char *path = strdup(path_env);
+	char *token = strtok(path, ":");
+	while (token)
+	{
+		char full_path[1024];
+		snprintf(full_path, sizeof(full_path), "%s/%s", token, cmd);
+		if (check_if_executable(full_path))
+		{
+			free(path);
+			return strdup(full_path);
+		}
+		token = strtok(NULL, ":");
+	}
+	free(path);
+	return NULL;
+}
+
+void init_minishell(t_minishell *shell, char **envp)
+{
+	shell->env = envp;
+	shell->pwd = getcwd(NULL, 0);
 	shell->oldpwd = NULL;
 	shell->history = NULL;
 	shell->history_path = NULL;
@@ -98,37 +84,72 @@ void init_minishell(t_minishell *shell)
 	shell->is_oldpwd_unset = 1;
 
 	char *cmdline = NULL;
-
-	// !! input check
 	while (1)
 	{
-		char *cmdline = NULL;
 		ft_readline(&cmdline, "minishell> ");
 		if (cmdline)
 		{
-			if (ft_strcmp(cmdline, "exit") == 0)
+			if (strcmp(cmdline, "exit") == 0)
 			{
 				free(cmdline);
 				break;
 			}
-			add_history(cmdline);
-			printf("You entered: %s\n", cmdline);
-			free(cmdline);
+			else
+			{
+				char *argv[1024];
+				int argc = 0;
+				char *token = strtok(cmdline, " ");
+				while (token != NULL)
+				{
+					argv[argc++] = token;
+					token = strtok(NULL, " ");
+				}
+				argv[argc] = NULL;
+
+				char *cmd_path = find_command(argv[0], envp);
+				if (cmd_path)
+				{
+					pid_t pid = fork();
+					if (pid == 0)
+					{
+						// Child process
+						if (execve(cmd_path, argv, shell->env) == -1)
+						{
+							perror("execve");
+							exit(EXIT_FAILURE);
+						}
+					}
+					else if (pid > 0)
+					{
+						// Parent process
+						int status;
+						waitpid(pid, &status, 0);
+					}
+					else
+					{
+						// Fork failed
+						perror("fork");
+					}
+					free(cmd_path);
+				}
+				else
+				{
+					printf("Command not found: %s\n", argv[0]);
+				}
+				add_history(cmdline);
+				free(cmdline);
+			}
 		}
-    }
-    //.....
-    if (cmdline)
-	{
-		add_history(cmdline);
-		free(cmdline);
-    }
+	}
 }
 
-
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
 	t_minishell shell;
 
-	init_minishell(&shell);
+	if (argc < 1 || !argv)
+		return 0;
+
+	init_minishell(&shell, envp);
 	return 0;
 }
