@@ -30,49 +30,79 @@ typedef struct s_minishell
 	t_bool is_oldpwd_unset;
 } t_minishell;
 
-void ft_readline(char **cmdline, char *prompt)
+void	ft_readline(char **cmdline, char *prompt)
 {
 	*cmdline = readline(prompt);
 }
 
-int check_if_executable(char *cmd)
+int	check_if_executable(char *cmd)
 {
-	int res = access(cmd, X_OK | F_OK);
+	int	res;
+
+	res = access(cmd, X_OK | F_OK);
 	if (res == 0)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
 
-char *find_command(char *cmd, char **envp)
+char	*find_command(char *cmd, char **envp)
 {
-	
-	if (!envp)
-		printf("AZAZA");
-	if (check_if_executable(cmd))
-		return cmd;
-	char *path_env = getenv("PATH");
-	if (!path_env)
-		return NULL;
+	char	**paths;
+	char	*path_env;
+	char	*full_path = NULL;
+	int		i;
+	int		len;
 
-	char *path = strdup(path_env);
-	char *token = strtok(path, ":");
-	while (token)
+	if (!envp)
+		return (NULL);
+	if (check_if_executable(cmd))
+		return (ft_strdup(cmd));
+	path_env = getenv("PATH");
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+	i = 0;
+	while (paths[i])
 	{
-		char full_path[1024];
-		snprintf(full_path, sizeof(full_path), "%s/%s", token, cmd);
+		len = ft_strlen(paths[i]) + ft_strlen(cmd) + 2;
+		full_path = (char *)malloc(sizeof(char) * len);
+		if (!full_path)
+		{
+			while (paths[i])
+				free(paths[i++]);
+			free(paths);
+			return (NULL);
+		}
+		snprintf(full_path, len, "%s/%s", paths[i], cmd);
 		if (check_if_executable(full_path))
 		{
-			free(path);
-			return strdup(full_path);
+			while (paths[i])
+				free(paths[i++]);
+			free(paths);
+			return (full_path);
 		}
-		token = strtok(NULL, ":");
+		free(full_path);
+		i++;
 	}
-	free(path);
-	return NULL;
+	i = 0;
+	while (paths[i])
+	{
+		free(paths[i]);
+		i++;
+	}
+	free(paths);
+	return (NULL);
 }
 
-void init_minishell(t_minishell *shell, char **envp)
+void	init_minishell(t_minishell *shell, char **envp)
 {
+	int		i;
+	char	**argv;
+	int		status;
+	char	*cmd_path;
+
 	shell->env = envp;
 	shell->pwd = getcwd(NULL, 0);
 	shell->oldpwd = NULL;
@@ -82,7 +112,6 @@ void init_minishell(t_minishell *shell, char **envp)
 	shell->root = NULL;
 	shell->is_parent = 1;
 	shell->is_oldpwd_unset = 1;
-
 	char *cmdline = NULL;
 	while (1)
 	{
@@ -92,21 +121,17 @@ void init_minishell(t_minishell *shell, char **envp)
 			if (strcmp(cmdline, "exit") == 0)
 			{
 				free(cmdline);
-				break;
+				break ;
 			}
 			else
 			{
-				char *argv[1024];
-				int argc = 0;
-				char *token = strtok(cmdline, " ");
-				while (token != NULL)
+				argv = ft_split(cmdline, ' ');
+				if (!argv)
 				{
-					argv[argc++] = token;
-					token = strtok(NULL, " ");
+					free(cmdline);
+					continue ;
 				}
-				argv[argc] = NULL;
-
-				char *cmd_path = find_command(argv[0], envp);
+				cmd_path = find_command(argv[0], envp);
 				if (cmd_path)
 				{
 					pid_t pid = fork();
@@ -122,7 +147,6 @@ void init_minishell(t_minishell *shell, char **envp)
 					else if (pid > 0)
 					{
 						// Parent process
-						int status;
 						waitpid(pid, &status, 0);
 					}
 					else
@@ -136,6 +160,10 @@ void init_minishell(t_minishell *shell, char **envp)
 				{
 					printf("Command not found: %s\n", argv[0]);
 				}
+				i = 0;
+				while (argv[i])
+					free(argv[i++]);
+				free(argv);
 				add_history(cmdline);
 				free(cmdline);
 			}
@@ -143,13 +171,12 @@ void init_minishell(t_minishell *shell, char **envp)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_minishell shell;
+	t_minishell	shell;
 
 	if (argc < 1 || !argv)
-		return 0;
-
+		return (0);
 	init_minishell(&shell, envp);
-	return 0;
+	return (0);
 }
