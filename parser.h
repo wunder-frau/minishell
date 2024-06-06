@@ -4,15 +4,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef enum
 {
-	T_AND,
-	T_OR,
 	T_PIPE,
-	T_BRACKET,
-	T_COMMAND_BR,
+    T_BRACKET,
+    T_COMMAND,
+    T_REDIR,
+    T_AND,
+    T_OR,
+    T_STRING,
+    T_SPACE,
+    T_UNKNOWN
 } NodeType;
+
+typedef struct {
+    NodeType type;
+    char *value;
+} Token;
 
 typedef struct ASTNode
 {

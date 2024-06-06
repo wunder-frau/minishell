@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "lexer.h"
 
 // TO DO add `ft_strchr`, `ft_strcmp`, `ft_arrlen`, `free` to libft_
 char	*ft_strchr(const char *s, int c)
@@ -81,54 +82,60 @@ void ft_readline(char **cmdline, char *prompt)
 
 void init_minishell(t_minishell *shell)
 {
-	extern char	**environ;
-	int			status;
+    extern char **environ;
+    int         status;
 
-	status = 0;
-	shell = ft_calloc(1, sizeof(t_minishell));
-	// if(!shell)
-	// 	return (0);
-	shell->env = env_c(environ);
-	shell->oldpwd = NULL;
-	shell->history = NULL;
-	shell->history_path = NULL;
-	shell->exit_status = 0;
-	shell->root = NULL;
-	shell->is_parent = 1;
-	shell->is_oldpwd_unset = 1;
+    status = 0;
+    shell = ft_calloc(1, sizeof(t_minishell));
+    if (!shell)
+        return;
+    shell->env = env_c(environ);
+    shell->oldpwd = NULL;
+    shell->history = NULL;
+    shell->history_path = NULL;
+    shell->exit_status = 0;
+    shell->root = NULL;
+    shell->is_parent = 1;
+    shell->is_oldpwd_unset = 1;
 
-	char *cmdline = NULL;
+    char *cmdline = NULL;
 
-	// !! input check
-	while (1)
-	{
-		char *cmdline = NULL;
-		ft_readline(&cmdline, "minishell> ");
-		if (cmdline)
-		{
-			if (ft_strcmp(cmdline, "exit") == 0)
-			{
-				free(cmdline);
-				break;
-			}
-			add_history(cmdline);
-			printf("You entered: %s\n", cmdline);
-			free(cmdline);
-		}
+    while (1)
+    {
+        ft_readline(&cmdline, "minishell> ");
+        if (cmdline)
+        {
+            if (ft_strcmp(cmdline, "exit") == 0)
+            {
+                free(cmdline);
+                break;
+            }
+            add_history(cmdline);
+
+            int num_tokens;
+            Token **tokens = lexer(cmdline, &num_tokens);
+
+            for (int i = 0; i < num_tokens; i++)
+            {
+                printf("Token type: %d, value: '%s'\n", tokens[i]->type, tokens[i]->value);
+                free_token(tokens[i]);
+            }
+            free(tokens);
+
+            free(cmdline);
+        }
     }
-    //.....
+
     if (cmdline)
-	{
-		add_history(cmdline);
-		free(cmdline);
+    {
+        add_history(cmdline);
+        free(cmdline);
     }
 }
 
-
-int main(void)
+int main()
 {
-	t_minishell shell;
-
-	init_minishell(&shell);
-	return 0;
+    t_minishell shell;
+    init_minishell(&shell);
+    return 0;
 }
