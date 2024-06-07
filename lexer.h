@@ -1,6 +1,12 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "libft_/libft.h"
+
 typedef enum {
     TOKEN_PIPE,
     TOKEN_BRACKET,
