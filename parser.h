@@ -31,6 +31,13 @@ typedef struct ASTNode
     struct ASTNode *right;
 } ASTNode;
 
+typedef struct s_node_info
+{
+	int		type;
+	char	*str_left;
+	char	*str_right;
+}	t_node_info;
+
 typedef struct s_and
 {
 	int		type;

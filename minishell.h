@@ -30,4 +30,7 @@ typedef struct s_minishell
 	bool is_oldpwd_unset;
 } t_minishell;
 
+void	ft_readline(char **cmdline, char *prompt);
+void	run_commandline(t_minishell **ms);
+
 #endif
