@@ -1,6 +1,4 @@
-#include "parser.h"
 #include "minishell.h"
-#include "lexer.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -19,8 +17,9 @@ void ft_readline(char **cmdline, char *prompt)
 
 void	run_commandline(t_minishell **ms)
 {
-    char	*cmdline;
-    (void)**ms;
+    char    *cmdline;
+    int     hd;
+    //(void)**ms;
 
      while (1)
     {
@@ -33,17 +32,9 @@ void	run_commandline(t_minishell **ms)
                 break;
             }
             add_history(cmdline);
-
-            int num_tokens;
-            Token **tokens = lexer(cmdline, &num_tokens);
-
-            for (int i = 0; i < num_tokens; i++)
-            {
-                printf("Token type: %d, value: '%s'\n", tokens[i]->type, tokens[i]->value);
-                free_token(tokens[i]);
-            }
-            free(tokens);
-
+            hd = 0;
+            (*ms)->root = NULL;
+            create_tree(cmdline, &((*ms)->root), &hd, *ms);
             free(cmdline);
         }
     }

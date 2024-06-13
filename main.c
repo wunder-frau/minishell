@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "lexer.h"
 
 // TO DO add `ft_strchr`, `ft_strcmp`, `ft_arrlen`, `free` to libft_
 char	*ft_strchr(const char *s, int c)
@@ -64,11 +63,6 @@ char	**env_c(char **envp)
 	}
 	return (env);
 }
-
-// void ft_readline(char **cmdline, char *prompt)
-// {
-// 	*cmdline = readline(prompt);
-// }
 
 void init_minishell(t_minishell **shell)
 {
