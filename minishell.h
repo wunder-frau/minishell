@@ -25,9 +25,13 @@ typedef struct s_minishell
 	t_list *history;
 	char *history_path;
 	int exit_status;
+	int fd_output;
 	t_node *root;
 	bool is_parent;
 	bool is_oldpwd_unset;
 } t_minishell;
+
+int		is_builtin(char *cmd);
+void	exec_builtin(t_minishell *shell, char **argv);
 
 #endif

@@ -1,5 +1,5 @@
 NAME = minishell
-MINISHELL_SRC = main.c
+MINISHELL_SRC = main.c builtins/utils.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths
