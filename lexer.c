@@ -25,13 +25,40 @@ char *ft_strndup(const char *s, size_t n) {
     return new_str;
 }
 
+int set_node_info(t_node_info **info, char *str, int point, int type)
+{
+    t_node_info *node_info;
+
+    if (type == T_PIPE)
+        str[point] = NULL_TERM;
+    node_info = ft_calloc(1, sizeof(t_node_info));
+    if (!node_info)
+        return (-1);
+    node_info->str_left = str;
+    node_info->str_right = str + point + 1;
+    node_info->type = type;
+    *info = node_info;
+
+    printf("point: %d\n", point);
+    printf("str[point]: %c\n", str[point]);
+    printf("Node info created successfully:\n");
+    printf("  str_left: %s\n", node_info->str_left);
+    printf("  str_right: %s\n", node_info->str_right);
+    printf("  type: %d\n", node_info->type);
+
+    return (-1);
+}
+
 int	pipe_block(t_node_info **node, char *str, int type, int i)
 {
-    (void)**node;
-    (void)type;
+    //(void)**node;
+    //(void)type;
     if (str[i] == PIPE)
     {
-        printf("PIPE_pipe_block");
+        set_node_info(node, str, i, type);
+        printf("str[i]_block: %d\n", str[i]);
+        printf("[i]_block: %d\n", i);
+        printf("type: %d", str[i]);
         printf("\n");
     }
     else

@@ -86,5 +86,6 @@ int		create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms);
 /** lexer.c **/
 int lexer(t_node_info **node, char *str, int type, int i);
 int	pipe_block(t_node_info **node, char *str, int type, int i);
+int set_node_info(t_node_info **info, char *str, int point, int type);
 
 #endif
