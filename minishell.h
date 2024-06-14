@@ -84,8 +84,11 @@ bool	get_type(char *str, t_node_info **info);
 int		create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms);
 
 /** lexer.c **/
-int lexer(t_node_info **node, char *str, int type, int i);
-int	pipe_block(t_node_info **node, char *str, int type, int i);
-int set_node_info(t_node_info **info, char *str, int point, int type);
+int		lexer(t_node_info **node, char *str, int type, int i);
+int		pipe_block(t_node_info **node, char *str, int type, int i);
+int		set_node_info(t_node_info **info, char *str, int point, int type);
+int		round_brackets_check(char *str, int point);
+void	check_if_inside_quotes(char *str, int *i, int *quote_type);
+
 
 #endif

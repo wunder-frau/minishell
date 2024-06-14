@@ -25,6 +25,44 @@ char *ft_strndup(const char *s, size_t n) {
     return new_str;
 }
 
+void	check_if_inside_quotes(char *str, int *i, int *quote_type)
+{
+   	if (str[*i] == S_QUOTE && *quote_type == S_QUOTE)
+		*quote_type = 0;
+	else if (str[*i] == S_QUOTE && *quote_type == 0)
+		*quote_type = S_QUOTE;
+	else if (str[*i] == D_QUOTE && *quote_type == D_QUOTE)
+		*quote_type = 0;
+	else if (str[*i] == D_QUOTE && *quote_type == 0)
+		*quote_type = D_QUOTE;
+}
+
+int	round_brackets_check(char *str, int point)
+{
+	int	i;
+	int	unmatched_count;
+	int	quote_type;
+
+	i = (int)ft_strlen(str) - 1;
+	unmatched_count = 0;
+	quote_type = 0;
+	while (i >= point)
+	{
+		check_if_inside_quotes(str, &i, &quote_type);
+		if (!quote_type)
+		{
+			if (str[i] == O_ROUND)
+				unmatched_count++;
+			if (str[i] == C_ROUND)
+				unmatched_count--;
+			i--;
+		}
+		else
+			i--;
+	}
+	return (!unmatched_count);
+}
+
 int set_node_info(t_node_info **info, char *str, int point, int type)
 {
     t_node_info *node_info;
@@ -55,17 +93,28 @@ int	pipe_block(t_node_info **node, char *str, int type, int i)
     //(void)type;
     if (str[i] == PIPE)
     {
-        set_node_info(node, str, i, type);
+        // to remove
+        if (round_brackets_check(str, i))
+        {
+            return(set_node_info(node, str, i, type));
+            printf("set_node");
+            printf("\n");
+        }
+        else
+        {
+        //return(lexer(node, str, type, i - 1));
         printf("str[i]_block: %d\n", str[i]);
         printf("[i]_block: %d\n", i);
         printf("type: %d", str[i]);
+        printf("lexer recursion");
         printf("\n");
+        }
     }
-    else
-    {
+    // else
+    // {
         printf("NOT_PIPE");
         printf("\n");
-    }
+    // }
     return (0);
 }
 
@@ -78,9 +127,12 @@ int lexer(t_node_info **node, char *str, int type,
 	{
 		if (type == T_PIPE)
 			status = pipe_block(node, str, type, i);
+        if (status > 0)
+			return (status);
+		else if (status < 0)
+			return (-1);
 		i--;
 	}
-	// return (lexer(node, str, type + 1,
-	// 		ft_strlen(str) - 1));
-    return (0);
+	return (lexer(node, str, type + 1,
+			ft_strlen(str) - 1));
 }

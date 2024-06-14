@@ -7,7 +7,10 @@ bool	get_type(char *str, t_node_info **info)
 	status = lexer(info, str, T_PIPE, ft_strlen(str) - 1);
 	return (status);
 }
-
+/**
+* @param `status` is initially used to store the return value of the get_type
+*		 function, which determines the type of the current node.
+*/
 int	create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms)
 {
 	bool		status;
