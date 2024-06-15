@@ -64,7 +64,24 @@ void	ft_env(t_minishell *shell, char **argv)
 	shell->exit_status = 0;
 }
 
+void	ft_free_array(char **array)
+{
+	int	i;
 
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i])
+	{
+		printf("1\n");
+		if (array[i])
+			free(array[i]);
+		printf("2\n");
+		i++;
+	}
+	if (array)
+		free(array);
+}
 /*
 void	ft_export(t_minishell *shell, char **argv)
 {
@@ -113,15 +130,73 @@ void	ft_unset(t_minishell *shell, char **argv)
 		i++;
 	}
 	shell->exit_status = 0;
+}*/
+char **ft_add_env(char **env, char *key, char *value)
+{
+	int		i;
+	char	**new_env;
+	char	*new_var;
+
+	i = 0;
+	while (env[i])
+		i++;
+	new_env = malloc(sizeof(char *) * (i + 2));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (env[i])
+	{
+		new_env[i] = ft_strdup(env[i]);
+		if (!new_env[i]) 
+		{
+			ft_free_array(new_env);
+			return (NULL);
+		}
+		i++;
+	}
+	new_var = ft_strjoin(key, "=");
+	if (!new_var)
+	{
+		ft_free_array(new_env);
+		return (NULL);
+	}
+	new_env[i] = ft_strjoin(new_var, value);
+	free(new_var);
+	if (!new_env[i])
+	{
+		ft_free_array(new_env);
+		return (NULL);
+	}
+	new_env[i + 1] = NULL;
+	ft_free_array(env);
+	return (new_env);
 }
 
-void ft_cd(t_minishell *shell, char **argv)
+char *ft_get_env(char **env, char *key)
+{
+	int	i;
+	int	j;
+	int	len;
+
+	i = 0;
+	while (env[i])
+	{
+		j = 0;
+		while (env[i][j] && env[i][j] != '=')
+			j++;
+		len = j;
+		if (ft_strncmp(env[i], key, len) == 0)
+			return (ft_strdup(env[i] + len + 1));
+		i++;
+	}
+	return (NULL);
+}
+void	ft_cd(t_minishell *shell, char **argv)
 {
 	char	*home;
 	char	*oldpwd;
 	char	*pwd;
 	int		ret;
-
 	home = ft_get_env(shell->env, "HOME");
 	oldpwd = getcwd(NULL, 0);
 	if (!argv[1] || ft_strncmp(argv[1], "~\0", 2) == 0)
@@ -132,10 +207,11 @@ void ft_cd(t_minishell *shell, char **argv)
 		ret = chdir(argv[1]);
 	if (ret == -1)
 	{
+		printf("1337\n");
 		ft_putstr_fd("minishell: cd: ", 2);
 		ft_putstr_fd(argv[1], 2);
 		ft_putstr_fd(": ", 2);
-		//ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("strerror", 2);
 		ft_putstr_fd("\n", 2);
 		shell->exit_status = 1;
 	}
@@ -148,7 +224,8 @@ void ft_cd(t_minishell *shell, char **argv)
 		free(oldpwd);
 		shell->exit_status = 0;
 	}
-}*/
+}
+
 
 int	is_builtin(char *cmd)
 {
@@ -163,9 +240,9 @@ int	is_builtin(char *cmd)
 		printf("da\n");
 		return (1);
 	}
-	/*else if (ft_strncmp(cmd, "cd\0", 3) == 0)
+	else if (ft_strncmp(cmd, "cd\0", 3) == 0)
 		return (1);
-	else if (ft_strncmp(cmd, "export\0", 7) == 0)
+	/*else if (ft_strncmp(cmd, "export\0", 7) == 0)
 		return (1);
 	else if (ft_strncmp(cmd, "unset\0", 6) == 0)
 		return (1);*/
@@ -185,9 +262,9 @@ void	exec_builtin(t_minishell *shell, char **argv)
 		ft_exit(shell, argv);
 		exit(shell->exit_status);
 	}
-	/*else if (ft_strncmp(argv[0], "cd\0", 3) == 0)
+	else if (ft_strncmp(argv[0], "cd\0", 3) == 0)
 		ft_cd(shell, argv);
-	else if (ft_strncmp(argv[0], "export\0", 7) == 0)
+	/*else if (ft_strncmp(argv[0], "export\0", 7) == 0)
 		ft_export(shell, argv);
 	else if (ft_strncmp(argv[0], "unset\0", 6) == 0)
 		ft_unset(shell, argv);*/
