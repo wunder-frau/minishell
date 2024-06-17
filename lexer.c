@@ -2,6 +2,12 @@
 
 // ! remove later `ft_isspace` and `ft_strndup`
 
+bool is_odd(int num)
+{
+    return (num % 2 != 0);
+}
+
+
 int ft_isspace(char c)
 {
     return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
@@ -87,34 +93,49 @@ int set_node_info(t_node_info **info, char *str, int point, int type)
     return (-1);
 }
 
+int check_symbol_pairing(char *str, int point, int symbol)
+{
+    int i;
+    int pair_0;
+    int pair_1;
+
+    i = (int)ft_strlen(str) - 1;
+    pair_0 = 0;
+    pair_1 = 0;
+    while (i >= point)
+    {
+        if (str[i] == symbol)
+            pair_0++;
+        i--;
+    }
+    while (--point > 0)
+    {
+        if (str[point] == symbol)
+            pair_1++;
+    }
+    return (is_odd(pair_0) == false && is_odd(pair_1) == false);
+}
+
 int	pipe_block(t_node_info **node, char *str, int type, int i)
 {
-    //(void)**node;
-    //(void)type;
     if (str[i] == PIPE)
     {
-        // to remove
-        if (round_brackets_check(str, i))
+        if (check_symbol_pairing(str, i, S_QUOTE) && check_symbol_pairing(str, i, D_QUOTE))
         {
-            return(set_node_info(node, str, i, type));
             printf("set_node");
             printf("\n");
+            return(set_node_info(node, str, i, type));
         }
         else
         {
-        //return(lexer(node, str, type, i - 1));
-        printf("str[i]_block: %d\n", str[i]);
-        printf("[i]_block: %d\n", i);
-        printf("type: %d", str[i]);
-        printf("lexer recursion");
-        printf("\n");
+            printf("str[i]_block: %d\n", str[i]);
+            printf("[i]_block: %d\n", i);
+            printf("type: %d", str[i]);
+            printf("lexer recursion");
+            printf("\n");
+            return(lexer(node, str, type, i - 1));
         }
     }
-    // else
-    // {
-        printf("NOT_PIPE");
-        printf("\n");
-    // }
     return (0);
 }
 
