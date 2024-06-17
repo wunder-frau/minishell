@@ -24,6 +24,13 @@ typedef struct s_node_info
 	char	*str_right;
 }	t_node_info;
 
+typedef struct s_pipe
+{
+	int		type;
+	t_node	*left;
+	t_node	*right;
+}	t_pipe;
+
 typedef struct s_minishell
 {
 	char **env;
@@ -90,5 +97,6 @@ int		set_node_info(t_node_info **info, char *str, int point, int type);
 int		round_brackets_check(char *str, int point);
 void	check_if_inside_quotes(char *str, int *i, int *quote_type);
 int		check_symbol_pairing(char *str, int point, int symbol);
+bool	create_node(t_node_info *info, t_node **root);
 
 #endif

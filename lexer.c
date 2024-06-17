@@ -82,7 +82,7 @@ int set_node_info(t_node_info **info, char *str, int point, int type)
     node_info->str_right = str + point + 1;
     node_info->type = type;
     *info = node_info;
-
+    
     printf("point: %d\n", point);
     printf("str[point]: %c\n", str[point]);
     printf("Node info created successfully:\n");
@@ -90,7 +90,7 @@ int set_node_info(t_node_info **info, char *str, int point, int type)
     printf("  str_right: %s\n", node_info->str_right);
     printf("  type: %d\n", node_info->type);
 
-    return (-1);
+    return (1);
 }
 
 int check_symbol_pairing(char *str, int point, int symbol)
