@@ -199,6 +199,8 @@ void	ft_cd(t_minishell *shell, char **argv)
 	char	*pwd;
 	int		ret;
 
+
+	printf("SIDIIIIIIIIIIIIII\n");
 	home = ft_get_env(shell->env, "HOME");
 	oldpwd = getcwd(NULL, 0);
 	if (!argv[1] || ft_strncmp(argv[1], "~\0", 2) == 0)
@@ -209,7 +211,6 @@ void	ft_cd(t_minishell *shell, char **argv)
 		ret = chdir(argv[1]);
 	if (ret == -1)
 	{
-		printf("1337\n");
 		ft_putstr_fd("minishell: cd: ", 2);
 		ft_putstr_fd(argv[1], 2);
 		ft_putstr_fd(": ", 2);
@@ -221,7 +222,7 @@ void	ft_cd(t_minishell *shell, char **argv)
 	{
 		pwd = getcwd(NULL, 0);
 		// ZACHEM
-		//shell->env = ft_add_env(shell->env, "OLDPWD", oldpwd);
+		shell->env = ft_add_env(shell->env, "OLDPWD", oldpwd);
 		shell->env = ft_add_env(shell->env, "PWD", pwd);
 		free(pwd);
 		free(oldpwd);
