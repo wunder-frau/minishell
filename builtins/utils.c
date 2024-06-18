@@ -68,19 +68,20 @@ void	ft_free_array(char **array)
 {
 	int	i;
 
-	i = 0;
+	//i = 0;
+	//while (array[i++])
+	//	printf("array[%i] = %s,\n",i,  array[i]);
 	if (!array)
 		return ;
-	while (array[i])
-	{
-		printf("1\n");
-		if (array[i])
-			free(array[i]);
-		printf("2\n");
-		i++;
-	}
-	if (array)
-		free(array);
+	i = 0;
+    while (array[i])
+    {
+        printf("Freeing element %d: %p\n", i, (void *)array[i]);
+        //free(array[i]);
+        i++;
+    }
+    printf("Freeing array pointer: %p\n", (void *)array);
+    //free(array);
 }
 /*
 void	ft_export(t_minishell *shell, char **argv)
@@ -197,6 +198,7 @@ void	ft_cd(t_minishell *shell, char **argv)
 	char	*oldpwd;
 	char	*pwd;
 	int		ret;
+
 	home = ft_get_env(shell->env, "HOME");
 	oldpwd = getcwd(NULL, 0);
 	if (!argv[1] || ft_strncmp(argv[1], "~\0", 2) == 0)
@@ -218,7 +220,8 @@ void	ft_cd(t_minishell *shell, char **argv)
 	else
 	{
 		pwd = getcwd(NULL, 0);
-		shell->env = ft_add_env(shell->env, "OLDPWD", oldpwd);
+		// ZACHEM
+		//shell->env = ft_add_env(shell->env, "OLDPWD", oldpwd);
 		shell->env = ft_add_env(shell->env, "PWD", pwd);
 		free(pwd);
 		free(oldpwd);
@@ -227,25 +230,18 @@ void	ft_cd(t_minishell *shell, char **argv)
 }
 
 
-int	is_builtin(char *cmd)
+int	is_builtin(char *data)
 {
-	if (ft_strncmp(cmd, "echo\0", 5) == 0)
+	if (!data)
+		return (0);
+	if (ft_strncmp(data, "echo\0", 5) == 0
+		|| ft_strncmp(data, "cd\0", 3) == 0
+		|| ft_strncmp(data, "pwd\0", 4) == 0
+		|| ft_strncmp(data, "export\0", 7) == 0
+		|| ft_strncmp(data, "unset\0", 6) == 0
+		|| ft_strncmp(data, "env\0", 4) == 0
+		|| ft_strncmp(data, "exit\0", 5) == 0)
 		return (1);
-	else if (ft_strncmp(cmd, "pwd\0", 4) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "env\0", 4) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "exit\0", 5) == 0)
-	{
-		printf("da\n");
-		return (1);
-	}
-	else if (ft_strncmp(cmd, "cd\0", 3) == 0)
-		return (1);
-	/*else if (ft_strncmp(cmd, "export\0", 7) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "unset\0", 6) == 0)
-		return (1);*/
 	return (0);
 }
 
