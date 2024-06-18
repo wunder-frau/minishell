@@ -5,7 +5,7 @@ MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 # Paths
 LIBFT_DIR = libft_
 LIBFT = $(LIBFT_DIR)/libft.a
-CC = cc
+CC = gcc
 CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
 
 # Colors and formatting

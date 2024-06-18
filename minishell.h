@@ -44,7 +44,6 @@ typedef struct s_minishell
 	bool is_oldpwd_unset;
 } t_minishell;
 
-// ! remove extra
 enum	e_characters
 {
 	NULL_TERM,
@@ -53,13 +52,13 @@ enum	e_characters
 	L_REDIR_SEPARATOR = 29,
 	R_REDIR_SEPARATOR = 30,
 	SEPARATOR = 31,
-	SPACE = 32,
-	D_QUOTE = 34,
+	SPA = 32,
+	D_QUO = 34,
 	D_SIGN = 36,
 	AND = 38,
-	S_QUOTE = 39,
-	O_ROUND = 40,
-	C_ROUND = 41,
+	S_QUO = 39,
+	O_ROU = 40,
+	C_ROU = 41,
 	ASTERISK = 42,
 	DASH = 45,
 	DOT = 46,
@@ -73,7 +72,7 @@ enum	e_characters
 	BACKSLASH = 92,
 	UNSCORE = 95,
 	N_LOWER = 110,
-	PIPE = 124,
+	PI = 124,
 };
 
 enum	e_types

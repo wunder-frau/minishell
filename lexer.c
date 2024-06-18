@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-// ! remove later `ft_isspace` and `ft_strndup`
-
 bool is_odd(int num)
 {
     return (num % 2 != 0);
@@ -33,14 +31,14 @@ char *ft_strndup(const char *s, size_t n) {
 
 void	check_if_inside_quotes(char *str, int *i, int *quote_type)
 {
-   	if (str[*i] == S_QUOTE && *quote_type == S_QUOTE)
+   	if (str[*i] == S_QUO && *quote_type == S_QUO)
 		*quote_type = 0;
-	else if (str[*i] == S_QUOTE && *quote_type == 0)
-		*quote_type = S_QUOTE;
-	else if (str[*i] == D_QUOTE && *quote_type == D_QUOTE)
+	else if (str[*i] == S_QUO && *quote_type == 0)
+		*quote_type = S_QUO;
+	else if (str[*i] == D_QUO && *quote_type == D_QUO)
 		*quote_type = 0;
-	else if (str[*i] == D_QUOTE && *quote_type == 0)
-		*quote_type = D_QUOTE;
+	else if (str[*i] == D_QUO && *quote_type == 0)
+		*quote_type = D_QUO;
 }
 
 int	round_brackets_check(char *str, int point)
@@ -57,9 +55,9 @@ int	round_brackets_check(char *str, int point)
 		check_if_inside_quotes(str, &i, &quote_type);
 		if (!quote_type)
 		{
-			if (str[i] == O_ROUND)
+			if (str[i] == O_ROU)
 				unmatched_count++;
-			if (str[i] == C_ROUND)
+			if (str[i] == C_ROU)
 				unmatched_count--;
 			i--;
 		}
@@ -118,9 +116,9 @@ int check_symbol_pairing(char *str, int point, int symbol)
 
 int	pipe_block(t_node_info **node, char *str, int type, int i)
 {
-    if (str[i] == PIPE)
+    if (str[i] == PI)
     {
-        if (check_symbol_pairing(str, i, S_QUOTE) && check_symbol_pairing(str, i, D_QUOTE))
+        if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
         {
             printf("set_node");
             printf("\n");
