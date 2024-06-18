@@ -64,23 +64,61 @@ char	**env_c(char **envp)
 	return (env);
 }
 
-void init_minishell(t_minishell **shell)
+void	ft_free_minishell(t_minishell *ms)
 {
-    extern char **environ;
-    int         status;
+	if (!ms)
+		return ;
+	if (ms->env)
+		ft_free(ms->env);
+	if (ms->root)
+		free_tree(&(ms->root));
+	free(ms);
+}
 
-    status = 0;
-    *shell = ft_calloc(1, sizeof(t_minishell));
-    if (!(*shell))
-        return;
-    (*shell)->env = env_c(environ);
-    (*shell)->oldpwd = NULL;
-    (*shell)->history = NULL;
-    (*shell)->history_path = NULL;
-    (*shell)->exit_status = 0;
-    (*shell)->root = NULL;
-    (*shell)->is_parent = 1;
-    (*shell)->is_oldpwd_unset = 1;
+void	terminate_minishell(t_minishell **ms, int status)
+{
+	ft_free_minishell(*ms);
+	ft_putstr_fd("\033[0;31me-bash:\033[0;0m can't initialize "
+		"t_minishell structure\n", STDERR_FILENO);
+	exit (status);
+}
+
+void	init_minishell(t_minishell **ms)
+{
+	extern char	**environ;
+	int			status;
+
+	status = 0;
+	*ms = ft_calloc(1, sizeof(t_minishell));
+	if (!*ms)
+		status = 200;
+	if (status == 0)
+	{
+		(*ms)->env = env_c(environ);
+		if (!(*ms)->env)
+			status = 200;
+	}
+	if (status != 0)
+		terminate_minishell(ms, status);
+}
+
+// void init_minishell(t_minishell **shell)
+// {
+//     extern char **environ;
+//     int         status;
+
+//     status = 0;
+//     *shell = ft_calloc(1, sizeof(t_minishell));
+//     if (!(*shell))
+//         return;
+//     (*shell)->env = env_c(environ);
+//     (*shell)->oldpwd = NULL;
+//     (*shell)->history = NULL;
+//     (*shell)->history_path = NULL;
+//     (*shell)->exit_status = 0;
+//     (*shell)->root = NULL;
+//     (*shell)->is_parent = 1;
+//     (*shell)->is_oldpwd_unset = 1;
 
     //char *cmdline = NULL;
 
@@ -115,7 +153,7 @@ void init_minishell(t_minishell **shell)
     //     add_history(cmdline);
     //     free(cmdline);
     // }
-}
+//}
 
 int main(void)
 {

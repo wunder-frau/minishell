@@ -82,6 +82,8 @@ enum	e_types
 	T_COMMAND,
 };
 
+void	terminate_minishell(t_minishell **ms, int status);
+
 /** run_commanline.c **/
 void	ft_readline(char **cmdline, char *prompt);
 void	run_commandline(t_minishell **ms);
@@ -89,6 +91,7 @@ void	run_commandline(t_minishell **ms);
 /** parse_command_tree.c **/
 bool	get_type(char *str, t_node_info **info);
 int		create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms);
+void	free_tree(t_node **root);
 
 /** lexer.c **/
 int		lexer(t_node_info **node, char *str, int type, int i);
