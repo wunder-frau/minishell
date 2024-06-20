@@ -15,32 +15,32 @@ void ft_readline(char **cmdline, char *prompt)
 	*cmdline = readline(prompt);
 }
 
-void	run_commandline(t_minishell **ms)
-{
-    char    *cmdline;
-    int     hd;
-    //(void)**ms;
+void run_commandline(t_minishell **ms) {
+    char *cmdline = NULL;
+    int hd;
 
-     while (1)
-    {
+    while (1) {
         ft_readline(&cmdline, "minishell> ");
-        if (cmdline)
-        {
-            if (ft_strcmp(cmdline, "exit") == 0)
-            {
-                free(cmdline);
-                break;
-            }
-            add_history(cmdline);
-            hd = 0;
-            (*ms)->root = NULL;
-            create_tree(cmdline, &((*ms)->root), &hd, *ms);
-            free(cmdline);
+
+        if (cmdline == NULL) {
+            continue;
         }
-    }
-    if (cmdline)
-    {
+
+        if (ft_strlen(cmdline) == 0) {
+            free(cmdline);
+            continue;
+        }
+
+        if (ft_strcmp(cmdline, "exit") == 0) {
+            free(cmdline);
+            break;
+        }
+
         add_history(cmdline);
+        hd = 0;
+        (*ms)->root = NULL;
+        create_tree(cmdline, &((*ms)->root), &hd, *ms);
         free(cmdline);
+        cmdline = NULL;
     }
 }

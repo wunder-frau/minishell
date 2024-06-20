@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -85,6 +86,7 @@ void	terminate_minishell(t_minishell **ms, int status);
 
 /** run_commanline.c **/
 void	ft_readline(char **cmdline, char *prompt);
+int		get_cmdline(char **cmdline, t_minishell **ms);
 void	run_commandline(t_minishell **ms);
 
 /** parse_command_tree.c **/
