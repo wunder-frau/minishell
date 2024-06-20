@@ -114,44 +114,96 @@ int check_symbol_pairing(char *str, int point, int symbol)
     return (is_odd(pair_0) == false && is_odd(pair_1) == false);
 }
 
-int	pipe_block(t_node_info **node, char *str, int type, int i)
+int pipe_block(t_node_info **node, char *str, int type, int i)
 {
     if (str[i] == PI)
     {
         if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
         {
-            printf("set_node");
-            printf("\n");
-            return(set_node_info(node, str, i, type));
+            printf("set_node\n");
+            return set_node_info(node, str, i, type);
         }
         else
         {
-            printf("str[i]_block: %d\n", str[i]);
-            printf("[i]_block: %d\n", i);
-            printf("type: %d", str[i]);
-            printf("lexer recursion");
-            printf("\n");
-            return(lexer(node, str, type, i - 1));
+            printf("Invalid symbol pairing at index %d\n", i);
+            return (lexer(node, str, type, i - 1));
         }
     }
-    return (0);
+    return 0;
 }
 
-int lexer(t_node_info **node, char *str, int type,
-	int i)
+// int	pipe_block(t_node_info **node, char *str, int type, int i)
+// {
+//     if (str[i] == PI)
+//     {
+//         if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
+//         {
+//             printf("set_node");
+//             printf("\n");
+//             return(set_node_info(node, str, i, type));
+//         }
+//         else
+//         {
+//             printf("str[i]_block: %d\n", str[i]);
+//             printf("[i]_block: %d\n", i);
+//             printf("type: %d", str[i]);
+//             printf("lexer recursion");
+//             printf("\n");
+//             return(lexer(node, str, type, i - 1));
+//         }
+//     }
+//     return (0);
+// }
+
+int lexer(t_node_info **node, char *str, int type, int i)
 {
-	int	status;
+    int status;
 
-	while (i >= 0)
-	{
-		if (type == T_PIPE)
-			status = pipe_block(node, str, type, i);
+    while (i >= 0)
+    {
+        if (type == T_PIPE)
+        {
+            printf("Calling pipe_block with i=%d\n", i);
+            status = pipe_block(node, str, type, i);
+        }
+        else 
+        {
+            printf("Unexpected type: %d\n", type);
+            status = -1;
+        }
+
         if (status > 0)
-			return (status);
-		else if (status < 0)
-			return (-1);
-		i--;
-	}
-	return (lexer(node, str, type + 1,
-			ft_strlen(str) - 1));
+            return (status);
+        else if (status < 0)
+            return (-1);
+
+        i--;
+    }
+
+    printf("Recursive call: lexer(node, str, type + 1, ft_strlen(str) - 1)\n");
+    return (lexer(node, str, type + 1, ft_strlen(str) - 1));
 }
+
+// int lexer(t_node_info **node, char *str, int type,
+// 	int i)
+// {
+// 	int	status;
+
+// 	while (i >= 0)
+// 	{
+// 		if (type == T_PIPE)
+// 			status = pipe_block(node, str, type, i);
+//         else 
+//         {
+//             printf("__lol_err___");
+//             status = -1;
+//         }
+//         if (status > 0)
+// 			return (status);
+// 		else if (status < 0)
+// 			return (-1);
+// 		i--;
+// 	}
+// 	return (lexer(node, str, type + 1,
+// 			ft_strlen(str) - 1));
+// }

@@ -28,9 +28,13 @@ int	pipe_tree(t_node_info *info, t_node **root, int *hd_num,
 	(void)*hd_num;
 	(void)*ms;
 
+	printf("left_____");
 	status = create_tree(info->str_left, &((*root)->left), hd_num, ms);
 	if (status == 0)
+	{
+		printf("right_____");
 		status = create_tree(info->str_right, &((*root)->right), hd_num, ms);
+	}
 	return (status);
 }
 
