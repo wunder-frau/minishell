@@ -22,16 +22,16 @@ void	ft_free_2d_array(void *ptr)
 }
 
 void free_tree(t_node **root) {
-    if (*root == NULL)
-        return;
+		if (*root == NULL)
+				return;
 
 		if ((*root)->left)
 			free_tree(&((*root)->left));
 		if ((*root)->right)
 			free_tree(&((*root)->right));
 
-    free(*root);
-    *root = NULL;
+		free(*root);
+		*root = NULL;
 }
 
 int	pipe_tree(t_node_info *info, t_node **root, int *hd_num,
@@ -42,101 +42,41 @@ int	pipe_tree(t_node_info *info, t_node **root, int *hd_num,
 	(void)*ms;
 
 	printf("left_____");
+	printf("\n");
 	status = create_tree(info->str_left, &((*root)->left), hd_num, ms);
 	if (status == 0)
 	{
 		printf("right_____");
+		printf("\n");
 		status = create_tree(info->str_right, &((*root)->right), hd_num, ms);
 	}
 	return (status);
 }
 
-int parse_redirects(char *str_left, char ***redirs)
-{
-    int i = 0;
-    int redir_count = 0;
-    int redir_index = 0;
-    int q_flag = 0;
-    char **redir_array;
-
-    // Count the number of redirections
-    while (str_left[i] != NULL_TERM)
-    {
-        if ((str_left[i] == S_QUO || str_left[i] == D_QUO) && q_flag == 0)
-            q_flag = str_left[i];
-        else if (str_left[i] == S_QUO && q_flag == S_QUO)
-            q_flag = 0;
-        else if (str_left[i] == D_QUO && q_flag == D_QUO)
-            q_flag = 0;
-
-        if (q_flag == 0 && (str_left[i] == REDIR_L || str_left[i] == REDIR_R))
-            redir_count++;
-
-        i++;
-    }
-
-    // Allocate memory for redirection array
-    redir_array = (char **)ft_calloc(redir_count + 1, sizeof(char *));
-    if (!redir_array)
-        return (200);
-
-    i = 0;
-    q_flag = 0;
-    while (str_left[i] != NULL_TERM)
-    {
-        if ((str_left[i] == S_QUO || str_left[i] == D_QUO) && q_flag == 0)
-            q_flag = str_left[i];
-        else if (str_left[i] == S_QUO && q_flag == S_QUO)
-            q_flag = 0;
-        else if (str_left[i] == D_QUO && q_flag == D_QUO)
-            q_flag = 0;
-
-        if (q_flag == 0 && (str_left[i] == REDIR_L || str_left[i] == REDIR_R))
-        {
-            int start = i;
-            while (str_left[i] != SPA && str_left[i] != NULL_TERM)
-                i++;
-            redir_array[redir_index] = ft_substr(str_left, start, i - start);
-            if (!redir_array[redir_index])
-            {
-                ft_free_2d_array(redir_array);
-                return (200);
-            }
-            redir_index++;
-        }
-        else
-            i++;
-    }
-    redir_array[redir_index] = NULL;
-    *redirs = redir_array;
-
-    return (0);
-}
-
 int add_command(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms)
 {
-    //int status;
-    // t_redir *redir_node;
-    // char **redirs;
+		int status;
+		t_redir *redir_node;
+		char **redirs;
 		(void)*hd_num;
 		(void)*ms;
-    // status = parse_redirects(info->str_left, &redirs);
-    // if (status != 0)
-    //     return (status);
 
-    // redir_node = init_t_redir();
-    // if (redir_node == NULL)
-    // {
-    //     if (redirs)
-    //         ft_free_2d_array(redirs);
-    //     return (200);
-    // }
+		status = prepare_redirects(info->str_left, hd_num, &redirs, ms);
+		if (status != 0)
+		    return (status);
 
-    // redir_node->redirs = redirs;
-    // ((t_command *)(*root))->redir = (t_node *)redir_node;
-    ((t_command *)(*root))->cmd = info->str_right;
+		redir_node = init_t_redir();
+		if (redir_node == NULL)
+		{
+		    if (redirs)
+		        ft_free_2d_array(redirs);
+		    return (200);
+		}
 
-    return (0);
+		redir_node->redirs = redirs;
+		((t_command *)(*root))->redir = (t_node *)redir_node;
+		((t_command *)(*root))->cmd = info->str_right;
+		return (0);
 }
 
 // int	add_command(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms)
@@ -202,6 +142,17 @@ t_command	*init_t_command(void)
 	return (node);
 }
 
+t_redir	*init_t_redir(void)
+{
+	t_redir	*node;
+
+	node = (t_redir *)ft_calloc(1, sizeof(t_redir));
+	if (!node)
+		return (0);
+	node->type = T_REDIR;
+	return (node);
+}
+
 bool	create_node(t_node_info *info, t_node **root)
 {
 	t_node	*node;
@@ -217,6 +168,8 @@ bool	create_node(t_node_info *info, t_node **root)
 	else if (info->type == T_COMMAND)
 	{
 		node = (t_node *)init_t_command();
+			print_node(node);
+	printf("\n");
 	}
 	if (node == NULL)
 	{

@@ -10,10 +10,44 @@
 #include <string.h>
 #include <stdbool.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
 #include "libft_/libft.h"
+
+enum	e_signals
+{
+	DEFAULT,
+	INTERACTIVE,
+	HEREDOC,
+	IGNORE,
+};
+
+enum	e_signals_echo
+{
+	IMPLICIT,
+	EXPLICIT,
+};
+
+enum	e_exit_status
+{
+	SUCCESS,
+	GENERIC_ERROR,
+	CMD_ARG_ERROR,
+	CMD_PD_FAILURE = 126,
+	CMD_NF_FAILURE = 127,
+	MALLOC_ERR = 200,
+	SYSTEM_ERROR = 201,
+	CHDIR_ERROR = 202,
+	GETCWD_ERROR = 203,
+	UNEXPECTED_EXIT = 255,
+	SYNTAX_ERROR = 258,
+	EXECVE_FAILURE = 300,
+	FORK_FAILURE = 400,
+	PIPE_FAILURE = 500,
+	DUP_FAILURE = 600,
+};
 
 typedef struct s_node
 {
@@ -103,6 +137,7 @@ enum	e_types
 void	terminate_minishell(t_minishell **ms, int status);
 
 /** run_commanline.c **/
+int	ft_strcmp(const char *s1, const char *s2);
 void	ft_readline(char **cmdline, char *prompt);
 int		get_cmdline(char **cmdline, t_minishell **ms);
 void	run_commandline(t_minishell **ms);
@@ -111,7 +146,7 @@ void	run_commandline(t_minishell **ms);
 bool	get_type(char *str, t_node_info **info);
 int		create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms);
 int		pipe_tree(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms);
-int		parse_redirects(char *str_left, char ***redirs);
+int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
 int		add_command(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms);
 void	free_tree(t_node **root);
 void	ft_free_2d_array(void *ptr);
@@ -120,6 +155,7 @@ t_pipe  *create_pipe_node(void);
 t_command *init_t_command(void);
 
 /** lexer.c **/
+int		ft_isspace(char c);
 int		lexer(t_node_info **node, char *str, int type, int i);
 int		pipe_block(t_node_info **node, char *str, int type, int i);
 int		set_node_info(t_node_info **info, char *str, int point, int type);
@@ -135,13 +171,37 @@ int		redir_search(char *str);
 int	modificate_str_command_without_br(char *str, char **redir, int i, int j);
 
 /** prepare_redirects.c **/
-// void	print_err_msg(char *cmd, char *msg);
-// int		prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
-// int		prepare_heredoc(char **redir, char *hd_name, t_minishell *ms);
-// void	remove_hd_duplicates(char ***redirs, char *hd_name, int hd_counter);
-// void	perror_err_msg(char *cmd, char *arg);
-// int     prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms);
-// char    *get_hd_name(int *hd_num);
-// void    remove_hd_files(int *hd_num);
+int		check_redir(char **redir, t_minishell *ms);
+void	print_err_msg(char *cmd, char *msg);
+int		prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
+void	perror_err_msg(char *cmd, char *arg);
+char	*get_hd_name(int *hd_num);
+void	remove_hd_files(int *hd_num);
+
+/** prepare_heredocs.c **/
+int		prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms);
+void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter);
+int		prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms);
+
+/** wait_children.c **/
+int		wait_children(pid_t *pids, int num);
+void	print_msg(int status);
+
+/** utils.c **/
+void	remove_quotes(char *str, int i, int j);
+void	remove_quotes_arr(char **arr, int i);
+bool	is_blank_string(char *str);
+char	**wrapper_ft_split_with_quotes(char *str);
+int		parse_cmd(char *cmd, char ***res, t_minishell *ms);
+size_t	ft_arrlen(void **arr);
+
+/** redirects_apply.c **/
+int	apply_append(char *redir, t_minishell *ms, int *out);
+int	apply_heredoc(char *heredoc, int *in);
+int	apply_redir_in(char *redir, t_minishell *ms, int *in);
+int	apply_redir_out(char *redir, t_minishell *ms, int *out);
+int	apply_redirect(char *redir, t_minishell *ms, int *in, int *out);
+int	replace_fd(int in, int out);
+int	apply_redirects(char **redirs, t_minishell *ms);
 
 #endif

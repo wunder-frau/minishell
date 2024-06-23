@@ -2,36 +2,36 @@
 
 bool is_odd(int num)
 {
-    return (num % 2 != 0);
+	return (num % 2 != 0);
 }
 
 
 int ft_isspace(char c)
 {
-    return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
 }
 
 char *ft_strndup(const char *s, size_t n) {
-    size_t len = 0;
-    while (len < n && s[len] != '\0')
-        len++;
-    char *new_str = (char *)malloc(len + 1);
-    if (new_str == NULL)
-        return NULL;
-    size_t i = 0;
-    while (i < len)
-    {
-       new_str[i] = s[i];
-       i++;
-    }
-    new_str[len] = '\0';
+	size_t len = 0;
+	while (len < n && s[len] != '\0')
+		len++;
+	char *new_str = (char *)malloc(len + 1);
+	if (new_str == NULL)
+		return NULL;
+	size_t i = 0;
+	while (i < len)
+	{
+		new_str[i] = s[i];
+		i++;
+	}
+	new_str[len] = '\0';
 
-    return new_str;
+	return new_str;
 }
 
 void	check_if_inside_quotes(char *str, int *i, int *quote_type)
 {
-   	if (str[*i] == S_QUO && *quote_type == S_QUO)
+	if (str[*i] == S_QUO && *quote_type == S_QUO)
 		*quote_type = 0;
 	else if (str[*i] == S_QUO && *quote_type == 0)
 		*quote_type = S_QUO;
@@ -65,31 +65,31 @@ int	redir_search(char *str)
 	return (key > 0);
 }
 
-int	round_brackets_check(char *str, int point)
-{
-	int	i;
-	int	unmatched_count;
-	int	quote_type;
+// int	round_brackets_check(char *str, int point)
+// {
+// 	int	i;
+// 	int	unmatched_count;
+// 	int	quote_type;
 
-	i = (int)ft_strlen(str) - 1;
-	unmatched_count = 0;
-	quote_type = 0;
-	while (i >= point)
-	{
-		check_if_inside_quotes(str, &i, &quote_type);
-		if (!quote_type)
-		{
-			if (str[i] == O_ROU)
-				unmatched_count++;
-			if (str[i] == C_ROU)
-				unmatched_count--;
-			i--;
-		}
-		else
-			i--;
-	}
-	return (!unmatched_count);
-}
+// 	i = (int)ft_strlen(str) - 1;
+// 	unmatched_count = 0;
+// 	quote_type = 0;
+// 	while (i >= point)
+// 	{
+// 		check_if_inside_quotes(str, &i, &quote_type);
+// 		if (!quote_type)
+// 		{
+// 			if (str[i] == O_ROU)
+// 				unmatched_count++;
+// 			if (str[i] == C_ROU)
+// 				unmatched_count--;
+// 			i--;
+// 		}
+// 		else
+// 			i--;
+// 	}
+// 	return (!unmatched_count);
+// }
 int set_node_info(t_node_info **info, char *str, int point, int type)
 {
     t_node_info *node_info;
@@ -163,6 +163,11 @@ int	set_node_info_command(t_node_info **info, char *str, int type)
 	node_info->str_right = str;
 	node_info->type = type;
 	*info = node_info;
+
+	printf("Node info created successfully:\n");
+	printf("  str_left: %s\n", node_info->str_left);
+	printf("  str_right: %s\n", node_info->str_right);
+	printf("  type: %d\n", node_info->type);
 	return (1);
 }
 
@@ -266,11 +271,11 @@ int pipe_block(t_node_info **node, char *str, int type, int i)
 int	command_without_bracket_block(t_node_info **node, char *str, int type)
 {
 	(void)type;
-	// if (redir_search(str))
-	// 	return (set_node_info_command(node, str, type));
-	// else
+	if (redir_search(str))
+		return (set_node_info_command(node, str, type));
+	else
 		return (set_node_cmd_simple(node, str, T_COMMAND));
-	//return (0);
+	return (0);
 }
 
 int lexer(t_node_info **node, char *str, int type, int i)

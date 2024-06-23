@@ -1,5 +1,27 @@
 #include "minishell.h"
 
+int	check_redir(char **redir, t_minishell *ms)
+{
+	int		status;
+	char	**rdr;
+
+	status = parse_cmd(*redir, &rdr, ms);
+	if (status != 0)
+		return (status);
+	if (ft_arrlen((void **)rdr) != 1)
+	{
+		status = 1;
+		print_err_msg(*redir, ": ambiguous redirect\n");
+		ft_free_2d_array(rdr);
+	}
+	else
+	{
+		*redir = rdr[0];
+		free(rdr);
+	}
+	return (status);
+}
+
 void	print_err_msg(char *cmd, char *msg)
 {
 	cmd = ft_strjoin("\033[0;31me-bash: \033[0;0m", cmd);
@@ -26,39 +48,11 @@ void	perror_err_msg(char *cmd, char *arg)
 	free(arg);
 }
 
-void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter)
-{
-	int		i;
-	int		j;
-	char	**rdr;
-
-	rdr = *redirs;
-	i = 0;
-	j = 0;
-	if (hd_counter == 0)
-		free(hd_name);
-	while (hd_counter > 1)
-	{
-		if (rdr[i] == hd_name)
-		{
-			j = i;
-			while (rdr[j] != NULL_TERM)
-			{
-				rdr[j] = rdr[j + 1];
-				j++;
-			}
-			hd_counter--;
-			continue ;
-		}
-		i++;
-	}
-}
-
 int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs,
 		t_minishell *ms)
 {
 	int	status;
-
+	(void)*ms;
 	if (redirects_line == NULL)
 	{
 		*redirs = NULL;
@@ -68,6 +62,7 @@ int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs,
 	free(redirects_line);
 	if (!*redirs)
 		return (200);
+	//status = 0;
 	status = prepare_heredocs(redirs, hd_num, ms);
 	if (status != 0)
 	{
@@ -85,7 +80,7 @@ int	prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms)
 	int		hd_counter;
 	int		status;
 	char	*hd_name;
-
+	(void)*ms;
 	hd_name = get_hd_name(hd_num);
 	if (!hd_name)
 		return (200);
@@ -97,6 +92,7 @@ int	prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms)
 		if (ft_strncmp("<<", (*redirs)[i], 2) == 0)
 		{
 			hd_counter++;
+			//status = 0;
 			status = prepare_heredoc(*redirs + i, hd_name, ms);
 		}
 		i++;

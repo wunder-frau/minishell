@@ -157,9 +157,9 @@ void	init_minishell(t_minishell **ms)
 
 int main(void)
 {
-    t_minishell *shell;
-    init_minishell(&shell);
+	t_minishell *shell;
+	init_minishell(&shell);
 	run_commandline(&shell);
 	free(shell);
-    return 0;
+	return 0;
 }
