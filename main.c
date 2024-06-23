@@ -56,11 +56,11 @@ char	**env_c(char **envp)
 	}
 	i = 0;
 
-	while(i < len && env[i] != NULL)
-	{
-		printf("%s\n", env[i]);
-		i++;
-	}
+	// while(i < len && env[i] != NULL)
+	// {
+	// 	printf("%s\n", env[i]);
+	// 	i++;
+	// }
 	return (env);
 }
 
