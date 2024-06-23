@@ -1,6 +1,10 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# ifndef HEREDOC_NAME
+#  define HEREDOC_NAME "<<.heredoc_"
+# endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -31,6 +35,19 @@ typedef struct s_pipe
 	t_node	*left;
 	t_node	*right;
 }	t_pipe;
+
+typedef struct s_command
+{
+	int		type;
+	t_node	*redir;
+	char	*cmd;
+}	t_command;
+
+typedef struct s_redir
+{
+	int		type;
+	char	**redirs;
+}	t_redir;
 
 typedef struct s_minishell
 {
@@ -80,6 +97,7 @@ enum	e_types
 {
 	T_PIPE,
 	T_COMMAND,
+	T_REDIR,
 };
 
 void	terminate_minishell(t_minishell **ms, int status);
@@ -92,15 +110,38 @@ void	run_commandline(t_minishell **ms);
 /** parse_command_tree.c **/
 bool	get_type(char *str, t_node_info **info);
 int		create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms);
+int		pipe_tree(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms);
+int		parse_redirects(char *str_left, char ***redirs);
+int		add_command(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms);
 void	free_tree(t_node **root);
+void	ft_free_2d_array(void *ptr);
+t_redir *init_t_redir(void);
+t_pipe  *create_pipe_node(void);
+t_command *init_t_command(void);
 
 /** lexer.c **/
 int		lexer(t_node_info **node, char *str, int type, int i);
 int		pipe_block(t_node_info **node, char *str, int type, int i);
 int		set_node_info(t_node_info **info, char *str, int point, int type);
+int		set_node_info_command(t_node_info **info, char *str, int type);
+int		set_node_cmd_simple(t_node_info **info, char *str, int type);
 int		round_brackets_check(char *str, int point);
 void	check_if_inside_quotes(char *str, int *i, int *quote_type);
 int		check_symbol_pairing(char *str, int point, int symbol);
 bool	create_node(t_node_info *info, t_node **root);
+int		redir_search(char *str);
+
+/** lexer_utils.c **/
+int	modificate_str_command_without_br(char *str, char **redir, int i, int j);
+
+/** prepare_redirects.c **/
+// void	print_err_msg(char *cmd, char *msg);
+// int		prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
+// int		prepare_heredoc(char **redir, char *hd_name, t_minishell *ms);
+// void	remove_hd_duplicates(char ***redirs, char *hd_name, int hd_counter);
+// void	perror_err_msg(char *cmd, char *arg);
+// int     prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms);
+// char    *get_hd_name(int *hd_num);
+// void    remove_hd_files(int *hd_num);
 
 #endif

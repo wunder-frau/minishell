@@ -1,5 +1,5 @@
 NAME = minishell
-MINISHELL_SRC = lexer.c main.c run_commandline.c parse_command_tree.c
+MINISHELL_SRC = lexer_utils.c lexer.c main.c run_commandline.c parse_command_tree.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths

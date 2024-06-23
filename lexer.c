@@ -41,6 +41,30 @@ void	check_if_inside_quotes(char *str, int *i, int *quote_type)
 		*quote_type = D_QUO;
 }
 
+int	redir_search(char *str)
+{
+	int	i;
+	int	quote_type;
+	int	key;
+
+	i = 0;
+	quote_type = 0;
+	key = 0;
+	while (str[i] != NULL_TERM)
+	{
+		check_if_inside_quotes(str, &i, &quote_type);
+		if (!quote_type)
+		{
+			if (str[i] == REDIR_L || str[i] == REDIR_R)
+				key++;
+			i++;
+		}
+		else
+			i++;
+	}
+	return (key > 0);
+}
+
 int	round_brackets_check(char *str, int point)
 {
 	int	i;
@@ -119,6 +143,42 @@ int set_node_info(t_node_info **info, char *str, int point, int type)
 
 //     return (1);
 // }
+
+int	set_node_info_command(t_node_info **info, char *str, int type)
+{
+	t_node_info	*node_info;
+	char		*redir;
+	int			status;
+
+	node_info = ft_calloc(1, sizeof(t_node_info));
+	if (!node_info)
+		return (-1);
+	status = modificate_str_command_without_br(str, &redir, 0, 0);
+	if (status == -1)
+	{
+		free(node_info);
+		return (-1);
+	}
+	node_info->str_left = redir;
+	node_info->str_right = str;
+	node_info->type = type;
+	*info = node_info;
+	return (1);
+}
+
+int	set_node_cmd_simple(t_node_info **info, char *str, int type)
+{
+	t_node_info	*node_info;
+
+	node_info = ft_calloc(1, sizeof(t_node_info));
+	if (!node_info)
+		return (-1);
+	node_info->str_left = NULL;
+	node_info->str_right = str;
+	node_info->type = type;
+	*info = node_info;
+	return (1);
+}
 
 int check_symbol_pairing(char *str, int point, int symbol)
 {
@@ -203,38 +263,53 @@ int pipe_block(t_node_info **node, char *str, int type, int i)
 //     return (0);
 // }
 
+int	command_without_bracket_block(t_node_info **node, char *str, int type)
+{
+	(void)type;
+	// if (redir_search(str))
+	// 	return (set_node_info_command(node, str, type));
+	// else
+		return (set_node_cmd_simple(node, str, T_COMMAND));
+	//return (0);
+}
+
 int lexer(t_node_info **node, char *str, int type, int i)
 {
-    int status;
+	int status;
 
-    printf("Entering lexer with type=%d, i=%d, str=%s\n", type, i, str);
+	printf("Entering lexer with type=%d, i=%d, str=%s\n", type, i, str);
 
-    while (i >= 0)
-    {
-        if (type == T_PIPE)
-        {
-            printf("Calling pipe_block with i=%d\n", i);
-            status = pipe_block(node, str, type, i);
-        }
-        else 
-        {
-            printf("Unexpected type: %d\n", type);
-            status = -1;
-        }
+	while (i >= 0)
+	{
+		if (type == T_PIPE)
+		{
+			printf("Calling pipe_block with i=%d\n", i);
+			status = pipe_block(node, str, type, i);
+		}
+		else if (type == T_COMMAND)
+		{
+			printf("Calling command_without_bracket_block with i=%d\n", i);
+			status = command_without_bracket_block(node, str, type);
+		}
+		else 
+		{
+			printf("Unexpected type: %d\n", type);
+			status = -1;
+		}
 
-        if (status > 0)
-        {
-            printf("lexer returning with status=%d\n", status);
-            return (status);
-        }
-        else if (status < 0)
-        {
-            printf("lexer encountered an error with status=%d\n", status);
-            return (-1);
-        }
+		if (status > 0)
+		{
+			printf("lexer returning with status=%d\n", status);
+			return (status);
+		}
+		else if (status < 0)
+		{
+			printf("lexer encountered an error with status=%d\n", status);
+			return (-1);
+		}
 
-        i--;
-    }
+		i--;
+	}
 
     printf("Recursive call: lexer(node, str, type + 1, ft_strlen(str) - 1)\n");
     return (lexer(node, str, type + 1, ft_strlen(str) - 1));
