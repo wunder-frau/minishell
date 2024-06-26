@@ -20,7 +20,10 @@ int check_if_executable(char *cmd)
 
     res = access(cmd, X_OK | F_OK);
     if (res == 0)
+    {
+        printf("Executable\n");
         return (1);
+    }
     return (0);
 }
 
@@ -75,7 +78,6 @@ t_hmap **init_hmap(char **env)
     int j;
     int i;
 
-	hashmap = NULL;
     hashmap = (t_hmap **)malloc(sizeof(t_hmap *));
     if (!hashmap)
         exit(EXIT_FAILURE);
@@ -133,15 +135,15 @@ static void get_paths(t_minishell *shell, t_cmd_data *cmd_data)
     char *paths_string;
 
     if (!shell)
-	{
-		perror("shell");
-		exit(EXIT_FAILURE);
-	}
-	if (!cmd_data)
-	{
-		perror("cmd_data");
-		exit(EXIT_FAILURE);
-	}
+    {
+        perror("shell");
+        exit(EXIT_FAILURE);
+    }
+    if (!cmd_data)
+    {
+        perror("cmd_data");
+        exit(EXIT_FAILURE);
+    }
     paths_string = return_value_hash(*(cmd_data->hashmap), "PATH");
     if (!paths_string)
     {
@@ -149,7 +151,7 @@ static void get_paths(t_minishell *shell, t_cmd_data *cmd_data)
         cmd_data->cmd_paths = NULL;
         return;
     }
-    printf("Retrieved PATH: %s\n", paths_string); // Debugging print
+    // printf("Retrieved PATH: %s\n", paths_string); // Debugging print
     cmd_data->cmd_paths = ft_split(paths_string, ':');
     if (!cmd_data->cmd_paths)
     {
@@ -174,36 +176,74 @@ char *get_cmd_path(char **cmd_paths, char *cmd)
         free(temp_path);
         if (!cmd_path)
             return (NULL);
-		printf("Trying path: %s\n", cmd_path); // Debugging print
+        printf("Trying path: %s\n", cmd_path); // Debugging print
         if (check_if_executable(cmd_path) == 1)
+        {
             return (cmd_path);
+        }
         free(cmd_path);
         i++;
     }
     return (NULL);
 }
 
-void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
-{
-    get_paths(shell, cmd_data);
-    if (cmd_data->cmd_paths)
-    {
-        cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
-        printf("cmd_data->cmd_path: %s\n", cmd_data->cmd_path);
-        if (!cmd_data->cmd_path)
-        {
-            printf("Command not found: %s\n", argv[0]);
-            shell->exit_status = 127;
-            return;
-        }
+char **convert_hashmap_to_env_array(t_hmap *hashmap) {
+    int count = 0;
+    t_hmap *current = hashmap;
+
+    // Count the number of environment variables
+    while (current) {
+        count++;
+        current = current->next;
     }
-    if (is_builtin(argv[0]) == 1)
-        exec_builtin(shell, argv);
-    else if (execve(cmd_data->cmd_path, argv, shell->env) == -1)
-    {
-        perror("execve");
+
+    // Allocate memory for the environment array
+    char **env_array = (char **)malloc((count + 1) * sizeof(char *));
+    if (!env_array) {
+        perror("malloc");
         exit(EXIT_FAILURE);
     }
+
+    // Populate the environment array
+    current = hashmap;
+    int i = 0;
+    while (current) {
+        // Create the "KEY=VALUE" string
+        size_t len = ft_strlen(current->key) + ft_strlen(current->value) + 2; // +2 for '=' and '\0'
+        env_array[i] = (char *)malloc(len * sizeof(char));
+        if (!env_array[i]) {
+            perror("malloc");
+            exit(EXIT_FAILURE);
+        }
+        snprintf(env_array[i], len, "%s=%s", current->key, current->value);
+        i++;
+        current = current->next;
+    }
+
+    // NULL terminate the environment array
+    env_array[count] = NULL;
+
+    return env_array;
+}
+
+void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
+{
+	get_paths(shell, cmd_data);
+	if (cmd_data->cmd_paths)
+	{
+		cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
+		if (!cmd_data->cmd_path)
+		{
+			printf("Command not found: %s\n", argv[0]);
+			shell->exit_status = 127;
+			return;
+		}
+	}
+	if (execve(cmd_data->cmd_path, argv, convert_hashmap_to_env_array(*(shell->hashmap))) == -1)
+	{
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
 }
 
 void init_minishell(t_minishell *shell, char **envp, t_cmd_data *cmd_data)
@@ -215,10 +255,17 @@ void init_minishell(t_minishell *shell, char **envp, t_cmd_data *cmd_data)
     cmd_data->cmd_line = NULL;
     cmd_data->cmd_paths = NULL;
     cmd_data->cmd_path = NULL;
-    cmd_data->hashmap = init_hmap(envp);
 
-    shell->env = envp;
-    shell->pwd = getcwd(NULL, 0);
+    cmd_data->hashmap = init_hmap(envp);
+    shell->hashmap = (t_hmap **)malloc(sizeof(t_hmap *));
+    if (!shell->hashmap)
+    {
+        perror("Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    *(shell->hashmap) = *(cmd_data->hashmap);
+
+    shell->pwd = NULL;
     shell->oldpwd = NULL;
     shell->history = NULL;
     shell->history_path = NULL;
@@ -227,6 +274,7 @@ void init_minishell(t_minishell *shell, char **envp, t_cmd_data *cmd_data)
     shell->is_parent = 1;
     shell->is_oldpwd_unset = 1;
     shell->fd_output = 1;
+    shell->cmd_data = cmd_data;
     while (1)
     {
         ft_readline(&cmd_data->cmd_line, "minishell> ");
@@ -239,36 +287,50 @@ void init_minishell(t_minishell *shell, char **envp, t_cmd_data *cmd_data)
             }
             else
             {
+                // printf("IN WHILE(1) shell->hashmap PWD with ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
                 argv = ft_split(cmd_data->cmd_line, ' ');
                 if (!argv)
                 {
                     free(cmd_data->cmd_line);
                     continue;
                 }
-                printf("argv[0]: %s\n", argv[0]);
-                pid_t pid = fork();
-                if (pid == 0)
-                {
-                    // Child process
-                    execution(shell, argv, cmd_data);
-                    exit(shell->exit_status);
-                }
-                else if (pid > 0)
-                {
-                    // Parent process
-                    waitpid(pid, &status, 0);
-                    printf("cmd_data->cmd_path: %s\n", cmd_data->cmd_path);
-                }
-                else
-                {
-                    // Fork failed
-                    perror("fork");
-                }
-                //free(cmd_data->cmd_path);
+				if (is_builtin(argv[0]) == 1)
+    			{
+      				printf("Executing builtin: %s\n", argv[0]);
+        			exec_builtin(shell, argv);
+				}
+				else
+				{
+					pid_t pid = fork();
+					if (pid == 0)
+					{
+						// Child process
+						execution(shell, argv, cmd_data);
+						printf("child.shell->pwd: %s\n", shell->pwd);
+						// printf("IN CHILD PROCESS shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
+						exit(shell->exit_status);
+					}
+					else if (pid > 0)
+					{
+						// Parent process
+						waitpid(pid, &status, 0);
+						printf("parent.shell->pwd: %s\n", shell->pwd);
+						// printf("IN PARENT shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
+						//update_shell_hashmap(shell, cmd_data);
+						// printf("IN PARENT after update shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
+					}
+					else
+					{
+						// Fork failed
+						perror("fork");
+					}
+				}
                 i = 0;
                 while (argv[i])
                     free(argv[i++]);
                 free(argv);
+				printf("end.shell->pwd: %s\n", shell->pwd);
+                // printf("IN PARENT shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
                 add_history(cmd_data->cmd_line);
                 free(cmd_data->cmd_line);
             }
