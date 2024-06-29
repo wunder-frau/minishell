@@ -25,3 +25,20 @@ void	perror_err_msg(char *cmd, char *arg)
 	perror(arg);
 	free(arg);
 }
+
+void	print_arg_err_msg(char *cmd, char *arg, char *msg)
+{
+	cmd = ft_strjoin("\033[0;31me-bash: \033[0;0m", cmd);
+	if (!cmd)
+		return ;
+	arg = ft_strjoin(cmd, arg);
+	free(cmd);
+	if (!arg)
+		return ;
+	msg = ft_strjoin(arg, msg);
+	free(arg);
+	if (!msg)
+		return ;
+	ft_putstr_fd(msg, STDERR_FILENO);
+	free(msg);
+}

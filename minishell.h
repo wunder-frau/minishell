@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -228,5 +229,18 @@ int	shlvl_init(char ***envp);
 void	free_arr_2d(void *ptr);
 void	free_minishell(t_minishell *ms);
 void	free_ast(t_node **root);
+
+
+int	execution_builtin(char **arr, t_minishell *ms, int cmd_type);
+int	find_executable(char **command, char **paths);
+int	locate_command(char	**command, char	**envp);
+int	is_builtin(char *cmd);
+int	run_builtin(char **command, char **redir, t_minishell *ms, int cmd_type);
+int	run_builtin_without_redir(char **command, t_minishell *ms, int cmd_type);
+int	execution_builtin_redir(char **command, char **redir, t_minishell *ms, int cmd_type);
+int	copy_std_fd(int *in_fd, int *out_fd, char *command);
+void	return_std_fd(int *in_fd, int *out_fd, int *status, char *command);
+void	run_pwd(char **arr, t_minishell *ms);
+void	print_arg_err_msg(char *cmd, char *arg, char *msg);
 
 #endif
