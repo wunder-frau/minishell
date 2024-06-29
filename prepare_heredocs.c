@@ -8,25 +8,15 @@ static void	handle_heredoc_line(int fd, char *line, t_minishell *ms,
 int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
 {
 	int		status;
-	pid_t	pid;
 	int		fd;
 
 	remove_spaces_and_quotes_hd(*limiter + 2);
-	pid = fork();
-	if (pid == -1)
-		return (FORK_FAILURE);
-	if (pid == 0)
-	{
-		// signal_interceptor(HEREDOC);
-		// toggler(IMPLICIT);
 		fd = open(hd_name + 2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd != -1)
 			heredoc(*limiter + 2, fd, ms);
 		exit(GENERIC_ERROR);
-	}
 	free(*limiter);
 	*limiter = hd_name;
-	status = wait_children(&pid, 1);
 	return (status);
 }
 
@@ -34,7 +24,7 @@ void	remove_spaces_and_quotes_hd(char *hd)
 {
 	int	i;
 
-	while (ft_isspace(*hd))
+	while (ft_is_space(*hd))
 	{
 		i = 0;
 		while (hd[i] != NULL_TERM)
@@ -104,7 +94,6 @@ static void	handle_heredoc_line(int fd, char *line, t_minishell *ms,
 	int	status;
   (void)*ms;
 	status = 0;
-	//status = dollar_sign_expansion(&line, ms->env, ms->exit_status);
 	if (status == 0)
 	{
 		ft_putendl_fd(line, fd);

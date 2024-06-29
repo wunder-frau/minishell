@@ -1,46 +1,39 @@
 #include "minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	while(*s1 && *s2 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
-	return(*s1 - *s2);
-}
-
-void ft_readline(char **cmdline, char *prompt)
+void	ft_readline(char **cmdline, char *prompt)
 {
 	*cmdline = readline(prompt);
 }
 
-void run_commandline(t_minishell **ms) {
-    char *cmdline = NULL;
-    int hd;
+void	run_commandline(t_minishell **ms)
+{
+	char *cmdline = NULL;
+	int hd;
 
-    while (1) {
-        ft_readline(&cmdline, "minishell> ");
+	while (1) {
+		ft_readline(&cmdline, "minishell> ");
 
-        if (cmdline == NULL) {
-            continue;
-        }
-
-        if (ft_strlen(cmdline) == 0) {
-            free(cmdline);
-            continue;
-        }
-
-        if (ft_strcmp(cmdline, "exit") == 0) {
-            free(cmdline);
-            break;
-        }
-
-        add_history(cmdline);
-        hd = 0;
-        (*ms)->root = NULL;
-        create_tree(cmdline, &((*ms)->root), &hd, *ms);
-        free(cmdline);
-        cmdline = NULL;
-    }
+		if (cmdline == NULL)
+			continue;
+		if (ft_strlen(cmdline) == 0)
+		{
+			free(cmdline);
+			continue;
+		}
+		if (ft_strcmp(cmdline, "exit") == 0)
+		{
+			free(cmdline);
+			break;
+		}
+		add_history(cmdline);
+		hd = 0;
+		(*ms)->root = NULL;
+		printf("Debug: Creating command tree\n");
+		build_ast(cmdline, &((*ms)->root), &hd, *ms);
+		printf("Debug: Traversing command tree\n");
+		traverse_tree(&((*ms)->root), *ms);
+		printf("Debug: Command executed, freeing cmdline\n");
+		free(cmdline);
+		cmdline = NULL;
+	}
 }

@@ -1,29 +1,23 @@
 #include "minishell.h"
 
-// char	*command_part(char *str, int *i, int quote_type)
-// {
-// 	while (str[*i] != NULL_TERM)
-// 	{
-// 		check_if_inside_quotes(str, i, &quote_type);
-// 		if (!quote_type)
-// 		{
-// 			if (str[*i] == O_ROUND)
-// 			{
-// 				while (str[*i] != C_ROUND)
-// 					(*i)++;
-// 				if (str[*i] == C_ROUND)
-// 				{
-// 					str[(*i)++] = NULL_TERM;
-// 					return (str);
-// 				}
-// 			}
-// 			(*i)++;
-// 		}
-// 		else
-// 			(*i)++;
-// 	}
-// 	return (NULL);
-// }
+void	quote_tracker(char *str, int *i, int *quote_type)
+{
+	char cur_char = str[*i];
+
+	if ((cur_char == S_QUO && *quote_type == S_QUO)
+	|| (cur_char == D_QUO && *quote_type == D_QUO))
+	{
+		printf("inside____________quotes");
+		printf("\n");
+		*quote_type = 0;
+	}
+	else if (cur_char == S_QUO || cur_char == D_QUO)
+	{
+		printf("out_____of______quotes");
+		printf("\n");
+		*quote_type = cur_char;
+	}
+}
 
 static void	modificate_str_utils(char *str, char *r, int *i, int *j)
 {
@@ -33,27 +27,24 @@ static void	modificate_str_utils(char *str, char *r, int *i, int *j)
 	(*i)++;
 }
 
-static void	fill_redir(char *str, char **redir, int *i, int *j)
+static int	is_special_char(char c)
 {
-	int	q_flag;
+	return (c == REDIR_L || c == REDIR_R || c == SPA || c == HT);
+}
 
-	q_flag = 0;
-	while ((str[*i] == REDIR_L || str[*i] == REDIR_R
-			|| str[*i] == SPA || str[*i] == HT) && str[*i] != NULL_TERM)
+static void	rep_redir_with_sep(char *str, char **redir, int *i, int *j)
+{
+	int q_flag = 0;
+
+	while (is_special_char(str[*i]) && str[*i] != NULL_TERM)
 		modificate_str_utils(str, *redir, i, j);
 	while (str[*i] != NULL_TERM)
 	{
-		if ((str[*i] == S_QUO || str[*i] == D_QUO) && q_flag == 0)
-			q_flag = str[*i];
-		else if (str[*i] == S_QUO && q_flag == S_QUO)
-			q_flag = 0;
-		else if (str[*i] == D_QUO && q_flag == D_QUO)
-			q_flag = 0;
-		if (q_flag == 0 && (str[*i] == SPA || str[*i] == REDIR_L
-				|| str[*i] == REDIR_R || str[*i] == HT || str[*i] == NULL_TERM))
-			break ;
+		quote_tracker(str, i, &q_flag);
+		if (q_flag == 0 && (is_special_char(str[*i]) || str[*i] == NULL_TERM))
+				break;
 		else
-			modificate_str_utils(str, *redir, i, j);
+				modificate_str_utils(str, *redir, i, j);
 	}
 	(*redir)[(*j)++] = SEPARATOR;
 	(*i)--;
@@ -72,14 +63,9 @@ int	modificate_str_command_without_br(char *str, char **redir, int i,
 		return (-1);
 	while (str[i] != NULL_TERM)
 	{
-		if ((str[i] == S_QUO || str[i] == D_QUO) && q_flag == 0)
-			q_flag = str[i];
-		else if (str[i] == S_QUO && q_flag == S_QUO)
-			q_flag = 0;
-		else if (str[i] == D_QUO && q_flag == D_QUO)
-			q_flag = 0;
+		quote_tracker(str, &i, &q_flag);
 		if (q_flag == 0 && (str[i] == REDIR_L || str[i] == REDIR_R))
-			fill_redir(str, redir, &i, &j);
+			rep_redir_with_sep(str, redir, &i, &j);
 		if (str[i] == NULL_TERM)
 			break ;
 		i++;

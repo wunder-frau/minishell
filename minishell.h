@@ -16,20 +16,6 @@
 
 #include "libft_/libft.h"
 
-enum	e_signals
-{
-	DEFAULT,
-	INTERACTIVE,
-	HEREDOC,
-	IGNORE,
-};
-
-enum	e_signals_echo
-{
-	IMPLICIT,
-	EXPLICIT,
-};
-
 enum	e_exit_status
 {
 	SUCCESS,
@@ -56,12 +42,12 @@ typedef struct s_node
 	struct s_node	*right;
 }	t_node;
 
-typedef struct s_node_info
+typedef struct s_parsed_data
 {
 	int		type;
-	char	*str_left;
-	char	*str_right;
-}	t_node_info;
+	char	*block_left;
+	char	*block_right;
+}	t_parsed_data;
 
 typedef struct s_pipe
 {
@@ -134,38 +120,63 @@ enum	e_types
 	T_REDIR,
 };
 
-void	terminate_minishell(t_minishell **ms, int status);
+enum	e_builtins
+{
+	NOT_BUILTIN,
+	C_EMPTY,
+	C_BLANK,
+	C_ECHO,
+	C_CD,
+	C_PWD,
+	C_EXPORT,
+	C_UNSET,
+	C_ENV,
+	C_EXIT,
+};
 
+enum	e_builtins_len
+{
+	CD_LEN = 3,
+	ENV_LEN = 4,
+	PWD_LEN = 4,
+	ECHO_LEN = 5,
+	EXIT_LEN = 5,
+	UNSET_LEN = 6,
+	EXPORT_LEN = 7,
+};
+
+/** TO DELETE **/
+void print_node(t_node *node);
+
+void			rl_replace_line(const char *text, int clear_undo);
 /** run_commanline.c **/
-int	ft_strcmp(const char *s1, const char *s2);
 void	ft_readline(char **cmdline, char *prompt);
-int		get_cmdline(char **cmdline, t_minishell **ms);
 void	run_commandline(t_minishell **ms);
+char	**dup_envp(char **envp);
+void	terminate_minishell(t_minishell **ms, int status);
+void	init_minishell(t_minishell **ms);
 
-/** parse_command_tree.c **/
-bool	get_type(char *str, t_node_info **info);
-int		create_tree(char *str, t_node **root, int *hd_num, t_minishell *ms);
-int		pipe_tree(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms);
+/** parse_ast.c **/
+bool	parse_ast(char *str, t_parsed_data **info);
+int		build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms);
+int		assemble_ast_pipe(t_parsed_data *info, t_node **root, int *hd_num, t_minishell *ms);
 int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
-int		add_command(t_node_info *info, t_node **root, int *hd_num, t_minishell *ms);
-void	free_tree(t_node **root);
-void	ft_free_2d_array(void *ptr);
-t_redir *init_t_redir(void);
-t_pipe  *create_pipe_node(void);
-t_command *init_t_command(void);
+int		assemble_ast_command(t_parsed_data *info, t_node **root, int *hd_num, t_minishell *ms);
+t_redir *init_node_redir(void);
+t_pipe  *init_node_pipe(void);
+t_command *init_node_cmd(void);
 
 /** lexer.c **/
-int		ft_isspace(char c);
-int		lexer(t_node_info **node, char *str, int type, int i);
-int		pipe_block(t_node_info **node, char *str, int type, int i);
-int		set_node_info(t_node_info **info, char *str, int point, int type);
-int		set_node_info_command(t_node_info **info, char *str, int type);
-int		set_node_cmd_simple(t_node_info **info, char *str, int type);
+int		lexer(t_parsed_data **node, char *str, int type, int i);
+int		block_pipe(t_parsed_data **node, char *str, int type, int i);
+int		set_node_data_pipe(t_parsed_data **info, char *str, int point, int type);
+int		set_node_cmd_redirects(t_parsed_data **info, char *str, int type);
+int		set_node_cmd(t_parsed_data **info, char *str, int type);
 int		round_brackets_check(char *str, int point);
-void	check_if_inside_quotes(char *str, int *i, int *quote_type);
+void	quote_tracker(char *str, int *i, int *is_str);
 int		check_symbol_pairing(char *str, int point, int symbol);
-bool	create_node(t_node_info *info, t_node **root);
-int		redir_search(char *str);
+bool	init_node(t_parsed_data *info, t_node **root);
+bool		check_redirection(char *str);
 
 /** lexer_utils.c **/
 int	modificate_str_command_without_br(char *str, char **redir, int i, int j);
@@ -183,17 +194,12 @@ int		prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms);
 void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter);
 int		prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms);
 
-/** wait_children.c **/
-int		wait_children(pid_t *pids, int num);
-void	print_msg(int status);
-
 /** utils.c **/
 void	remove_quotes(char *str, int i, int j);
 void	remove_quotes_arr(char **arr, int i);
 bool	is_blank_string(char *str);
-char	**wrapper_ft_split_with_quotes(char *str);
+char	**split_handle_quotes_and_spaces(char *str);
 int		parse_cmd(char *cmd, char ***res, t_minishell *ms);
-size_t	ft_arrlen(void **arr);
 
 /** redirects_apply.c **/
 int	apply_append(char *redir, t_minishell *ms, int *out);
@@ -203,5 +209,24 @@ int	apply_redir_out(char *redir, t_minishell *ms, int *out);
 int	apply_redirect(char *redir, t_minishell *ms, int *in, int *out);
 int	replace_fd(int in, int out);
 int	apply_redirects(char **redirs, t_minishell *ms);
+
+/** traverse_command.c **/
+int	traverse_command(char *cmd, char **redir, t_minishell *ms);
+int	run_cmd_with_redir(char **command, char **redir, t_minishell *ms);
+int	traverse_tree(t_node **root, t_minishell *ms);
+
+/** shlvl.c **/
+int	add_to_env_list_new_env(char **envp, char ***result, int *i, int *len);
+void	shlvl_warning(int number);
+int	env_var(char **envp, char *var, int i, int j);
+int	check_for_non_digits(char *str);
+int	shlvl_init_when_shlvl_exists(int position, char ***envp, int number, char *shlvl);
+int	var_init_when_no_var_exists(char ***envp, int i, char *var);
+int	shlvl_init(char ***envp);
+
+/** utils_free.c **/
+void	free_arr_2d(void *ptr);
+void	free_minishell(t_minishell *ms);
+void	free_ast(t_node **root);
 
 #endif
