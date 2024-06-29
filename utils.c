@@ -24,37 +24,67 @@
 
 void remove_quotes(char *str, int i, int j)
 {
-	int len;
-	int inside_quotes;
+	int	len;
+	int	inside_quotes;
 
 	len = ft_strlen(str);
 	inside_quotes = 0;
-
 	while (i < len)
 	{
-		quote_tracker(str, &i, &inside_quotes);
-		if ((str[i] == S_QUO || str[i] == D_QUO) && inside_quotes == 0)
-		{
+		if ((str[i] == S_QUO || str[i] == D_QUO) && !inside_quotes)
 			inside_quotes = str[i];
-			printf("Entering quote: '%c'\n", str[i]);
-		}
-		else if (str[i] == inside_quotes)
-		{
+		else if (str[i] == S_QUO && inside_quotes == S_QUO)
 			inside_quotes = 0;
-			printf("Exiting quote: '%c'\n", str[i]);
-		}
+		else if (str[i] == D_QUO && inside_quotes == D_QUO)
+			inside_quotes = 0;
+		else if (str[i] == SPA && !inside_quotes)
+			break ;
 		else
-		{
 			str[j++] = str[i];
-			printf("✨ Copied character '%c' to position %d\n", str[i], j - 1);
-		}
-
 		i++;
 	}
 	while (i < len)
-			str[j++] = str[i++];
-
+		str[j++] = str[i++];
 	str[j] = NULL_TERM;
+	printf("🔚 Resulting string after removing quotes: [%s]\n", str);
+
+	// int len;
+	// int inside_quotes;
+
+	// len = ft_strlen(str);
+	// inside_quotes = 0;
+
+	// while (i < len)
+	// {
+	// 	quote_tracker(str, &i, &inside_quotes);
+	// 	if (str[i] == SPA && !inside_quotes)
+	// 	{
+	// 		printf("llllllllll________________%c", str[i + 1]);
+	// 		break ;
+	// 					printf("suuuuukkka________________%c", str[i]);
+	// 	}
+	// 	else if ((str[i] == S_QUO || str[i] == D_QUO) && inside_quotes == 0)
+	// 	{
+	// 		inside_quotes = str[i];
+	// 		printf("Entering quote: '%c'\n", str[i]);
+	// 	}
+	// 	else if (str[i] == inside_quotes)
+	// 	{
+	// 		inside_quotes = 0;
+	// 		printf("Exiting quote: '%c'\n", str[i]);
+	// 	}
+	// 	else
+	// 	{
+	// 		str[j++] = str[i];
+	// 		printf("✨ Copied character '%c' to position %d\n", str[i], j - 1);
+	// 	}
+
+	// 	i++;
+	// }
+	// while (i < len)
+	// 		str[j++] = str[i++];
+
+	// str[j] = NULL_TERM;
 	printf("🔚 Resulting string after removing quotes: %s\n", str);
 }
 
