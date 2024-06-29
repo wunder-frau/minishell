@@ -32,6 +32,7 @@ void remove_quotes(char *str, int i, int j)
 
 	while (i < len)
 	{
+		quote_tracker(str, &i, &inside_quotes);
 		if ((str[i] == S_QUO || str[i] == D_QUO) && inside_quotes == 0)
 		{
 			inside_quotes = str[i];
