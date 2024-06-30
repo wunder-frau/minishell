@@ -89,6 +89,7 @@ typedef struct s_cmd_data
 
 typedef struct s_minishell
 {
+	char **command;
 	t_hmap **hashmap;
 //	char **env;
 	char *pwd;
@@ -249,13 +250,13 @@ void	free_minishell(t_minishell *ms);
 void	free_ast(t_node **root);
 
 
-int	execution_builtin(char **arr, t_minishell *ms, int cmd_type);
+int	exec_builtin(t_minishell *shell);
 int	find_executable(char **command, char **paths);
 int	locate_command(char	**command, char	**envp);
 int	is_builtin(char *cmd);
-int	run_builtin(char **command, char **redir, t_minishell *ms, int cmd_type);
+int	run_builtin(char **redir, t_minishell *ms);
 int	run_builtin_without_redir(char **command, t_minishell *ms, int cmd_type);
-int	execution_builtin_redir(char **command, char **redir, t_minishell *ms, int cmd_type);
+int	exec_builtin_redir(char **command, char **redir, t_minishell *ms);
 int	copy_std_fd(int *in_fd, int *out_fd, char *command);
 void	return_std_fd(int *in_fd, int *out_fd, int *status, char *command);
 void	run_pwd(char **arr, t_minishell *ms);
@@ -264,5 +265,10 @@ void	print_arg_err_msg(char *cmd, char *arg, char *msg);
 
 t_hmap **init_hmap(char **env);
 void add_new_var(t_hmap **v, char *akey, char *avalue);
+void free_hashmap(t_hmap *hashmap);
+int key_exists(t_hmap *v, char *ekey);
+char *return_value_hash(t_hmap *v, char *key);
+char *ft_get_env(t_hmap *hashmap, const char *key);
+void ft_pwd(t_minishell *shell);
 
 #endif

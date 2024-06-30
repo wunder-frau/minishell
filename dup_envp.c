@@ -1,5 +1,50 @@
 #include "minishell.h"
 
+void free_hashmap(t_hmap *hashmap)
+{
+    t_hmap *current;
+    t_hmap *next;
+
+    current = hashmap;
+    while (current)
+    {
+        next = current->next;
+        free(current->key);
+        free(current->value);
+        free(current);
+        current = next;
+    }
+}
+
+int key_exists(t_hmap *v, char *ekey)
+{
+    while (v)
+    {
+        if (ft_strcmp(v->key, ekey) == 0)
+            return (1);
+        v = v->next;
+    }
+    return (0);
+}
+
+char *return_value_hash(t_hmap *v, char *key)
+{
+    if (key_exists(v, key) == 1)
+    {
+        while (v)
+        {
+            if (ft_strcmp(v->key, key) == 0)
+            {
+                printf("Found key: %s, value: %s\n", key, v->value);
+                return (v->value);
+            }
+            v = v->next;
+        }
+    }
+    printf("Key not found: %s\n", key);
+    return (NULL);
+}
+
 static t_hmap *hmap_new(char *akey, char *avalue)
 {
 	t_hmap *node;

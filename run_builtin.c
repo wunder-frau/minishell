@@ -1,18 +1,18 @@
 #include "minishell.h"
 
-int	run_builtin(char **command, char **redir, t_minishell *ms, int cmd_type)
+int	run_builtin(char **redir, t_minishell *ms)
 {
 	int	status;
 
+	status = 0;
 	if (!redir)
-		status = execution_builtin(command, ms, cmd_type);
+		status = exec_builtin(ms);
 	else
-		status = execution_builtin_redir(command, redir, ms, cmd_type);
+		status = exec_builtin_redir(ms->command, redir, ms);
 	return (status);
 }
 
-int	execution_builtin_redir(char **command, char **redir, t_minishell *ms,
-	int cmd_type)
+int	exec_builtin_redir(char **command, char **redir, t_minishell *ms)
 {
 	int	status;
 	int	in_fd;
@@ -22,7 +22,7 @@ int	execution_builtin_redir(char **command, char **redir, t_minishell *ms,
 	if (status == 0)
 		status = apply_redirects(redir, ms);
 	if (status == 0)
-		status = execution_builtin(command, ms, cmd_type);
+		status = exec_builtin(ms);
 	return_std_fd(&in_fd, &out_fd, &status, command[0]);
 	return (status);
 }

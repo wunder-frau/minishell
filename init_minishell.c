@@ -17,6 +17,7 @@ void	init_minishell(t_minishell **ms, char **envp, t_cmd_data *cmd_data)
 		if (!cmd_data->hashmap)
 			status = 200;
 	}
+	(*ms)->hashmap = cmd_data->hashmap;
 		// if (status == 0)
 		// status = shlvl_init(&((*ms)->env));
 	if (status != 0)

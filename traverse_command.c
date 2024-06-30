@@ -6,11 +6,12 @@ int	traverse_command(char *cmd, char **redir, t_minishell *ms)
 	int		status;
 	char **command;
 	status = parse_cmd(cmd, &command, ms);
+	ms->command = command;
 	if (status == 0)
 	{
 		cmd_type = is_builtin(command[0]);
 		if (cmd_type > 0)
-			status = run_builtin(command, redir, ms, cmd_type);
+			status = run_builtin(redir, ms);
 		else
 			status = run_cmd_with_redir(command, redir, ms);
 	}
