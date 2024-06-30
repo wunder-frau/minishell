@@ -16,8 +16,8 @@ void	free_minishell(t_minishell *ms)
 {
 	if (!ms)
 		return ;
-	if (ms->env)
-		free_arr_2d(ms->env);
+	if (ms->hashmap)
+		free_arr_2d(ms->hashmap);
 	if (ms->root)
 		free_ast(&(ms->root));
 	free(ms);

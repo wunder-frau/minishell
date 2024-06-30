@@ -70,9 +70,27 @@ typedef struct s_redir
 	char	**redirs;
 }	t_redir;
 
+typedef struct s_hmap
+{
+    char            *key;
+    char            *value;
+    struct s_hmap   *next;
+} t_hmap;
+
+typedef struct s_cmd_data
+{
+	char *cmd;
+	char **argv;
+	char **cmd_paths;
+	char	*cmd_path;
+	char *cmd_line;
+	t_hmap **hashmap;
+} t_cmd_data;
+
 typedef struct s_minishell
 {
-	char **env;
+	t_hmap **hashmap;
+//	char **env;
 	char *pwd;
 	char *oldpwd;
 	t_list *history;
@@ -155,7 +173,7 @@ void	ft_readline(char **cmdline, char *prompt);
 void	run_commandline(t_minishell **ms);
 char	**dup_envp(char **envp);
 void	terminate_minishell(t_minishell **ms, int status);
-void	init_minishell(t_minishell **ms);
+void	init_minishell(t_minishell **ms, char **envp, t_cmd_data *cmd_data);
 
 /** parse_ast.c **/
 bool	parse_ast(char *str, t_parsed_data **info);
@@ -242,5 +260,9 @@ int	copy_std_fd(int *in_fd, int *out_fd, char *command);
 void	return_std_fd(int *in_fd, int *out_fd, int *status, char *command);
 void	run_pwd(char **arr, t_minishell *ms);
 void	print_arg_err_msg(char *cmd, char *arg, char *msg);
+
+
+t_hmap **init_hmap(char **env);
+void add_new_var(t_hmap **v, char *akey, char *avalue);
 
 #endif

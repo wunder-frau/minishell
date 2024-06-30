@@ -33,7 +33,7 @@ int	run_cmd_with_redir(char **command, char **redir, t_minishell *ms)
 	// 	perror("execvp");
 	// 	exit(EXECVE_FAILURE);
 	// }
-	execve(command[0], command, ms->env);
+	//execve(command[0], command, ms->hashmap);
 	print_err_msg(command[0], ": execve() error occured\n");
 	exit(EXECVE_FAILURE);
 	return (status);

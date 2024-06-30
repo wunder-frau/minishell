@@ -23,8 +23,10 @@ int	execution_builtin(char **cmd, t_minishell *ms, int cmd_type)
 	else
 	{
 		ms->exit_status = SUCCESS;
+		// if (cmd_type == C_CD)
+		// 	run_cd(cmd, ms, 0);
 		if (cmd_type == C_PWD)
-			run_pwd(cmd + 1, ms);
+			run_pwd(cmd, ms);
 	}
 	int i = 0;
 
