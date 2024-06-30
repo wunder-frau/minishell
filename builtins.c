@@ -32,8 +32,8 @@ int	exec_builtin(t_minishell *shell)
 {
 if (ft_strncmp(shell->command[0], "echo", 5) == 0)
 	ft_echo(shell, &shell->command[0]);
-// else if (ft_strncmp(argv[0], "cd", 3) == 0)
-// ft_cd(shell, argv);
+else if (ft_strncmp(shell->command[0], "cd", 3) == 0)
+	ft_cd(shell, &shell->command[0]);
 if (ft_strncmp(shell->command[0], "pwd", 4) == 0)
 {
 ft_pwd(shell);
@@ -50,7 +50,7 @@ else if (ft_strncmp(shell->command[0], "exit", 5) == 0)
 	return shell->exit_status;
 	exit(shell->exit_status);
 }
-	printf("IN EXEC shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
+	//printf("IN EXEC shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
 	return shell->exit_status;
 }
 
