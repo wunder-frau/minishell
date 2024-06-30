@@ -275,5 +275,7 @@ void ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
 void ft_remove_env_hash(t_hmap **hashmap, char *key);
 
 void ft_echo(t_minishell *shell, char **cmd);
+void ft_export(t_minishell *shell, char **argv);
+void ft_unset(t_minishell *shell, char **argv);
 
 #endif

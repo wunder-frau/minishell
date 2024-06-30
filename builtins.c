@@ -38,10 +38,10 @@ if (ft_strncmp(shell->command[0], "pwd", 4) == 0)
 {
 ft_pwd(shell);
 }
-// else if (ft_strncmp(argv[0], "export", 7) == 0)
-// ft_export(shell, argv);
-// else if (ft_strncmp(argv[0], "unset", 6) == 0)
-// ft_unset(shell, argv);
+else if (ft_strncmp(shell->command[0], "export", 7) == 0)
+	ft_export(shell, &shell->command[0]);
+else if (ft_strncmp(shell->command[0], "unset", 6) == 0)
+	ft_unset(shell, &shell->command[0]);
 // else if (ft_strncmp(argv[0], "env", 4) == 0)
 // ft_env(shell);
 else if (ft_strncmp(shell->command[0], "exit", 5) == 0)
