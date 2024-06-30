@@ -23,23 +23,27 @@ int	traverse_command(char *cmd, char **redir, t_minishell *ms)
 int	run_cmd_with_redir(char **command, char **redir, t_minishell *ms)
 {
 	int		status;
-	status = 0;
-	if (redir != NULL)
-		status = apply_redirects(redir, ms);
-	if (status != 0)
-		exit(status);
-	printf("🤪🎉 Executing command___________________________>>>>>>:  %s 🤪🎉\n", command[0]);
-	// if (execvp(command[0], command) == -1)
-	// {
-	// 	perror("execvp");
-	// 	exit(EXECVE_FAILURE);
-	// }
+	pid_t	pid;
 
-	//execve(command[0], command, convert_hashmap(*(ms->hashmap)));
-	printf("BEFORE EXEC\n");
-	execution(ms, &command[0], &ms->cmd_data);
-	print_err_msg(command[0], ": execve() error occured\n");
-	//exit(EXECVE_FAILURE);
+	pid = fork();
+	if (pid == -1)
+		return (FORK_FAILURE);
+	if (pid == 0)
+	{
+		status = 0;
+		if (redir != NULL)
+			status = apply_redirects(redir, ms);
+		if (status != 0)
+			exit(status);
+		printf("🤪🎉 Executing command___________________________>>>>>>:  %s 🤪🎉\n", command[0]);
+
+		execve(command[0], command, convert_hashmap(*(ms->hashmap)));
+		printf("BEFORE EXEC\n");
+		execution(ms, &command[0], &ms->cmd_data);
+		print_err_msg(command[0], ": execve() error occured\n");
+		exit(EXECVE_FAILURE);
+	}
+	status = waitpid(pid, &status, 0);
 	return (status);
 }
 

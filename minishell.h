@@ -288,5 +288,4 @@ int check_if_executable(char *cmd);
 char *get_cmd_path(char **cmd_paths, char *cmd);
 void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
 
-
 #endif
