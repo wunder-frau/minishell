@@ -102,8 +102,6 @@ void	remove_quotes_arr(char **arr, int i)
 
 bool	is_blank_string(char *str)
 {
-	printf("is_blank");
-	printf("\n");
 	if (ft_strlen(str) == 0)
 		return (true);
 	while (ft_is_space(*str))

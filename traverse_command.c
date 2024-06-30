@@ -2,25 +2,23 @@
 
 int	traverse_command(char *cmd, char **redir, t_minishell *ms)
 {
-	int		cmd_type;
 	int		status;
 	char **command;
 	status = parse_cmd(cmd, &command, ms);
 	ms->command = command;
 	if (status == 0)
 	{
-		cmd_type = is_builtin(command[0]);
-		if (cmd_type > 0)
+		if (is_builtin(command[0]))
 			status = run_builtin(redir, ms);
 		else
-			status = run_cmd_with_redir(command, redir, ms);
+			status = run_external_with_redir(command, redir, ms);
 	}
 	ms->exit_status = status;
 	free_arr_2d(command);
 	return (status);
 }
 
-int	run_cmd_with_redir(char **command, char **redir, t_minishell *ms)
+int	run_external_with_redir(char **command, char **redir, t_minishell *ms)
 {
 	int		status;
 	pid_t	pid;

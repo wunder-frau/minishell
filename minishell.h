@@ -93,7 +93,6 @@ typedef struct s_minishell
 	int fd_output;
 	char **command;
 	t_hmap **hashmap;
-//	char **env;
 	char *pwd;
 	char *oldpwd;
 	t_list *history;
@@ -143,30 +142,6 @@ enum	e_types
 	T_REDIR,
 };
 
-enum	e_builtins
-{
-	NOT_BUILTIN,
-	C_EMPTY,
-	C_BLANK,
-	C_ECHO,
-	C_CD,
-	C_PWD,
-	C_EXPORT,
-	C_UNSET,
-	C_ENV,
-	C_EXIT,
-};
-
-enum	e_builtins_len
-{
-	CD_LEN = 3,
-	ENV_LEN = 4,
-	PWD_LEN = 4,
-	ECHO_LEN = 5,
-	EXIT_LEN = 5,
-	UNSET_LEN = 6,
-	EXPORT_LEN = 7,
-};
 
 /** TO DELETE **/
 void print_node(t_node *node);
@@ -235,7 +210,7 @@ int	apply_redirects(char **redirs, t_minishell *ms);
 
 /** traverse_command.c **/
 int	traverse_command(char *cmd, char **redir, t_minishell *ms);
-int	run_cmd_with_redir(char **command, char **redir, t_minishell *ms);
+int	run_external_with_redir(char **command, char **redir, t_minishell *ms);
 int	traverse_tree(t_node **root, t_minishell *ms);
 
 /** shlvl.c **/
@@ -256,7 +231,7 @@ void	free_ast(t_node **root);
 int	exec_builtin(t_minishell *shell);
 int	find_executable(char **command, char **paths);
 int	locate_command(char	**command, char	**envp);
-int	is_builtin(char *cmd);
+bool	is_builtin(char *cmd);
 int	run_builtin(char **redir, t_minishell *ms);
 int	run_builtin_without_redir(char **command, t_minishell *ms, int cmd_type);
 int	exec_builtin_redir(char **command, char **redir, t_minishell *ms);
