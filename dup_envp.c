@@ -1,5 +1,51 @@
 #include "minishell.h"
 
+void ft_add_env_hash(t_hmap **hashmap, char *key, char *value)
+{
+    if (!hashmap || !key)
+        return;
+
+    t_hmap *current =*hashmap;
+    while (current)
+    {
+        if (ft_strcmp(current->key, key) == 0)
+        {
+            free(current->value);
+            current->value = ft_strdup(value);
+            return;
+        }
+        current = current->next;
+    }
+    add_new_var(hashmap, key, value);
+}
+
+void ft_remove_env_hash(t_hmap **hashmap, char *key)
+{
+    if (!hashmap || !key)
+        return;
+
+    t_hmap *current = *hashmap;
+    t_hmap *prev = NULL;
+
+    while (current)
+    {
+        if (ft_strcmp(current->key, key) == 0)
+        {
+            if (prev)
+                prev->next = current->next;
+            else
+                *hashmap = current->next;
+
+            free(current->key);
+            free(current->value);
+            free(current);
+            return;
+        }
+        prev = current;
+        current = current->next;
+    }
+}
+
 void free_hashmap(t_hmap *hashmap)
 {
     t_hmap *current;

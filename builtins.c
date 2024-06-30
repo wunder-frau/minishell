@@ -30,8 +30,8 @@ return (0);
 
 int	exec_builtin(t_minishell *shell)
 {
-// if (ft_strncmp(argv[0], "echo", 5) == 0)
-// ft_echo(shell, argv);
+if (ft_strncmp(shell->command[0], "echo", 5) == 0)
+	ft_echo(shell, &shell->command[0]);
 // else if (ft_strncmp(argv[0], "cd", 3) == 0)
 // ft_cd(shell, argv);
 if (ft_strncmp(shell->command[0], "pwd", 4) == 0)

@@ -17,7 +17,8 @@ MINISHELL_SRC = utils.c \
 								redirect_utils.c \
 								builtins.c \
 								run_builtin.c \
-								pwd.c
+								pwd.c \
+								echo.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths

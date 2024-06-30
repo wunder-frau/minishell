@@ -89,6 +89,7 @@ typedef struct s_cmd_data
 
 typedef struct s_minishell
 {
+	int fd_output;
 	char **command;
 	t_hmap **hashmap;
 //	char **env;
@@ -270,5 +271,9 @@ int key_exists(t_hmap *v, char *ekey);
 char *return_value_hash(t_hmap *v, char *key);
 char *ft_get_env(t_hmap *hashmap, const char *key);
 void ft_pwd(t_minishell *shell);
+void ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
+void ft_remove_env_hash(t_hmap **hashmap, char *key);
+
+void ft_echo(t_minishell *shell, char **cmd);
 
 #endif
