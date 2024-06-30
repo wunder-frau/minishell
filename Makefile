@@ -21,7 +21,8 @@ MINISHELL_SRC = utils.c \
 								echo.c \
 								export_unset.c \
 								env.c \
-								cd.c
+								cd.c \
+								pipe_execve.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths

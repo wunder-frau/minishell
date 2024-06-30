@@ -102,6 +102,7 @@ typedef struct s_minishell
 	t_node *root;
 	bool is_parent;
 	bool is_oldpwd_unset;
+	t_cmd_data	cmd_data;
 } t_minishell;
 
 enum	e_characters
@@ -280,5 +281,12 @@ void ft_export(t_minishell *shell, char **argv);
 void ft_unset(t_minishell *shell, char **argv);
 void ft_env(t_minishell *shell);
 void ft_cd(t_minishell *shell, char **argv);
+
+char **convert_hashmap(t_hmap *hashmap);
+int check_if_executable(char *cmd);
+//static void get_paths(t_minishell *shell, t_cmd_data *cmd_data);
+char *get_cmd_path(char **cmd_paths, char *cmd);
+void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
+
 
 #endif
