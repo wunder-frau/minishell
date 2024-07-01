@@ -40,19 +40,19 @@ t_redir	*init_node_redir(void)
 	return (node);
 }
 
-bool	init_node(t_parsed_data *info, t_node **root)
+bool	init_node(t_parsed_data *data, t_node **root)
 {
 	t_node	*node;
 
-	printf("Entering init_node with info->type=%d\n", info->type);
+	printf("Entering init_node with data->type=%d\n", data->type);
 	node = NULL;
 
-	if (info->type == T_PIPE)
+	if (data->type == T_PIPE)
 	{
 		node = (t_node *)init_node_pipe();
 
 	}
-	else if (info->type == T_COMMAND)
+	else if (data->type == T_COMMAND)
 	{
 		node = (t_node *)init_node_cmd();
 			print_node(node);
@@ -60,8 +60,8 @@ bool	init_node(t_parsed_data *info, t_node **root)
 	}
 	if (node == NULL)
 	{
-		printf("Node creation failed, freeing info\n");
-		free(info);
+		printf("Node creation failed, freeing data\n");
+		free(data);
 		return (false);
 	}
 	*root = node;

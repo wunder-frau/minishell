@@ -155,11 +155,11 @@ void	terminate_minishell(t_minishell **ms, int status);
 void	init_minishell(t_minishell **ms, char **envp, t_cmd_data *cmd_data);
 
 /** parse_ast.c **/
-bool	parse_ast(char *str, t_parsed_data **info);
+bool	parse_ast(char *str, t_parsed_data **data);
 int		build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms);
-int		assemble_ast_pipe(t_parsed_data *info, t_node **root, int *hd_num, t_minishell *ms);
+int		assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_num, t_minishell *ms);
 int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
-int		assemble_ast_command(t_parsed_data *info, t_node **root, int *hd_num, t_minishell *ms);
+int		assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_num, t_minishell *ms);
 t_redir *init_node_redir(void);
 t_pipe  *init_node_pipe(void);
 t_command *init_node_cmd(void);
@@ -167,13 +167,13 @@ t_command *init_node_cmd(void);
 /** lexer.c **/
 int		lexer(t_parsed_data **node, char *str, int type, int i);
 int		block_pipe(t_parsed_data **node, char *str, int type, int i);
-int		set_node_data_pipe(t_parsed_data **info, char *str, int point, int type);
-int		set_node_cmd_redirects(t_parsed_data **info, char *str, int type);
-int		set_node_cmd(t_parsed_data **info, char *str, int type);
+int		set_node_data_pipe(t_parsed_data **data, char *str, int point, int type);
+int		set_node_cmd_redirects(t_parsed_data **data, char *str, int type);
+int		set_node_cmd(t_parsed_data **data, char *str, int type);
 int		round_brackets_check(char *str, int point);
 void	quote_tracker(char *str, int *i, int *is_str);
 int		check_symbol_pairing(char *str, int point, int symbol);
-bool	init_node(t_parsed_data *info, t_node **root);
+bool	init_node(t_parsed_data *data, t_node **root);
 bool		check_redirection(char *str);
 
 /** lexer_utils.c **/

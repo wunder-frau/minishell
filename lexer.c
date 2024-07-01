@@ -18,73 +18,79 @@ bool	check_redirection(char *str)
 	return (false);
 }
 
-int	set_node_data_pipe(t_parsed_data **info, char *str, int point, int type)
+int	set_node_data_pipe(t_parsed_data **data, char *str, int point, int type)
 {
-	t_parsed_data *node_info;
+	t_parsed_data *node_data;
 
 	printf("Entering set_node_data_pipe with point=%d, type=%d, str=%s\n", point, type, str);
 
 	if (type == T_PIPE)
 			str[point] = NULL_TERM;
 
-	node_info = (t_parsed_data *)calloc(1, sizeof(t_parsed_data));
-	if (!node_info)
+	node_data = (t_parsed_data *)ft_calloc(1, sizeof(t_parsed_data));
+	if (!node_data)
 	{
 			perror("calloc");
 			return (-1);
 	}
 
-	node_info->block_left = str;
-	node_info->block_right = str + point + 1;
-	node_info->type = type;
-	*info = node_info;
+	node_data->block_left = str;
+	node_data->block_right = str + point + 1;
+	node_data->type = type;
+	*data = node_data;
 
-	printf("Node info created successfully:\n");
-	printf("  block_left: %s\n", node_info->block_left);
-	printf("  block_right: %s\n", node_info->block_right);
-	printf("  type: %d\n", node_info->type);
+	printf("Node data created successfully:\n");
+	printf("  block_left: %s\n", node_data->block_left);
+	printf("  block_right: %s\n", node_data->block_right);
+	printf("  type: %d\n", node_data->type);
 
 	return (1);
 }
 
-int	set_node_cmd_redirects(t_parsed_data **info, char *str, int type)
+int	set_node_cmd_redirects(t_parsed_data **data, char *str, int type)
 {
-	t_parsed_data	*node_info;
+	t_parsed_data	*node_data;
 	char		*redir;
 	int			status;
 
-	node_info = ft_calloc(1, sizeof(t_parsed_data));
-	if (!node_info)
+	node_data = ft_calloc(1, sizeof(t_parsed_data));
+	if (!node_data)
 		return (-1);
 	status = modificate_str_command_without_br(str, &redir, 0, 0);
 	if (status == -1)
 	{
-		free(node_info);
+		free(node_data);
 		return (-1);
 	}
-	node_info->block_left = redir;
-	node_info->block_right = str;
-	node_info->type = type;
-	*info = node_info;
+	node_data->block_left = redir;
+	node_data->block_right = str;
+	node_data->type = type;
+	*data = node_data;
 
-	printf("Node info created successfully:\n");
-	printf("  block_left: %s\n", node_info->block_left);
-	printf("  block_right: %s\n", node_info->block_right);
-	printf("  type: %d\n", node_info->type);
+	printf("Node data created successfully:\n");
+	printf("  block_left: %s\n", node_data->block_left);
+	printf("  block_right: %s\n", node_data->block_right);
+	printf("  type: %d\n", node_data->type);
 	return (1);
 }
 
-int	set_node_cmd(t_parsed_data **info, char *str, int type)
+int	set_node_cmd(t_parsed_data **data, char *str, int type)
 {
-	t_parsed_data	*node_info;
+	t_parsed_data	*node_data;
 
-	node_info = ft_calloc(1, sizeof(t_parsed_data));
-	if (!node_info)
+	node_data = ft_calloc(1, sizeof(t_parsed_data));
+	if (!node_data)
 		return (-1);
-	node_info->block_left = NULL;
-	node_info->block_right = str;
-	node_info->type = type;
-	*info = node_info;
+	node_data->block_left = NULL;
+	node_data->block_right = str;
+	node_data->type = type;
+	*data = node_data;
+
+
+	printf("Node CMD created successfully:\n");
+	printf("  block_left: %s\n", node_data->block_left);
+	printf("  block_right: %s\n", node_data->block_right);
+	printf("  type: %d\n", node_data->type);
 	return (1);
 }
 
@@ -108,24 +114,24 @@ int check_symbol_pairing(char *str, int point, int symbol)
 			if (str[point] == symbol)
 					pair_1++;
 	}
-	return (ft_is_odd(pair_0) == false && ft_is_odd(pair_1) == false);
+	return (ft_is_odd(pair_0) == true && ft_is_odd(pair_1) == true);
 }
 
 int block_pipe(t_parsed_data **node, char *str, int type, int i)
 {
 	if (str[i] == PI)
 	{
-			printf("Found pipe character at index %d\n", i);
-			if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
-			{
-					printf("Valid symbol pairing at index %d\n", i);
-					return set_node_data_pipe(node, str, i, type);
-			}
-			else
-			{
-					printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
-					return lexer(node, str, type, i - 1);
-			}
+		printf("Found pipe character at index %d\n", i);
+		if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
+		{
+				printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
+				return lexer(node, str, type, i - 1);
+		}
+		else
+		{
+				printf("Valid symbol pairing at index %d\n", i);
+				return set_node_data_pipe(node, str, i, type);
+		}
 	}
 	return 0;
 }
