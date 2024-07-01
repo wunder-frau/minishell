@@ -11,41 +11,40 @@
 
 typedef struct s_node
 {
-    int             type;
-    struct s_node   *left;
-    struct s_node   *right;
+	int             type;
+	struct s_node   *left;
+	struct s_node   *right;
 } t_node;
 
 typedef struct s_hmap
 {
-    char            *key;
-    char            *value;
-    struct s_hmap   *next;
+	char            *key;
+	char            *value;
+	struct s_hmap   *next;
 } t_hmap;
 
 typedef struct s_cmd_data
 {
-    char *cmd;
-    char **argv;
-    char **cmd_paths;
-    char *cmd_path;
-    char *cmd_line;
-    t_hmap **hashmap;
+	char *cmd;
+	char **argv;
+	char **cmd_paths;
+	char *cmd_path;
+	char *cmd_line;
+	t_hmap **hashmap;
 } t_cmd_data;
 
 typedef struct s_minishell
 {
-    t_hmap **hashmap;
-    char *pwd;
-    char *oldpwd;
-    t_list *history;
-    char *history_path;
-    int exit_status;
-    int fd_output;
-    t_node *root;
-    bool is_parent;
-    bool is_oldpwd_unset;
-    t_cmd_data *cmd_data;
+	t_hmap **hashmap;
+	char *oldpwd;
+	t_list *history;
+	char *history_path;
+	int exit_status;
+	int fd_output;
+	t_node *root;
+	bool is_parent;
+	bool is_oldpwd_unset;
+	t_cmd_data *cmd_data;
 } t_minishell;
 
 int is_builtin(char *cmd);
