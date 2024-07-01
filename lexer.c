@@ -56,7 +56,7 @@ int	set_node_cmd_redirects(t_parsed_data **data, char *str, int type)
 	node_data = ft_calloc(1, sizeof(t_parsed_data));
 	if (!node_data)
 		return (-1);
-	status = modificate_str_command_without_br(str, &redir, 0, 0);
+	status = modificate_str_cmd(str, &redir, 0, 0);
 	if (status == -1)
 	{
 		free(node_data);

@@ -177,7 +177,7 @@ bool	init_node(t_parsed_data *data, t_node **root);
 bool		check_redirection(char *str);
 
 /** lexer_utils.c **/
-int	modificate_str_command_without_br(char *str, char **redir, int i, int j);
+int	modificate_str_cmd(char *str, char **redir, int i, int j);
 
 /** prepare_redirects.c **/
 int		check_redir(char **redir, t_minishell *ms);

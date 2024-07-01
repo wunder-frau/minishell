@@ -50,7 +50,7 @@ static void	rep_redir_with_sep(char *str, char **redir, int *i, int *j)
 	(*i)--;
 }
 
-int	modificate_str_command_without_br(char *str, char **redir, int i,
+int	modificate_str_cmd(char *str, char **redir, int i,
 	int j)
 {
 	int	q_flag;
@@ -61,14 +61,19 @@ int	modificate_str_command_without_br(char *str, char **redir, int i,
 	*redir = (char *)ft_calloc(ft_strlen(str) * 2, sizeof(char));
 	if (!*redir)
 		return (-1);
+	printf("Initial String: %s\n", str);
 	while (str[i] != NULL_TERM)
 	{
 		quote_tracker(str, &i, &q_flag);
 		if (q_flag == 0 && (str[i] == REDIR_L || str[i] == REDIR_R))
+		{
 			rep_redir_with_sep(str, redir, &i, &j);
+			printf("______________________Modified Redirection String: %s\n", *redir);
+		}
 		if (str[i] == NULL_TERM)
 			break ;
 		i++;
 	}
+	printf("Final String___________________: %s\n", *redir);
 	return (1);
 }
