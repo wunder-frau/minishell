@@ -52,7 +52,9 @@ int	traverse_tree(t_node **root, t_minishell *ms)
 
 	status = true;
 	type = (*root)->type;
-	if (type == T_COMMAND)
+	if (type == T_PIPE)
+		status = traverse_pipe(root, ms);
+	else if (type == T_COMMAND)
 		status = traverse_command(((t_command *)*root)->cmd,
 				((t_redir *)((t_command *)*root)->redir)->redirs, ms);
 	free_ast(root);
