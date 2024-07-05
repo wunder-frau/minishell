@@ -259,6 +259,7 @@ void ft_unset(t_minishell *shell, char **argv);
 void ft_env(t_minishell *shell);
 void ft_cd(t_minishell *shell, char **argv);
 
+/** **/
 char **convert_hashmap(t_hmap *hashmap);
 int check_if_executable(char *cmd);
 char *get_cmd_path(char **cmd_paths, char *cmd);
