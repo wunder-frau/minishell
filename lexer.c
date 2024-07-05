@@ -2,17 +2,17 @@
 
 bool	check_redirection(char *str)
 {
-	int	i;
-	int	quote_type;
+	int i = 0;
+	int inside_quotes = 0;
 
-	i = 0;
-	quote_type = 0;
 	while (str[i] != NULL_TERM)
 	{
-		quote_tracker(str, &i, &quote_type);
-			if (!quote_type && (str[i] == REDIR_L
-				|| str[i] == REDIR_R))
+		if (!is_inside_quotes(str[i], &inside_quotes) &&
+			(str[i] == REDIR_L || str[i] == REDIR_R))
+			{
+				printf("😊👍😊👍😊👍😊👍😊👍😊👍Found redirection symbol '%c' outside of quotes\n", str[i]);
 				return (true);
+			}
 			i++;
 	}
 	return (false);
@@ -56,7 +56,7 @@ int	set_node_cmd_redirects(t_parsed_data **data, char *str, int type)
 	node_data = ft_calloc(1, sizeof(t_parsed_data));
 	if (!node_data)
 		return (-1);
-	status = modificate_str_cmd(str, &redir, 0, 0);
+	status = convert_input_to_redirects(str, &redir, 0, 0);
 	if (status == -1)
 	{
 		free(node_data);
@@ -96,23 +96,23 @@ int	set_node_cmd(t_parsed_data **data, char *str, int type)
 
 int check_symbol_pairing(char *str, int point, int symbol)
 {
-	int i;
+	int last_str_index;
 	int pair_0;
 	int pair_1;
 
-	i = (int)ft_strlen(str) - 1;
+	last_str_index = (int)ft_strlen(str) - 1;
 	pair_0 = 0;
 	pair_1 = 0;
-	while (i >= point)
+	while (last_str_index >= point)
 	{
-			if (str[i] == symbol)
-					pair_0++;
-			i--;
+		if (str[last_str_index] == symbol)
+				pair_0++;
+		last_str_index--;
 	}
 	while (--point > 0)
 	{
-			if (str[point] == symbol)
-					pair_1++;
+		if (str[point] == symbol)
+				pair_1++;
 	}
 	return (ft_is_odd(pair_0) == true && ft_is_odd(pair_1) == true);
 }
@@ -124,19 +124,19 @@ int block_pipe(t_parsed_data **node, char *str, int type, int i)
 		printf("Found pipe character at index %d\n", i);
 		if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
 		{
-				printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
-				return lexer(node, str, type, i - 1);
+			printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
+			return lexer(node, str, type, i - 1);
 		}
 		else
 		{
-				printf("Valid symbol pairing at index %d\n", i);
-				return set_node_data_pipe(node, str, i, type);
+			printf("Valid symbol pairing at index %d\n", i);
+			return set_node_data_pipe(node, str, i, type);
 		}
 	}
 	return 0;
 }
 
-int	block_command(t_parsed_data **node, char *str, int type)
+int	block_cmd(t_parsed_data **node, char *str, int type)
 {
 	if (check_redirection(str))
 		return (set_node_cmd_redirects(node, str, type));
@@ -148,7 +148,9 @@ int	block_command(t_parsed_data **node, char *str, int type)
 int lexer(t_parsed_data **node, char *str, int type, int i)
 {
 	int status;
+	int last_str_index;
 
+	last_str_index = ft_strlen(str) - 1;
 	printf("Entering lexer with type=%d, i=%d, str=%s\n", type, i, str);
 
 	while (i >= 0)
@@ -160,8 +162,8 @@ int lexer(t_parsed_data **node, char *str, int type, int i)
 		}
 		else if (type == T_COMMAND)
 		{
-			printf("Calling block_command with i=%d\n", i);
-			status = block_command(node, str, type);
+			printf("Calling block_cmd with i=%d\n", i);
+			status = block_cmd(node, str, type);
 		}
 		if (status > 0)
 			return (status);
@@ -171,5 +173,5 @@ int lexer(t_parsed_data **node, char *str, int type, int i)
 	}
 	printf("Recursive call: lexer(node, str, type + 1, ft_strlen(str) - 1)\n");
 	return (lexer(node, str, type + 1,
-			ft_strlen(str) - 1));
+			last_str_index));
 }

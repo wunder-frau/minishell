@@ -3,8 +3,10 @@
 bool	parse_ast(char *str, t_parsed_data **data)
 {
 	int	status;
+	int last_str_index;
 
-	status = lexer(data, str, T_PIPE, ft_strlen(str) - 1);
+	last_str_index = ft_strlen(str) - 1;
+	status = lexer(data, str, T_PIPE, last_str_index);
 	return (status);
 }
 

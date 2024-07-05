@@ -37,6 +37,14 @@ enum	e_exit_status
 	DUP_FAILURE = 600,
 };
 
+enum	e_signals
+{
+	DEFAULT,
+	INTERACTIVE,
+	HEREDOC,
+	IGNORE,
+};
+
 typedef struct s_node
 {
 	int				type;
@@ -177,7 +185,7 @@ bool	init_node(t_parsed_data *data, t_node **root);
 bool		check_redirection(char *str);
 
 /** lexer_utils.c **/
-int	modificate_str_cmd(char *str, char **redir, int i, int j);
+int	convert_input_to_redirects(char *str, char **redir, int i, int j);
 
 /** prepare_redirects.c **/
 int		check_redir(char **redir, t_minishell *ms);
@@ -262,5 +270,13 @@ int check_if_executable(char *cmd);
 //static void get_paths(t_minishell *shell, t_cmd_data *cmd_data);
 char *get_cmd_path(char **cmd_paths, char *cmd);
 void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
+
+
+int	traverse_pipe(t_node **root, t_minishell *ms);
+int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
+int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
+int	fetch_children_status(pid_t *pids, int num);
+bool is_inside_quotes(char c, int *inside_quotes);
+
 
 #endif
