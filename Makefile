@@ -23,7 +23,8 @@ MINISHELL_SRC = utils.c \
 								env.c \
 								cd.c \
 								pipe_execve.c \
-								traverse_pipe.c 
+								traverse_pipe.c \
+								signals.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths

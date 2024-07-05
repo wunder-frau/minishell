@@ -5,8 +5,10 @@
 #  define HEREDOC_NAME "<<.heredoc_"
 # endif
 
+#include <termios.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -265,9 +267,9 @@ void ft_unset(t_minishell *shell, char **argv);
 void ft_env(t_minishell *shell);
 void ft_cd(t_minishell *shell, char **argv);
 
+/** **/
 char **convert_hashmap(t_hmap *hashmap);
 int check_if_executable(char *cmd);
-//static void get_paths(t_minishell *shell, t_cmd_data *cmd_data);
 char *get_cmd_path(char **cmd_paths, char *cmd);
 void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
 
@@ -278,5 +280,8 @@ int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
 int	fetch_children_status(pid_t *pids, int num);
 bool is_inside_quotes(char c, int *inside_quotes);
 
+/** signals.c **/
+void set_signals(void);
+int ctrl_d_handler(char *input);
 
 #endif

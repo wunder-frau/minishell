@@ -7,6 +7,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 1 || !argv)
 		return (0);
+	set_signals();
 	init_minishell(&shell, envp, &cmd_data);
 	run_commandline(&shell);
 	free_minishell(shell);
