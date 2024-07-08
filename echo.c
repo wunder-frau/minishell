@@ -2,26 +2,26 @@
 
 void ft_echo(t_minishell *shell, char **cmd)
 {
-    int i;
-    char *value;
+    int     i;
+    int     n_flag;
 
     i = 1;
+    // TODO: Implement -n flag
+    if (cmd[i] && ft_strcmp(cmd[i], "-n") == 0)
+    {
+        n_flag = 1;
+        i++;
+    }
+    else
+        n_flag = 0;
     while (cmd[i])
     {
-        if (cmd[i][0] == '$')
-        {
-            value = ft_get_env(*(shell->hashmap), cmd[i] + 1);  // Skip the '$' and get the variable name
-            if (value)
-                ft_putstr_fd(value, 1);
-        }
-        else
-        {
-            ft_putstr_fd(cmd[i], 1);
-        }
+        ft_putstr_fd(cmd[i], 1);
         if (cmd[i + 1])
             ft_putstr_fd(" ", shell->fd_output);
         i++;
     }
-    ft_putstr_fd("\n", 1);
+    if (!n_flag)
+        ft_putstr_fd("\n", 1);
     shell->exit_status = 0;
 }

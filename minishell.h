@@ -284,4 +284,10 @@ bool is_inside_quotes(char c, int *inside_quotes);
 void set_signals(void);
 int ctrl_d_handler(char *input);
 
+/** shlvl.c **/
+void add_shlvl(t_minishell *shell);
+
+/** dollar_expansion.c **/
+int	dollar_expansion(char **str, t_minishell *ms, int last_status);
+
 #endif

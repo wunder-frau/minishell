@@ -5,6 +5,7 @@ int	traverse_command(char *cmd, char **redir, t_minishell *ms)
 	int		status;
 	char **command;
 	status = parse_cmd(cmd, &command, ms);
+	//
 	ms->command = command;
 	if (status == 0)
 	{

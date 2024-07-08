@@ -24,7 +24,9 @@ MINISHELL_SRC = utils.c \
 								cd.c \
 								pipe_execve.c \
 								traverse_pipe.c \
-								signals.c
+								signals.c \
+								shlvl.c \
+								dollar_expansion.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths

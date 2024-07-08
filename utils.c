@@ -111,6 +111,7 @@ int	parse_cmd(char *cmd, char ***res, t_minishell *ms)
 {
 	char	**arr;
 	int		status;
+	int		i;
   (void)*ms;
 	if (is_blank_string(cmd))
 	{
@@ -120,6 +121,9 @@ int	parse_cmd(char *cmd, char ***res, t_minishell *ms)
 	if (!arr)
 		return (MALLOC_ERR);
 	status = 0;
+	i = 0;
+	while (arr[i] && status == 0)
+		status = dollar_expansion(&arr[i++], ms, status);
 	if (status != 0 && arr != NULL)
 		free_arr_2d(arr);
 	if (status == 0)
