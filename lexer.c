@@ -114,9 +114,8 @@ int check_symbol_pairing(char *str, int point, int symbol)
 		if (str[point] == symbol)
 				pair_1++;
 	}
-	return (ft_is_odd(pair_0) == true && ft_is_odd(pair_1) == true);
+	return (ft_is_odd(pair_0) == false && ft_is_odd(pair_1) == false);
 }
-
 int block_pipe(t_parsed_data **node, char *str, int type, int i)
 {
 	if (str[i] == PI)
@@ -124,13 +123,13 @@ int block_pipe(t_parsed_data **node, char *str, int type, int i)
 		printf("Found pipe character at index %d\n", i);
 		if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
 		{
-			printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
-			return lexer(node, str, type, i - 1);
+			printf("Valid symbol pairing at index %d\n", i);
+			return set_node_data_pipe(node, str, i, type);
 		}
 		else
 		{
-			printf("Valid symbol pairing at index %d\n", i);
-			return set_node_data_pipe(node, str, i, type);
+			printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
+			return lexer(node, str, type, i - 1);
 		}
 	}
 	return 0;
