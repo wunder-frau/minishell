@@ -152,7 +152,6 @@ enum	e_types
 	T_REDIR,
 };
 
-
 /** TO DELETE **/
 void print_node(t_node *node);
 
@@ -283,5 +282,17 @@ bool is_inside_quotes(char c, int *inside_quotes);
 /** signals.c **/
 void set_signals(void);
 int ctrl_d_handler(char *input);
+
+/** validation_input.c **/
+int	validate_input(char *str);
+char	*validate_pipeline(char *str, bool *status);
+char	*validate_command(char *str, bool *status);
+char	*validate_redirect(char *str, bool *status);
+char	*validate_word(char *str, bool *status);
+char	*validate_quotes(char *str, bool *status);
+void handle_and_display_error(char *str);
+bool is_special_token(char *str, int *length);
+bool is_alnum_or_quote(char c);
+void print_error_message(char *str);
 
 #endif

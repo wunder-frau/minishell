@@ -2,7 +2,7 @@
 
 void	print_err_msg(char *cmd, char *msg)
 {
-	cmd = ft_strjoin("\033[0;31merror: \033[0;0m", cmd);
+	cmd = ft_strjoin("shell: ", cmd);
 	if (!cmd)
 		return ;
 	msg = ft_strjoin(cmd, msg);
@@ -15,7 +15,7 @@ void	print_err_msg(char *cmd, char *msg)
 
 void	perror_err_msg(char *cmd, char *arg)
 {
-	cmd = ft_strjoin("\033[0;31merror: \033[0;0m", cmd);
+	cmd = ft_strjoin("shell: ", cmd);
 	if (!cmd)
 		return ;
 	arg = ft_strjoin(cmd, arg);
@@ -28,7 +28,7 @@ void	perror_err_msg(char *cmd, char *arg)
 
 void	print_arg_err_msg(char *cmd, char *arg, char *msg)
 {
-	cmd = ft_strjoin("\033[0;31me-bash: \033[0;0m", cmd);
+	cmd = ft_strjoin("shell: ", cmd);
 	if (!cmd)
 		return ;
 	arg = ft_strjoin(cmd, arg);

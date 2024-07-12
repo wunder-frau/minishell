@@ -43,5 +43,7 @@ int assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_num,
 	redir_node->redirs = redirs;
 	((t_command *)(*root))->redir = (t_node *)redir_node;
 	((t_command *)(*root))->cmd = data->block_right;
+		printf("right_____RRRR%s", data->block_right);
+		printf("\n");
 	return (0);
 }

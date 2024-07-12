@@ -18,6 +18,8 @@ void	free_minishell(t_minishell *ms)
 		return ;
 	if (ms->hashmap)
 		free_arr_2d(ms->hashmap);
+	if (ms->history)
+		ft_lstclear(&(ms->history), free);
 	if (ms->root)
 		free_ast(&(ms->root));
 	free(ms);
