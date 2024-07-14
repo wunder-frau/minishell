@@ -36,6 +36,8 @@ void remove_quotes(char *str, int i, int j)
 		}
 		i++;
 	}
+	while (i < len)
+		str[j++] = str[i++];
 	str[j] = NULL_TERM;
 	printf("🔚 Resulting string after removing quotes: [::%s]\n", str);
 }

@@ -48,17 +48,15 @@ static void	extract_redirect(char *str, char **redir, int *i, int *j)
 	while (str[*i] != NULL_TERM)
 	{
 		printf("HEREWEGO%s\n", str);
-		quote_tracker(str, i, &quote_status);
+		//quote_tracker(str, *i, &quote_status);
+		is_inside_quotes(str[*i], &quote_status);
 		if (quote_status == 0 && (is_special_char(str[*i]) || str[*i] == NULL_TERM))
-				break;
-		else
-		{
-			copy_and_replace_with_space(str, *redir, i, j);
-		}
+			break ;
+		copy_and_replace_with_space(str, *redir, i, j);
 	}
 	(*redir)[(*j)++] = SEPARATOR;
 	(*i)--;
-	printf("🔚 Resulting string after removing quotes: [%s]\n", str);
+	printf("🔚 Resulting string after removing redir sign: [%s]\n", str);
 }
 
 int	convert_input_to_redirects(char *str, char **redir, int i,

@@ -9,14 +9,24 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
 {
 	int		status;
 	int		fd;
+	pid_t	pid;
 
+	printf("Limiter bef: [%s]\n", *limiter);
 	remove_spaces_and_quotes_hd(*limiter + 2);
+	printf("Limiter after removing quotes: [%s]\n", *limiter);
+	pid = fork();
+	if (pid == -1)
+		return (FORK_FAILURE);
+	if (pid == 0)
+	{
 		fd = open(hd_name + 2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd != -1)
 			heredoc(*limiter + 2, fd, ms);
 		exit(GENERIC_ERROR);
+	}
 	free(*limiter);
 	*limiter = hd_name;
+	status = waitpid(pid, &status, 0);
 	return (status);
 }
 
