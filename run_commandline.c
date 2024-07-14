@@ -35,11 +35,11 @@ void	run_commandline(t_minishell **ms)
 			add_history(cmdline);
 		hd = 0;
 		(*ms)->root = NULL;
-		printf("Debug: Creating command tree\n");
+		// printf("Debug: Creating command tree\n");
 		build_ast(cmdline, &((*ms)->root), &hd, *ms);
-		printf("Debug: Traversing command tree\n");
+		// printf("Debug: Traversing command tree\n");
 		traverse_tree(&((*ms)->root), *ms);
-		printf("Debug: Command executed, freeing cmdline\n");
+		// printf("Debug: Command executed, freeing cmdline\n");
 		free(cmdline);
 		cmdline = NULL;
 	}

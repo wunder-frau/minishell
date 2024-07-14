@@ -81,7 +81,7 @@ char *return_value_hash(t_hmap *v, char *key)
         {
             if (ft_strcmp(v->key, key) == 0)
             {
-                printf("Found key: %s, value: %s\n", key, v->value);
+                //printf("Found key: %s, value: %s\n", key, v->value);
                 return (v->value);
             }
             v = v->next;
@@ -160,7 +160,7 @@ void add_new_var(t_hmap **v, char *akey, char *avalue)
 			temp = temp->next;
 		temp->next = node;
 	}
-	printf("Added key: %s, value: %s\n", akey, avalue);
+	//printf("Added key: %s, value: %s\n", akey, avalue);
 }
 
 

@@ -8,3 +8,7 @@ minishell
 libft_/
 *.o
 *.txt
+/tests
+/minishell_tester
+minishell_tester/
+minishell_tester

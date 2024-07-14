@@ -7,13 +7,13 @@ int	assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_num,
 	(void)*hd_num;
 	(void)*ms;
 
-	printf("left_____");
-	printf("\n");
+	//printf("left_____");
+	//printf("\n");
 	status = build_ast(data->block_left, &((*root)->left), hd_num, ms);
 	if (status == 0)
 	{
-		printf("right_____");
-		printf("\n");
+		//printf("right_____");
+		//printf("\n");
 		status = build_ast(data->block_right, &((*root)->right), hd_num, ms);
 	}
 	return (status);

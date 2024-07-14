@@ -1,3 +1,5 @@
+# Your existing Makefile
+
 NAME = minishell
 MINISHELL_SRC = utils.c \
 								prepare_heredocs.c \
@@ -33,10 +35,14 @@ MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 LIBFT_DIR = libft_
 LIBFT = $(LIBFT_DIR)/libft.a
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR) -I$(shell brew --prefix readline)/include
-LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
-# CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
-# LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline
+CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
+LDFLAGS = -L$(LIBFT_DIR) -lft
+
+# Check if readline is installed via brew or system
+READLINE_INC = $(shell brew --prefix readline 2>/dev/null || echo /usr/local/opt/readline/include)
+READLINE_LIB = $(shell brew --prefix readline 2>/dev/null || echo /usr/local/opt/readline/lib)
+CFLAGS += -I$(READLINE_INC)
+LDFLAGS += -L$(READLINE_LIB) -lreadline
 
 # Colors and formatting
 RED = \033[0;31m
@@ -81,4 +87,21 @@ fclean: clean
 re: fclean all
 	@echo "$(REBUILD_EMOJI) $(YELLOW)Rebuild complete!$(RESET)"
 
-.PHONY: all clean fclean re
+# Test-related variables and targets
+TEST_SRCS = tests/test_minishell.c
+TEST_OBJS = $(TEST_SRCS:.c=.o)
+TEST_EXEC = test_minishell
+TEST_CFLAGS = $(CFLAGS) -DUNIT_TEST
+
+test: $(TEST_EXEC)
+	./$(TEST_EXEC)
+
+$(TEST_EXEC): $(TEST_OBJS) $(filter-out main.o, $(MINISHELL_OBJ))
+	@$(CC) $(TEST_OBJS) $(filter-out main.o, $(MINISHELL_OBJ)) $(LDFLAGS) -o $@
+	@echo "$(BUILD_EMOJI) $(GREEN)Test executable built!$(RESET)"
+
+clean_test:
+	@rm -f $(TEST_OBJS) $(TEST_EXEC)
+	@echo "$(CLEAN_EMOJI) $(PURPLE)Test object files removed!$(RESET)"
+
+.PHONY: all clean fclean re test clean_test

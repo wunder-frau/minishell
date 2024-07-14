@@ -4,13 +4,13 @@ t_pipe  *init_node_pipe(void)
 {
 	t_pipe	*node;
 
-	printf("Entering init_node_pipe\n");
+	//printf("Entering init_node_pipe\n");
 	node = (t_pipe *)ft_calloc(1, sizeof(t_pipe));
 	if (!node)
 		return (NULL);
 	node->type = T_PIPE;
-	printf("Pipe node created with type=%d\n", node->type);
-	printf("\n");
+	//printf("Pipe node created with type=%d\n", node->type);
+	//printf("\n");
 	return (node);
 }
 
@@ -22,8 +22,8 @@ t_command	*init_node_cmd(void)
 	if (!node)
 		return (NULL);
 	node->type = T_COMMAND;
-	printf("Cmd node created with type=%d\n", node->type);
-	printf("\n");
+	//printf("Cmd node created with type=%d\n", node->type);
+	//printf("\n");
 	return (node);
 }
 
@@ -35,8 +35,8 @@ t_redir	*init_node_redir(void)
 	if (!node)
 		return (0);
 	node->type = T_REDIR;
-	printf("Redir node created with type=%d\n", node->type);
-	printf("\n");
+	//printf("Redir node created with type=%d\n", node->type);
+	//printf("\n");
 	return (node);
 }
 
@@ -44,7 +44,7 @@ bool	init_node(t_parsed_data *data, t_node **root)
 {
 	t_node	*node;
 
-	printf("Entering init_node with data->type=%d\n", data->type);
+	//printf("Entering init_node with data->type=%d\n", data->type);
 	node = NULL;
 
 	if (data->type == T_PIPE)
@@ -56,19 +56,19 @@ bool	init_node(t_parsed_data *data, t_node **root)
 	{
 		node = (t_node *)init_node_cmd();
 			print_node(node);
-	printf("\n");
+	//printf("\n");
 	}
 	if (node == NULL)
 	{
-		printf("Node creation failed, freeing data\n");
+		// printf("Node creation failed, freeing data\n");
 		free(data);
 		return (false);
 	}
 	*root = node;
 
-	printf("Node created successfully, root set\n");
-	printf("\n");
+	// printf("Node created successfully, root set\n");
+	// printf("\n");
 	print_node(node);
-	printf("\n");
+	// printf("\n");
 	return (true);
 }
