@@ -11,7 +11,7 @@ char *ft_strdup(const char *s1)
     copy = (char *)malloc(len);
     if (copy)
     {
-        memcpy(copy, s1, len);
+        ft_memcpy(copy, s1, len);
     }
     return copy;
 }
@@ -43,6 +43,12 @@ char *expand_variable(const char *str, t_minishell *ms, int last_status, int *va
     char *value;
     char *key;
     char *status_str;
+
+    if (str[1] == '\0' || str[1] == ' ' || str[1] == '\"')
+    {
+        *var_len = 1;
+        return ft_strdup("$");
+    }
 
     if (str[1] == '?')
     {
