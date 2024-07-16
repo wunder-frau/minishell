@@ -7,7 +7,7 @@ int check_if_executable(char *cmd)
     res = access(cmd, X_OK | F_OK);
     if (res == 0)
     {
-        printf("Executable\n");
+        // printf("Executable\n");
         return (1);
     }
     return (0);
@@ -59,7 +59,7 @@ cmd_path = ft_strjoin(temp_path, cmd);
 free(temp_path);
 if (!cmd_path)
 return (NULL);
-printf("Trying path: %s\n", cmd_path); // Debugging print
+// printf("Trying path: %s\n", cmd_path); // Debugging print
 if (check_if_executable(cmd_path) == 1)
 {
 return (cmd_path);
@@ -103,7 +103,7 @@ if (!env_array[i])
 perror("malloc");
 exit(EXIT_FAILURE);
 }
-snprintf(env_array[i], len, "%s=%s", current->key, current->value);
+// snprintf(env_array[i], len, "%s=%s", current->key, current->value);
 i++;
 current = current->next;
 }
@@ -118,7 +118,7 @@ void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
     if (cmd_data->cmd_paths)
     {
         cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
-        printf("Command path: %s\n", cmd_data->cmd_path); // Debugging print
+        // printf("Command path: %s\n", cmd_data->cmd_path); // Debugging print
         if (!cmd_data->cmd_path)
         {
             printf("Command not found: %s\n", argv[0]);
@@ -128,7 +128,7 @@ void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
     }
     if (execve(cmd_data->cmd_path, argv, convert_hashmap(*(shell->hashmap))) == -1)
     {
-        printf("PASDOPAODASPDASPDO\n");
+        // printf("PASDOPAODASPDASPDO\n");
         perror("execve");
         exit(EXIT_FAILURE);
     }

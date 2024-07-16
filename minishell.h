@@ -294,5 +294,10 @@ void handle_and_display_error(char *str);
 bool is_special_token(char *str, int *length);
 bool is_alnum_or_quote(char c);
 void print_error_message(char *str);
+/** shlvl.c **/
+void add_shlvl(t_minishell *shell);
+
+/** dollar_expansion.c **/
+int	dollar_expansion(char **str, t_minishell *ms, int last_status);
 
 #endif

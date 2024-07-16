@@ -17,6 +17,40 @@ bool is_builtin(char *cmd)
 	return (false);
 }
 
+int	ft_is_number(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	ft_exit(t_minishell *shell)
+{
+	if (shell->command[1])
+	{
+		if (ft_is_number(shell->command[1]))
+			shell->exit_status = ft_atoi(shell->command[1]);
+		else
+		{
+			shell->exit_status = 255;
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(shell->command[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+		}
+	}
+	else
+		shell->exit_status = 0;
+}
+
 int	exec_builtin(t_minishell *shell)
 {
 	if (ft_strncmp(shell->command[0], "echo", 5) == 0)
@@ -33,7 +67,7 @@ int	exec_builtin(t_minishell *shell)
 		ft_env(shell);
 	else if (ft_strncmp(shell->command[0], "exit", 5) == 0)
 	{
-	//ft_exit(shell, argv);
+		ft_exit(shell);
 		return shell->exit_status;
 		exit(shell->exit_status);
 	}

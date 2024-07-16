@@ -5,19 +5,19 @@ bool is_inside_quotes(char c, int *inside_quotes)
 	if ((c == S_QUO || c == D_QUO) && *inside_quotes == 0)
 	{
 		*inside_quotes = c;
-		printf("🎉 🌟 🍕Entering quotes '%c'\n", c);
+		// printf("🎉 🌟 🍕Entering quotes '%c'\n", c);
 		return true;
 	}
 	else if (c == S_QUO && *inside_quotes == S_QUO)
 	{
 		*inside_quotes = 0;
-		printf("🎉 🌟 🍕Leaving single quotes\n");
+		// printf("🎉 🌟 🍕Leaving single quotes\n");
 		return true;
 	}
 	else if (c == D_QUO && *inside_quotes == D_QUO)
 	{
 		*inside_quotes = 0;
-		printf("🎉 🌟 🍕Leaving double quotes\n");
+		// printf("🎉 🌟 🍕Leaving double quotes\n");
 		return true;
 	}
 	return false;
@@ -39,7 +39,7 @@ void remove_quotes(char *str, int i, int j)
 	while (i < len)
 		str[j++] = str[i++];
 	str[j] = NULL_TERM;
-	printf("🔚 Resulting string after removing quotes: [::%s]\n", str);
+	// printf("🔚 Resulting string after removing quotes: [::%s]\n", str);
 }
 
 void	remove_quotes_arr(char **arr, int i)
@@ -47,8 +47,8 @@ void	remove_quotes_arr(char **arr, int i)
 	while (arr[i])
 	{
 		remove_quotes(arr[i], 0, 0);
-		printf("\n");
-		printf("🤪🤪%s\n", arr[i]);
+		// printf("\n");
+		// printf("🤪🤪%s\n", arr[i]);
 		i++;
 	}
 }
@@ -102,8 +102,8 @@ char	**split_handle_quotes_and_spaces(char *str)
 		 i = 0;
 	while (res[i])
 	{
-		printf("\n");
-		printf("🎉%s\n", res[i]);
+		// printf("\n");
+		// printf("🎉%s\n", res[i]);
 		i++;
 	}
 	return (res);
@@ -113,6 +113,7 @@ int	parse_cmd(char *cmd, char ***res, t_minishell *ms)
 {
 	char	**arr;
 	int		status;
+	int		i;
   (void)*ms;
 	if (is_blank_string(cmd))
 	{
@@ -122,6 +123,9 @@ int	parse_cmd(char *cmd, char ***res, t_minishell *ms)
 	if (!arr)
 		return (MALLOC_ERR);
 	status = 0;
+	i = 0;
+	while (arr[i] && status == 0)
+		status = dollar_expansion(&arr[i++], ms, status);
 	if (status != 0 && arr != NULL)
 		free_arr_2d(arr);
 	if (status == 0)

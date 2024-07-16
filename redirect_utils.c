@@ -5,7 +5,7 @@ int	check_redir(char **redir, t_minishell *ms)
 	int		status;
 	char	**rdr;
 
-	printf("🔍 Checking redirections... ");
+	// printf("🔍 Checking redirections... ");
 	status = parse_cmd(*redir, &rdr, ms);
 	if (status != 0)
 		return (status);
@@ -56,23 +56,23 @@ int	replace_fd(int in, int out)
 	status = 0;
 	if (in != -1)
 	{
-	printf("______PPP");
-				printf("\n");
+						// printf("______PPP");
+				// printf("\n");
 		if (dup2(in, STDIN_FILENO) == -1)
 			status = DUP_FAILURE;
 		close(in);
-								printf("______PPP}}");
-				printf("\n");
+								// printf("______PPP}}");
+				// printf("\n");
 	}
 	if (status == 0 && out != -1)
 	{
-		printf("______here");
-		printf("\n");
+		// printf("______here");
+		// printf("\n");
 		if (dup2(out, STDOUT_FILENO) == -1)
 			status = DUP_FAILURE;
 		close(out);
-								printf("______here}}}}");
-				printf("\n");
+								// printf("______here}}}}");
+				// printf("\n");
 	}
 	return (status);
 }

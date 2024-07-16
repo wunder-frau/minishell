@@ -42,14 +42,14 @@ void	run_commandline(t_minishell **ms)
 		}
 		hd = 0;
 		(*ms)->root = NULL;
-		printf("Debug: Creating command tree\n");
+		// printf("Debug: Creating command tree\n");
 		status = build_ast(cmdline, &((*ms)->root), &hd, *ms);
 		if (status != 0)
 			(*ms)->exit_status = status;
-		printf("Debug: Traversing command tree\n");
+		// printf("Debug: Traversing command tree\n");
 		if (status == 0)
 			(*ms)->exit_status = traverse_tree(&((*ms)->root), *ms);
-		printf("Debug: Command executed, freeing cmdline\n");
+		// printf("Debug: Command executed, freeing cmdline\n");
 		free(cmdline);
 		cmdline = NULL;
 	}
