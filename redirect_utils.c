@@ -56,7 +56,7 @@ int	replace_fd(int in, int out)
 	status = 0;
 	if (in != -1)
 	{
-						printf("______PPP");
+	printf("______PPP");
 				printf("\n");
 		if (dup2(in, STDIN_FILENO) == -1)
 			status = DUP_FAILURE;

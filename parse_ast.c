@@ -15,8 +15,6 @@ int	build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms)
 	bool				status;
 	int					type;
 	t_parsed_data	*data;
-	(void)*hd_num;
-	(void)*ms;
 
 	status = parse_ast(str, &data);
 	if (status == false)
@@ -29,10 +27,10 @@ int	build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms)
 	else if (type == T_COMMAND)
 		status = assemble_ast_command(data, root, hd_num, ms);
 	free(data);
-	if (status != 0)
+	if (status != SUCCESS)
 	{
 		free_ast(root);
 		return (status);
 	}
-	return (0);
+	return (SUCCESS);
 }

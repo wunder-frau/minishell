@@ -27,11 +27,11 @@ void	run_commandline(t_minishell **ms)
 			free(cmdline);
 			continue;
 		}
-		if (ft_strcmp(cmdline, "exit") == 0)
-		{
-			free(cmdline);
-			break;
-		}
+		// if (ft_strcmp(cmdline, "exit") == 0)
+		// {
+		// 	free(cmdline);
+		// 	break;
+		// }
 		if (cmdline[0] != '\0' && cmdline[0] != '\n')
 			add_history(cmdline);
 		status = validate_input(cmdline);

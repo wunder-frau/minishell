@@ -18,6 +18,10 @@ void	free_minishell(t_minishell *ms)
 		return ;
 	if (ms->hashmap)
 		free_arr_2d(ms->hashmap);
+	if (ms->pwd)
+		free(ms->pwd);
+	if (ms->oldpwd)
+		free(ms->oldpwd);
 	if (ms->history)
 		ft_lstclear(&(ms->history), free);
 	if (ms->root)
