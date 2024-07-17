@@ -36,14 +36,8 @@ MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 LIBFT_DIR = libft_
 LIBFT = $(LIBFT_DIR)/libft.a
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
-LDFLAGS = -L$(LIBFT_DIR) -lft
-
-# Check if readline is installed via brew or system
-READLINE_INC = $(shell brew --prefix readline 2>/dev/null || echo /usr/local/opt/readline/include)
-READLINE_LIB = $(shell brew --prefix readline 2>/dev/null || echo /usr/local/opt/readline/lib)
-CFLAGS += -I$(READLINE_INC)
-LDFLAGS += -L$(READLINE_LIB) -lreadline
+CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR) -I$(shell brew --prefix readline)/include
+LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
 
 # Colors and formatting
 RED = \033[0;31m
