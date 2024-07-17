@@ -60,15 +60,15 @@ bool	init_node(t_parsed_data *data, t_node **root)
 	}
 	if (node == NULL)
 	{
-		// printf("Node creation failed, freeing data\n");
+		//printf("Node creation failed, freeing data\n");
 		free(data);
 		return (false);
 	}
 	*root = node;
 
-	// printf("Node created successfully, root set\n");
-	// printf("\n");
+	//printf("Node created successfully, root set\n");
+	//printf("\n");
 	print_node(node);
-	// printf("\n");
+	//printf("\n");
 	return (true);
 }

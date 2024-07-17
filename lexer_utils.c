@@ -48,7 +48,7 @@ static void	extract_redirect(char *str, char **redir, int *i, int *j)
 	while (str[*i] != NULL_TERM)
 	{
 		// TUT 1
-		printf("HEREWEGO%s\n", str);
+		//printf("HEREWEGO%s\n", str);
 		//quote_tracker(str, *i, &quote_status);
 		is_inside_quotes(str[*i], &quote_status);
 		if (quote_status == 0 && (is_special_char(str[*i]) || str[*i] == NULL_TERM))
@@ -79,13 +79,13 @@ int	convert_input_to_redirects(char *str, char **redir, int i,
 		if (quote_status == 0 && (str[i] == REDIR_L || str[i] == REDIR_R))
 		{
 			extract_redirect(str, redir, &i, &j);
-			// printf("______________________Modified Redirection String: %s\n", *redir);
+			//printf("______________________Modified Redirection String: %s\n", *redir);
 		}
 		if (str[i] == NULL_TERM)
 			break ;
 		i++;
 	}
-	// printf("Final REDIR___________________: %s\n", *redir);
-	// printf("Final String___________________: %s\n", str);
+	//printf("Final REDIR___________________: %s\n", *redir);
+	//printf("Final String___________________: %s\n", str);
 	return (1);
 }

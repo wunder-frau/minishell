@@ -41,15 +41,13 @@ int copy_std_fd(int *in_fd, int *out_fd, char *command)
 					close(*in_fd);
 			if (*out_fd != -1)
 					close(*out_fd);
-
-			// Print error message with command context
 			print_err_msg(command, ": dup() error occurred\n");
 			return (DUP_FAILURE);
 	}
 
 	// Debug print statements
-	// printf("Debug: Copied STDIN_FILENO to in_fd: %d\n", *in_fd);
-	// printf("Debug: Copied STDOUT_FILENO to out_fd: %d\n", *out_fd);
+	//printf("Debug: Copied STDIN_FILENO to in_fd: %d\n", *in_fd);
+	//printf("Debug: Copied STDOUT_FILENO to out_fd: %d\n", *out_fd);
 
 	// Return success status
 	return (0);

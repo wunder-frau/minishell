@@ -11,9 +11,9 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
 	int		fd;
 	pid_t	pid;
 
-	printf("Limiter bef: [%s]\n", *limiter);
+	//printf("Limiter bef: [%s]\n", *limiter);
 	remove_spaces_and_quotes_hd(*limiter + 2);
-	printf("Limiter after removing quotes: [%s]\n", *limiter);
+	//printf("Limiter after removing quotes: [%s]\n", *limiter);
 	pid = fork();
 	if (pid == -1)
 		return (FORK_FAILURE);
@@ -26,7 +26,11 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
 	}
 	free(*limiter);
 	*limiter = hd_name;
-	status = waitpid(pid, &status, 0);
+	status = 0;
+	//status = waitpid(pid, &status, 0);
+	//printf("Li___________________: [%d], [%d]\n", pid, status);
+	status = fetch_children_status(&pid, 1);
+	//printf("HHHH___________________: [%d], [%d]\n", pid, status);
 	return (status);
 }
 
@@ -61,7 +65,10 @@ static void	heredoc(char *limiter, int fd, t_minishell *ms)
 		}
 		isequal = ft_strcmp(limiter, line);
 		if (isequal != 0)
+		{
+			//printf("heredoc%s\n", line);
 			handle_heredoc_line(fd, line, ms, limiter);
+		}
 		if (isequal == 0)
 		{
 			close(fd);
@@ -106,6 +113,7 @@ static void	handle_heredoc_line(int fd, char *line, t_minishell *ms,
 	status = 0;
 	if (status == 0)
 	{
+					//printf("heredoc__line%s", line);
 		ft_putendl_fd(line, fd);
 		free(line);
 	}
