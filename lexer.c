@@ -120,19 +120,19 @@ int block_pipe(t_parsed_data **node, char *str, int type, int i)
 {
 	if (str[i] == PI)
 	{
-		// printf("Found pipe character at index %d\n", i);
+		//printf("Found pipe character at index %d\n", i);
 		if (check_symbol_pairing(str, i, S_QUO) && check_symbol_pairing(str, i, D_QUO))
 		{
-			// printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
-			return lexer(node, str, type, i - 1);
+			//printf("Valid symbol pairing at index %d\n", i);
+			return set_node_data_pipe(node, str, i, type);
 		}
 		else
 		{
-			// printf("Valid symbol pairing at index %d\n", i);
-			return set_node_data_pipe(node, str, i, type);
+			//printf("Invalid symbol pairing at index %d, recursing lexer\n", i);
+			return lexer(node, str, type, i - 1);
 		}
 	}
-	return 0;
+	return (0);
 }
 
 int	block_cmd(t_parsed_data **node, char *str, int type)

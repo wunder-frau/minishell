@@ -152,7 +152,7 @@ bool is_special_token(char *str, int *length)
 
 bool	is_alnum_or_quote(char c)
 {
-	return (isalnum(c) || c == S_QUO || c == D_QUO);
+	return (ft_isalnum(c) || c == S_QUO || c == D_QUO);
 }
 
 void	print_error_message(char *str)
