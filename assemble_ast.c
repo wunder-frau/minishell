@@ -7,13 +7,13 @@ int	assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_num,
 	(void)*hd_num;
 	(void)*ms;
 
-	//printf("left_____");
-	//printf("\n");
+	printf("left_____");
+	printf("\n");
 	status = build_ast(data->block_left, &((*root)->left), hd_num, ms);
 	if (status == 0)
 	{
-		//printf("right_____");
-		//printf("\n");
+		printf("right_____");
+		printf("\n");
 		status = build_ast(data->block_right, &((*root)->right), hd_num, ms);
 	}
 	return (status);
@@ -43,7 +43,7 @@ int assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_num,
 	redir_node->redirs = redirs;
 	((t_command *)(*root))->redir = (t_node *)redir_node;
 	((t_command *)(*root))->cmd = data->block_right;
-		//printf("right_____RRRR%s", data->block_right);
-		//printf("\n");
+		printf("right_____RRRR%s", data->block_right);
+		printf("\n");
 	return (0);
 }

@@ -111,7 +111,7 @@ char	*validate_redirect(char *str, bool *status)
 char *validate_word(char *str, bool *status)
 {
 	char *special_characters = "|<> '\"";
-	//printf("Validating word: %s\n", str);
+	printf("Validating word: %s\n", str);
 
 	while (*str && ft_strchr(special_characters, *str) == NULL)
 		str++;
@@ -172,12 +172,12 @@ void	handle_and_display_error(char *str)
 	if (*str == NULL_TERM)
 	{
 			str = "newline";
-			//printf("LOOOOOK%s\n", str);
+			printf("LOOOOOK%s\n", str);
 	}
 	else if (is_special_token(str, &token_length))
 	{
 		i = token_length;
-		//printf("loooooooool:%s\n", str);
+		printf("loooooooool:%s\n", str);
 	}
 	else if (is_alnum_or_quote(*str))
 	{

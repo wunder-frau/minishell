@@ -46,8 +46,8 @@ int copy_std_fd(int *in_fd, int *out_fd, char *command)
 	}
 
 	// Debug print statements
-	//printf("Debug: Copied STDIN_FILENO to in_fd: %d\n", *in_fd);
-	//printf("Debug: Copied STDOUT_FILENO to out_fd: %d\n", *out_fd);
+	printf("Debug: Copied STDIN_FILENO to in_fd: %d\n", *in_fd);
+	printf("Debug: Copied STDOUT_FILENO to out_fd: %d\n", *out_fd);
 
 	// Return success status
 	return (0);

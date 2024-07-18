@@ -71,7 +71,7 @@ int	exec_builtin(t_minishell *shell)
 		return shell->exit_status;
 		exit(shell->exit_status);
 	}
-		//printf("IN EXEC shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
+		printf("IN EXEC shell->hashmap PWD w ft_get_env: %s\n", ft_get_env(*(shell->hashmap), "PWD"));
 		return (shell->exit_status);
 }
 
