@@ -34,7 +34,7 @@ static void get_paths(t_minishell *ms, t_cmd_data *cmd_data)
 		cmd_data->cmd_paths = NULL;
 		return ;
 	}
-	// printf("Retrieved PATH: %s\n", paths_string); // Debugging print
+	printf("Retrieved PATH: %s\n", paths_string); // Debugging print
 	cmd_data->cmd_paths = ft_split(paths_string, ':');
 	if (!cmd_data->cmd_paths)
 	{
@@ -59,7 +59,7 @@ char *get_cmd_path(char **cmd_paths, char *cmd)
 		free(temp_path);
 		if (!cmd_path)
 			return (NULL);
-		// printf("Trying path: %s\n", cmd_path); // Debugging print
+		printf("Trying path: %s\n", cmd_path); // Debugging print
 		if (check_if_executable(cmd_path) == 1)
 			return (cmd_path);
 		free(cmd_path);
@@ -117,17 +117,35 @@ char **convert_hashmap(t_hmap *hashmap)
 void execution(t_minishell *ms, char **argv, t_cmd_data *cmd_data)
 {
 	char	**env_array;
+	//printf("Command to execute: %s\n", argv[0]);
 
-	get_paths(ms, cmd_data);
-	if (cmd_data->cmd_paths)
+	// Check if the command is a relative or absolute path
+	if (argv[0][0] == '.' || argv[0][0] == '/')
 	{
-		cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
-		if (!cmd_data->cmd_path)
+		cmd_data->cmd_path = argv[0];
+	}
+	else
+	{
+		// Otherwise, search for the command in the PATH directories
+		get_paths(ms, cmd_data);
+		if (cmd_data->cmd_paths)
 		{
-			printf("Command not found: %s\n", argv[0]);
-			ms->exit_status = 127;
-			return;
+			cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
+			if (!cmd_data->cmd_path)
+			{
+				printf("Command not found: %s\n", argv[0]);
+				ms->exit_status = 127;
+				return;
+			}
 		}
+		else
+			cmd_data->cmd_path = argv[0];
+	}
+	if (check_if_executable(cmd_data->cmd_path) != 1)
+	{
+		printf("Command not found or not executable: %s\n", cmd_data->cmd_path);
+		ms->exit_status = 127;
+		return;
 	}
 	env_array = convert_hashmap(*(ms->hashmap));
 	if (execve(cmd_data->cmd_path, argv, env_array) == -1)
@@ -136,3 +154,27 @@ void execution(t_minishell *ms, char **argv, t_cmd_data *cmd_data)
 		exit(EXIT_FAILURE);
 	}
 }
+
+// void execution(t_minishell *ms, char **argv, t_cmd_data *cmd_data)
+// {
+// 	char	**env_array;
+
+// 	get_paths(ms, cmd_data);
+// 	if (cmd_data->cmd_paths)
+// 	{
+// 		cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
+// 		printf("PLEASE TAKE A LOOK HERE: %s", cmd_data->cmd_path);
+// 		if (!cmd_data->cmd_path)
+// 		{
+// 			printf("Command not found: %s\n", argv[0]);
+// 			ms->exit_status = 127;
+// 			return;
+// 		}
+// 	}
+// 	env_array = convert_hashmap(*(ms->hashmap));
+// 	if (execve(cmd_data->cmd_path, argv, env_array) == -1)
+// 	{
+// 		perror("execve");
+// 		exit(EXIT_FAILURE);
+// 	}
+// }
