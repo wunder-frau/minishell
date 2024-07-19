@@ -52,6 +52,29 @@ static bool	is_non_empty_after_trim(const char *str)
 	return (*str != '\0');
 }
 
+// static void exit_numeric_arg_error(t_minishell *ms, char *str)
+// {
+//     if (ms->is_parent)
+//     {
+//         ft_putstr_fd("exit\n", STDERR_FILENO);
+//         clean_and_exit(ms);
+//     }
+//     print_arg_err_msg("exit: ", str, ": numeric argument required\n");
+//     ms->exit_status = UNEXPECTED_EXIT;
+//     exit(ms->exit_status);
+// }
+
+// static void exit_amount_of_arg_error(t_minishell *ms)
+// {
+//     if (ms->is_parent)
+//     {
+//         ft_putstr_fd("exit\n", STDERR_FILENO);
+//         clean_and_exit(ms);
+//     }
+//     print_err_msg("exit: ", "too many arguments\n");
+//     ms->exit_status = GENERIC_ERROR;
+// }
+
 static void	exit_numeric_arg_error(t_minishell *ms, char *str)
 {
 	if (ms->is_parent)
@@ -106,11 +129,15 @@ void	ft_exit(char **arg, t_minishell *ms)
 		ms->exit_status = SUCCESS;
 	else
 		handle_single_arg(arg[0], ms);
-	if (ms->is_parent)
-	{
-		ft_putstr_fd("exit\n", STDERR_FILENO);
+	if (ms->is_parent == true)
+		ft_putstr_fd("[>>exit<<]\n", STDERR_FILENO);
+	if (ms->is_parent == true)
 		clean_and_exit(ms);
-	}
+	// if (ms->is_parent)
+	// {
+	// 	ft_putstr_fd("exit\n", STDERR_FILENO);
+	// 	clean_and_exit(ms);
+	// }
 	exit(ms->exit_status);
 }
 
