@@ -282,7 +282,6 @@ bool is_inside_quotes(char c, int *inside_quotes);
 /** signals.c **/
 void set_signals(void);
 int ctrl_d_handler(char *input);
-void	check_signal(t_minishell **ms);
 
 /** validation_input.c **/
 int	validate_input(char *str);
