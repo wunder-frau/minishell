@@ -81,13 +81,13 @@ char *return_value_hash(t_hmap *v, char *key)
         {
             if (ft_strcmp(v->key, key) == 0)
             {
-                printf("Found key: %s, value: %s\n", key, v->value);
+                //printf("Found key: %s, value: %s\n", key, v->value);
                 return (v->value);
             }
             v = v->next;
         }
     }
-    printf("Key not found: %s\n", key);
+    //printf("Key not found: %s\n", key);
     return (NULL);
 }
 
@@ -160,7 +160,7 @@ void add_new_var(t_hmap **v, char *akey, char *avalue)
 			temp = temp->next;
 		temp->next = node;
 	}
-	printf("Added key: %s, value: %s\n", akey, avalue);
+	//printf("Added key: %s, value: %s\n", akey, avalue);
 }
 
 
@@ -188,7 +188,7 @@ void add_new_var(t_hmap **v, char *akey, char *avalue)
 // // !
 // 	// while(i < len && env[i] != NULL)
 // 	// {
-// 	// 	printf("%s\n", env[i]);
+// 	// 	//printf("%s\n", env[i]);
 // 	// 	i++;
 // 	// }
 // 	return (env);

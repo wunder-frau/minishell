@@ -301,4 +301,12 @@ void add_shlvl(t_minishell *shell);
 /** dollar_expansion.c **/
 int	dollar_expansion(char **str, t_minishell *ms, int last_status);
 
+/** exit.c **/
+bool	is_non_digit_space_sign(const char *str);
+void	ft_exit(char **arr, t_minishell *ms);
+void	handle_multiple_args(char **arr, t_minishell *ms);
+void	handle_single_arg(char *arg, t_minishell *ms) ;
+long	ft_atol(const char *str);
+void	clean_and_exit(t_minishell *ms);
+
 #endif

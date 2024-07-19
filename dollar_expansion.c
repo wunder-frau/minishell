@@ -108,6 +108,7 @@ void process_dollar(char **result, char **str, int *i, t_minishell *ms, int last
 
 void process_backslash_dollar(char **result, int *i)
 {
+        	//printf("some res--->%s\n", result[1]);
     append_char_to_result(result, '$');
     *i += 2;
 }

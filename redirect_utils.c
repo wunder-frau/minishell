@@ -5,7 +5,7 @@ int	check_redir(char **redir, t_minishell *ms)
 	int		status;
 	char	**rdr;
 
-	printf("🔍 Checking redirections... ");
+	//printf("🔍 Checking redirections... ");
 	status = parse_cmd(*redir, &rdr, ms);
 	if (status != 0)
 		return (status);
@@ -37,16 +37,16 @@ int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs,
 		char **temp_redirs = *redirs; // Use a temporary pointer to iterate through redirs
     while (*temp_redirs)
     {
-        printf("prepare_redirs: %s\n", *temp_redirs); // Dereference temp_redirs to get the string
+        //printf("prepare_redirs: %s\n", *temp_redirs); // Dereference temp_redirs to get the string
         temp_redirs++;
     }
 	free(redirects_line);
 	if (!*redirs)
 		return (200);
 	status = 0;
-		printf("BEFORE_____________%d\n", status);
+		//printf("BEFORE_____________%d\n", status);
 	status = prepare_heredocs(redirs, hd_num, ms);
-	printf("AFTER HERE_____________%d\n", status);
+	//printf("AFTER HERE_____________%d\n", status);
 	if (status != 0)
 	{
 		free_arr_2d(*redirs);

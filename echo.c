@@ -26,6 +26,7 @@
 //     shell->exit_status = 0;
 // }
 
+
 void	ft_echo(t_minishell *shell, char **cmd)
 {
 	int		i;
@@ -52,5 +53,5 @@ void	ft_echo(t_minishell *shell, char **cmd)
 		}
 	}
 	ft_putstr_fd("\n", 1);
-	shell->exit_status = 0;
+	//shell->exit_status = 0;
 }

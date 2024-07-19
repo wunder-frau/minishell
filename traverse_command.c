@@ -32,12 +32,12 @@ int	run_external_with_redir(char **command, char **redir, t_minishell *ms)
 		status = 0;
 		if (redir != NULL)
 		{
-			printf("run_external::::%s", *redir);
+			//printf("run_external::::%s", *redir);
 			status = apply_redirects(redir, ms);
 		}
 		if (status != 0)
 			exit(status);
-		printf("🤪🎉 Executing command___________________________>>>>>>:  %s 🤪🎉\n", command[0]);
+		//printf("🤪🎉 Executing command___________________________>>>>>>:  %s 🤪🎉\n", command[0]);
 		execution(ms, &command[0], &ms->cmd_data);
 		print_err_msg(command[0], ": execve() error occured\n");
 		exit(EXECVE_FAILURE);

@@ -137,7 +137,8 @@ MINISHELL_SRC = utils.c \
 								signals.c \
 								validation_input.c \
 								shlvl.c \
-								dollar_expansion.c
+								dollar_expansion.c \
+								exit.c
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths

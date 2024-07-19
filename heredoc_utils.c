@@ -15,20 +15,20 @@ int	prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms)
 	status = 0;
 	while ((*redirs)[i] && status == 0)
 	{
-			printf("status____0__%d\n", status);
+			//printf("status____0__%d\n", status);
 		if (ft_strncmp("<<", (*redirs)[i], 2) == 0)
 		{
 			hd_counter++;
 			//status = 0;
 			status = prepare_heredoc(*redirs + i, hd_name, ms);
-						printf("status____1__%d\n", status);
+						//printf("status____1__%d\n", status);
 		}
 		i++;
 	}
 	if (hd_counter > 0)
 		(*hd_num)++;
 	remove_hd_duplicates(redirs, hd_name, hd_counter);
-	printf("status_prepare_heredocs__%d\n", status);
+	//printf("status_prepare_heredocs__%d\n", status);
 	return (status);
 }
 
