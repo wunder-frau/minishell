@@ -33,7 +33,7 @@ void	run_commandline(t_minishell **ms)
 		// }
 		if (cmdline[0] != '\0' && cmdline[0] != '\n')
 			add_history(cmdline);
-		status = validate_input(cmdline);
+		status = syntax_checker_expression(cmdline);
 		if (status != SUCCESS)
 		{
 			free(cmdline);

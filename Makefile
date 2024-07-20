@@ -122,16 +122,19 @@ LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
 SRC_PATH = src/
 LEXER_PATH = lexer/
 BUILTINS_PATH = builtins/
+BNF_PATH = bnf_syntax_checker/
 OBJ_PATH = build/
 
 LEXER_SRC = lexer.c lexer_utils.c
 BUILTINS_SRC = exit.c exit_utils.c
+BNF_SRC = expression.c factor.c handle_syntax_error.c term.c
 
 MINISHELL_SRC = utils.c \
 								prepare_heredocs.c \
 								redirects_apply.c \
 								$(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
 								$(addprefix $(BUILTINS_PATH), $(BUILTINS_SRC)) \
+								$(addprefix $(BNF_PATH), $(BNF_SRC)) \
 								main.c run_commandline.c \
 								parse_ast.c \
 								traverse_command.c \
@@ -154,10 +157,9 @@ MINISHELL_SRC = utils.c \
 								pipe_execve.c \
 								traverse_pipe.c \
 								signals.c \
-								validation_input.c \
 								shlvl.c \
-								dollar_expansion.c 
-								
+								dollar_expansion.c
+
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 OBJS =	$(addprefix $(OBJ_PATH), $(MINISHELL_OBJ))
 
@@ -192,7 +194,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@echo "$(BUILD_EMOJI) $(BLUE)Compiled:$(RESET) $<"
 
 $(OBJ_PATH):
-	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins
+	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins $(OBJ_PATH)bnf_syntax_checker
 
 clean:
 	@rm -f $(MINISHELL_OBJ)

@@ -283,17 +283,23 @@ bool is_inside_quotes(char c, int *inside_quotes);
 void set_signals(void);
 int ctrl_d_handler(char *input);
 
-/** validation_input.c **/
-int	validate_input(char *str);
-char	*validate_pipeline(char *str, bool *status);
-char	*validate_command(char *str, bool *status);
-char	*validate_redirect(char *str, bool *status);
-char	*validate_word(char *str, bool *status);
-char	*validate_quotes(char *str, bool *status);
-void handle_and_display_error(char *str);
-bool is_special_token(char *str, int *length);
-bool is_alnum_or_quote(char c);
-void print_error_message(char *str);
+/** expression.c **/
+int		syntax_checker_expression(char *str);
+char	*syntax_checker_pipeline(char *str, bool *status);
+
+/** term.c **/
+char	*syntax_checker_command(char *str, bool *status);
+
+/** factor.c **/
+char	*syntax_checker_redirect(char *str, bool *status);
+char	*syntax_checker_word(char *str, bool *status);
+char	*handle_quoted_string(char *str, bool *status);
+
+/** handle_syntax_error.c **/
+bool	is_alnum_or_quote(char c);
+bool	is_special_token(char *str, int *length);
+void	handle_syntax_error(char *str);
+
 /** shlvl.c **/
 void add_shlvl(t_minishell *shell);
 
