@@ -1,10 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/21 00:43:58 by istasheu          #+#    #+#             */
+/*   Updated: 2024/07/21 00:44:00 by istasheu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 bool	is_non_digit_space_sign(const char *str)
 {
 	while (*str)
 	{
-		if (!ft_isdigit(*str) && !ft_is_space(*str) && *str != '+' && *str != '-')
+		if (!ft_isdigit(*str) && !ft_is_space(*str)
+			&& *str != '+' && *str != '-')
 			return (true);
 		str++;
 	}
@@ -49,7 +62,7 @@ void	exit_amount_of_arg_error(t_minishell *ms)
 
 void	clean_and_exit(t_minishell *ms)
 {
-	int status;
+	int	status;
 
 	status = ms->exit_status;
 	rl_clear_history();
