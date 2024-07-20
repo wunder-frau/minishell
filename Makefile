@@ -109,10 +109,29 @@
 
 
 NAME = minishell
+
+# Paths
+LIBFT_DIR = libft_
+LIBFT = $(LIBFT_DIR)/libft.a
+CC = gcc
+CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR) -I$(shell brew --prefix readline)/include
+LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
+# CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
+# LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline
+
+SRC_PATH = src/
+LEXER_PATH = lexer/
+BUILTINS_PATH = builtins/
+OBJ_PATH = build/
+
+LEXER_SRC = lexer.c lexer_utils.c
+BUILTINS_SRC = exit.c exit_utils.c
+
 MINISHELL_SRC = utils.c \
 								prepare_heredocs.c \
 								redirects_apply.c \
-								lexer_utils.c lexer.c \
+								$(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
+								$(addprefix $(BUILTINS_PATH), $(BUILTINS_SRC)) \
 								main.c run_commandline.c \
 								parse_ast.c \
 								traverse_command.c \
@@ -137,18 +156,10 @@ MINISHELL_SRC = utils.c \
 								signals.c \
 								validation_input.c \
 								shlvl.c \
-								dollar_expansion.c \
-								exit.c
+								dollar_expansion.c 
+								
 MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
-
-# Paths
-LIBFT_DIR = libft_
-LIBFT = $(LIBFT_DIR)/libft.a
-CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR) -I$(shell brew --prefix readline)/include
-LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
-# CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
-# LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline
+OBJS =	$(addprefix $(OBJ_PATH), $(MINISHELL_OBJ))
 
 # Colors and formatting
 RED = \033[0;31m
@@ -166,22 +177,26 @@ BUILD_EMOJI = 🔨
 REMOVE_EMOJI = 🗑️
 REBUILD_EMOJI = ♻️
 
-all: $(NAME)
+all: $(OBJ_PATH) $(NAME)
 
-$(NAME): $(LIBFT) $(MINISHELL_OBJ)
-	@$(CC) $(MINISHELL_OBJ) $(LDFLAGS) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJS)
+	@$(CC) $(OBJS) $(LDFLAGS) -o $(NAME)
 	@echo "$(BUILD_EMOJI) $(BLUE)Linked:$(RESET) $(NAME)"
 
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR)
 	@echo "$(BUILD_EMOJI) $(BLUE)libft built!$(RESET)"
 
-$(MINISHELL_OBJ): %.o: %.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "$(BUILD_EMOJI) $(BLUE)Compiled:$(RESET) $<"
 
+$(OBJ_PATH):
+	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins
+
 clean:
 	@rm -f $(MINISHELL_OBJ)
+	@rm -rf $(OBJ_PATH)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo "$(CLEAN_EMOJI) $(PURPLE)Object files removed!$(RESET)"
 
@@ -194,3 +209,4 @@ re: fclean all
 	@echo "$(REBUILD_EMOJI) $(YELLOW)Rebuild complete!$(RESET)"
 
 .PHONY: all clean fclean re
+
