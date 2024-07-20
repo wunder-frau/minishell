@@ -20,6 +20,10 @@
 
 #include "libft_/libft.h"
 
+extern int g_sigint_received;
+
+#define MAX_CHILDREN 256
+
 enum	e_exit_status
 {
 	SUCCESS,
@@ -112,6 +116,8 @@ typedef struct s_minishell
 	bool is_parent;
 	bool is_oldpwd_unset;
 	t_cmd_data	cmd_data;
+	pid_t children_pids[MAX_CHILDREN];
+	int num_children;
 } t_minishell;
 
 enum	e_characters
