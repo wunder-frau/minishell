@@ -29,27 +29,19 @@ int	exec_builtin_redir(char **command, char **redir, t_minishell *ms)
 
 int copy_std_fd(int *in_fd, int *out_fd, char *command)
 {
-	// Save current standard input and output file descriptors
 	*in_fd = dup(STDIN_FILENO);
 	*out_fd = dup(STDOUT_FILENO);
-
-	// Check if dup operation was successful
 	if (*in_fd == -1 || *out_fd == -1)
 	{
-			// Handle error and close file descriptors if one of the dups failed
-			if (*in_fd != -1)
-					close(*in_fd);
-			if (*out_fd != -1)
-					close(*out_fd);
-			print_err_msg(command, ": dup() error occurred\n");
-			return (DUP_FAILURE);
+		if (*in_fd != -1)
+			close(*in_fd);
+		if (*out_fd != -1)
+			close(*out_fd);
+		print_err_msg(command, ": dup() error occurred\n");
+		return (DUP_FAILURE);
 	}
-
-	// Debug print statements
 	//printf("Debug: Copied STDIN_FILENO to in_fd: %d\n", *in_fd);
 	//printf("Debug: Copied STDOUT_FILENO to out_fd: %d\n", *out_fd);
-
-	// Return success status
 	return (0);
 }
 
