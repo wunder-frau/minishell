@@ -123,18 +123,19 @@ SRC_PATH = src/
 LEXER_PATH = lexer/
 BUILTINS_PATH = builtins/
 BNF_PATH = bnf_syntax_checker/
+REDIR_PATH = redirects/
 OBJ_PATH = build/
 
 LEXER_SRC = lexer.c lexer_utils.c
 BUILTINS_SRC = exit.c exit_utils.c
 BNF_SRC = expression.c factor.c handle_syntax_error.c term.c
+REDIR_SRC = apply_heredocs.c apply_redirects.c heredoc_utils.c
 
 MINISHELL_SRC = utils.c \
-								prepare_heredocs.c \
-								redirects_apply.c \
 								$(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
 								$(addprefix $(BUILTINS_PATH), $(BUILTINS_SRC)) \
 								$(addprefix $(BNF_PATH), $(BNF_SRC)) \
+								$(addprefix $(REDIR_PATH), $(REDIR_SRC)) \
 								main.c run_commandline.c \
 								parse_ast.c \
 								traverse_command.c \
@@ -144,7 +145,6 @@ MINISHELL_SRC = utils.c \
 								assemble_ast.c \
 								init_node.c \
 								to_delete.c \
-								heredoc_utils.c \
 								error_handling.c \
 								redirect_utils.c \
 								builtins.c \
@@ -194,7 +194,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@echo "$(BUILD_EMOJI) $(BLUE)Compiled:$(RESET) $<"
 
 $(OBJ_PATH):
-	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins $(OBJ_PATH)bnf_syntax_checker
+	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins $(OBJ_PATH)bnf_syntax_checker $(OBJ_PATH)redirects
 
 clean:
 	@rm -f $(MINISHELL_OBJ)

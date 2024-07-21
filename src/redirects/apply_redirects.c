@@ -9,7 +9,6 @@ int	apply_append(char *redir, t_minishell *ms, int *out)
 		close(*out);
 	while (ft_is_space(*redir))
 		redir++;
-	//printf("______________apply_append____________");
 	status = check_redir(&redir, ms);
 	if (status != 0)
 		return (status);
@@ -30,7 +29,6 @@ int	apply_redir_in(char *redir, t_minishell *ms, int *in)
 	int		status;
 	int		fd;
 
-	//printf("______________lol_out_2____________");
 	if (*in != -1)
 		close(*in);
 	while (ft_is_space(*redir))
@@ -46,7 +44,6 @@ int	apply_redir_in(char *redir, t_minishell *ms, int *in)
 		status = GENERIC_ERROR;
 		perror_err_msg(redir, "");
 	}
-	//printf("lol");
 	free(redir);
 	return (status);
 }
@@ -56,7 +53,6 @@ int	apply_redir_out(char *redir, t_minishell *ms, int *out)
 	int		status;
 	int		fd;
 
-	//printf("lol_out_1");
 	if (*out != -1)
 		close(*out);
 	while (ft_is_space(*redir))
@@ -72,7 +68,6 @@ int	apply_redir_out(char *redir, t_minishell *ms, int *out)
 		status = GENERIC_ERROR;
 		perror_err_msg(redir, "");
 	}
-	//printf("lol_out");
 	free(redir);
 	return (status);
 }
@@ -80,34 +75,16 @@ int	apply_redir_out(char *redir, t_minishell *ms, int *out)
 int	apply_redirect(char *redir, t_minishell *ms, int *in, int *out)
 {
 	int	status;
-	//(void)ms;
+
 	status = 0;
-	//printf("test");
-	//printf("\n");
 	if (ft_strncmp(redir, "<<", 2) == 0)
-	{
-			//printf("________________<<________: [%s]\n", redir);
 		status = apply_heredoc(redir + 2, in);
-	}
 	else if (ft_strncmp(redir, ">>", 2) == 0)
 		status = apply_append(redir + 2, ms, out);
 	else if (ft_strncmp(redir, "<", 1) == 0)
-	{
-		//printf("______________<____________");
-				//printf("\n");
 		status = apply_redir_in(redir + 1, ms, in);
-	}
 	else if (ft_strncmp(redir, ">", 1) == 0)
-	{
-				//printf("______________>____________");
-				//printf("\n");
-						status = apply_redir_out(redir + 1, ms, out);
-	}
-	else
-	{
-		//f//printf(stderr, "Unsupported redirection: %s\n", redir);
-		status = 1;
-	}
+		status = apply_redir_out(redir + 1, ms, out);
 	return (status);
 }
 
@@ -124,15 +101,10 @@ int	apply_redirects(char **redirs, t_minishell *ms)
 	i = 0;
 	while (redirs[i] && status == 0)
 	{
-		//printf("apply_redirects");
 		status = apply_redirect(redirs[i], ms, &in, &out);
 		i++;
 	}
 	if (status == 0)
-	{
-		//printf("replace_fd");
 		status = replace_fd(in, out);
-				//printf("replace_fd_____");
-	}
 	return (status);
 }

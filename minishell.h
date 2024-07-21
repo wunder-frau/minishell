@@ -197,6 +197,7 @@ char	*get_hd_name(int *hd_num);
 void	remove_hd_files(int *hd_num);
 
 /** prepare_heredocs.c **/
+void	remove_spaces_and_quotes_hd(char *hd);
 int		prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms);
 void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter);
 int		prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms);
@@ -317,5 +318,6 @@ bool	is_non_empty_after_trim(const char *str);
 void	exit_numeric_arg_error(t_minishell *ms, char *str);
 void	exit_amount_of_arg_error(t_minishell *ms);
 void	clean_and_exit(t_minishell *ms);
+
 
 #endif
