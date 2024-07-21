@@ -119,32 +119,33 @@ LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
 # CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
 # LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline
 
+OBJ_PATH = build/
 SRC_PATH = src/
 LEXER_PATH = lexer/
 BUILTINS_PATH = builtins/
-BNF_PATH = bnf_syntax_checker/
+BNF_PATH = syntax_checker/
 REDIR_PATH = redirects/
-OBJ_PATH = build/
+TRAVERSE_PATH = traverse_tree/
 
 LEXER_SRC = lexer.c lexer_utils.c
 BUILTINS_SRC = exit.c exit_utils.c
 BNF_SRC = expression.c factor.c handle_syntax_error.c term.c
 REDIR_SRC = apply_heredocs.c apply_redirects.c heredoc_utils.c
+TRAVERSE_SRC = traverse_command.c traverse_pipe.c
 
 MINISHELL_SRC = utils.c \
 								$(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
 								$(addprefix $(BUILTINS_PATH), $(BUILTINS_SRC)) \
 								$(addprefix $(BNF_PATH), $(BNF_SRC)) \
 								$(addprefix $(REDIR_PATH), $(REDIR_SRC)) \
+								$(addprefix $(TRAVERSE_PATH), $(TRAVERSE_SRC)) \
 								main.c run_commandline.c \
 								parse_ast.c \
-								traverse_command.c \
 								dup_envp.c \
 								utils_free.c \
 								init_minishell.c \
 								assemble_ast.c \
 								init_node.c \
-								to_delete.c \
 								error_handling.c \
 								redirect_utils.c \
 								builtins.c \
@@ -155,7 +156,6 @@ MINISHELL_SRC = utils.c \
 								env.c \
 								cd.c \
 								pipe_execve.c \
-								traverse_pipe.c \
 								signals.c \
 								shlvl.c \
 								dollar_expansion.c
@@ -194,7 +194,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@echo "$(BUILD_EMOJI) $(BLUE)Compiled:$(RESET) $<"
 
 $(OBJ_PATH):
-	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins $(OBJ_PATH)bnf_syntax_checker $(OBJ_PATH)redirects
+	mkdir $(OBJ_PATH) $(OBJ_PATH)lexer $(OBJ_PATH)builtins $(OBJ_PATH)syntax_checker $(OBJ_PATH)redirects $(OBJ_PATH)traverse_tree
 
 clean:
 	@rm -f $(MINISHELL_OBJ)

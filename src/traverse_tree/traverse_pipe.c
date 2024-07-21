@@ -1,9 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   traverse_pipe.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/21 20:41:25 by istasheu          #+#    #+#             */
+/*   Updated: 2024/07/21 20:41:27 by istasheu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-/**
-*This function sets up a pipe and coordinates the execution
-*of two child processes representing the commands in a pipeline.
-*/
 int	traverse_pipe(t_node **root, t_minishell *ms)
 {
 	int		status;
@@ -12,19 +20,15 @@ int	traverse_pipe(t_node **root, t_minishell *ms)
 	t_node	*node;
 
 	node = *root;
-	//printf("AM I HERE?");
 	if (pipe(pipefd) == -1)
 		return (PIPE_FAILURE);
 	status = traverse_lhs(&(node->left), ms, pipefd, pids);
 	if (status == 0)
 		status = traverse_rhs(&(node->right), ms, pipefd, pids);
-	status = fetch_children_status(pids, 2);
+	status = wait_children_and_fetch_exit_status(pids, 2);
 	return (status);
 }
 
-/**
- * Executes the first command, redirecting its output to the pipe.
- */
 int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 {
 	int	status;
@@ -34,7 +38,6 @@ int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 		return (FORK_FAILURE);
 	if (pids[0] == 0)
 	{
-			//printf("?????");
 		ms->is_parent = false;
 		close(pipefd[0]);
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
@@ -59,7 +62,7 @@ int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 	if (pids[1] == -1)
 		return (FORK_FAILURE);
 	if (pids[1] == 0)
-	{	//printf("DO ?");
+	{
 		ms->is_parent = false;
 		if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		{
@@ -75,14 +78,14 @@ int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 	return (0);
 }
 
-int	fetch_children_status(pid_t *pids, int num)
+int	wait_children_and_fetch_exit_status(pid_t *pids, int num)
 {
 	int	i;
 	int	status;
 
 	i = 0;
 	while (i < num)
-	{	//printf("DO I HERE?");
+	{
 		if (pids[i] == -1)
 			return (FORK_FAILURE);
 		waitpid(pids[i], &status, 0);

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   traverse_command.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/21 20:43:34 by istasheu          #+#    #+#             */
+/*   Updated: 2024/07/21 20:44:02 by istasheu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	traverse_command(char *cmd, char **redir, t_minishell *ms)
 {
 	int		status;
-	char **command;
+	char	**command;
+
 	status = parse_cmd(cmd, &command, ms);
-	//
 	ms->command = command;
 	if (status == 0)
 	{
@@ -31,19 +43,14 @@ int	run_external_with_redir(char **command, char **redir, t_minishell *ms)
 	{
 		status = 0;
 		if (redir != NULL)
-		{
-			//printf("run_external::::%s", *redir);
 			status = apply_redirects(redir, ms);
-		}
 		if (status != 0)
 			exit(status);
-		//printf("🤪🎉 Executing command___________________________>>>>>>:  %s 🤪🎉\n", command[0]);
 		execution(ms, &command[0], &ms->cmd_data);
 		print_err_msg(command[0], ": execve() error occured\n");
 		exit(EXECVE_FAILURE);
 	}
-	// = waitpid(pid, &status, 0);
-		status = fetch_children_status(&pid, 1);
+	status = wait_children_and_fetch_exit_status(&pid, 1);
 	return (status);
 }
 

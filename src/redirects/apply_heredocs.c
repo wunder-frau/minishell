@@ -81,7 +81,7 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
 	free(*limiter);
 	*limiter = hd_name;
 	status = 0;
-	status = fetch_children_status(&pid, 1);
+	status = wait_children_and_fetch_exit_status(&pid, 1);
 	return (status);
 }
 

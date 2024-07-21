@@ -55,8 +55,6 @@ bool	init_node(t_parsed_data *data, t_node **root)
 	else if (data->type == T_COMMAND)
 	{
 		node = (t_node *)init_node_cmd();
-			print_node(node);
-	//printf("\n");
 	}
 	if (node == NULL)
 	{
@@ -67,8 +65,5 @@ bool	init_node(t_parsed_data *data, t_node **root)
 	*root = node;
 
 	//printf("Node created successfully, root set\n");
-	//printf("\n");
-	print_node(node);
-	//printf("\n");
 	return (true);
 }

@@ -152,9 +152,6 @@ enum	e_types
 	T_REDIR,
 };
 
-/** TO DELETE **/
-void print_node(t_node *node);
-
 void			rl_replace_line(const char *text, int clear_undo);
 /** run_commanline.c **/
 void	ft_readline(char **cmdline, char *prompt);
@@ -277,7 +274,7 @@ void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
 int	traverse_pipe(t_node **root, t_minishell *ms);
 int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
 int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
-int	fetch_children_status(pid_t *pids, int num);
+int	wait_children_and_fetch_exit_status(pid_t *pids, int num);
 bool is_inside_quotes(char c, int *inside_quotes);
 
 /** signals.c **/
