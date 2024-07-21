@@ -1,6 +1,7 @@
 #include "minishell.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h> // For debug print
 
 char *ft_strdup(const char *s1)
 {
@@ -98,17 +99,17 @@ void process_dollar(char **result, char **str, int *i, t_minishell *ms, int last
     char *old_result;
     int var_len;
 
-    temp = expand_variable(&(*str)[*i], ms, last_status, &var_len);
+    temp = expand_variable(*str + *i, ms, last_status, &var_len);
     old_result = *result;
     *result = ft_strjoin(*result, temp);
     free(old_result);
     free(temp);
     *i += var_len;
+
 }
 
 void process_backslash_dollar(char **result, int *i)
 {
-        	//printf("some res--->%s\n", result[1]);
     append_char_to_result(result, '$');
     *i += 2;
 }
@@ -156,15 +157,25 @@ int dollar_expansion(char **str, t_minishell *ms, int last_status)
     while ((*str)[i])
     {
         if ((*str)[i] == '\'')
-            process_quotes(&result, &in_single_quotes, str, &i, ms, last_status);
+        {
+            process_single_quote(&result, &in_single_quotes, (*str)[i++]);
+        }
         else if ((*str)[i] == '\"')
-            process_quotes(&result, &in_double_quotes, str, &i, ms, last_status);
+        {
+            process_double_quote(&result, &in_double_quotes, (*str)[i++]);
+        }
         else if ((*str)[i] == '\\' && (*str)[i + 1] == '$')
+        {
             process_backslash_dollar(&result, &i);
-        else if ((*str)[i] == '$' && (in_double_quotes || !in_single_quotes))
+        }
+        else if ((*str)[i] == '$' && (in_double_quotes || (!in_single_quotes && !in_double_quotes)))
+        {
             process_dollar(&result, str, &i, ms, last_status);
+        }
         else
+        {
             process_other_chars(&result, str, &i);
+        }
     }
     free(*str);
     *str = result;

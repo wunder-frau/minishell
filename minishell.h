@@ -308,4 +308,7 @@ void	handle_single_arg(char *arg, t_minishell *ms) ;
 long	ft_atol(const char *str);
 void	clean_and_exit(t_minishell *ms);
 
+/** export_unset.c **/
+bool is_valid_identifier(const char *str);
+
 #endif

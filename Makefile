@@ -193,4 +193,21 @@ fclean: clean
 re: fclean all
 	@echo "$(REBUILD_EMOJI) $(YELLOW)Rebuild complete!$(RESET)"
 
-.PHONY: all clean fclean re
+# Test-related variables and targets
+TEST_SRCS = tests/test_minishell.c
+TEST_OBJS = $(TEST_SRCS:.c=.o)
+TEST_EXEC = test_minishell
+TEST_CFLAGS = $(CFLAGS) -DUNIT_TEST
+
+test: $(TEST_EXEC)
+	./$(TEST_EXEC)
+
+$(TEST_EXEC): $(TEST_OBJS) $(filter-out main.o, $(MINISHELL_OBJ))
+	@$(CC) $(TEST_OBJS) $(filter-out main.o, $(MINISHELL_OBJ)) $(LDFLAGS) -o $@
+	@echo "$(BUILD_EMOJI) $(GREEN)Test executable built!$(RESET)"
+
+clean_test:
+	@rm -f $(TEST_OBJS) $(TEST_EXEC)
+	@echo "$(CLEAN_EMOJI) $(PURPLE)Test object files removed!$(RESET)"
+
+.PHONY: all clean fclean re test clean_test
