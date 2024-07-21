@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 22:46:13 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/21 22:46:15 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 00:42:27 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool	parse_ast(char *str, t_parsed_data **data)
 	return (status);
 }
 
-int	build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms)
+int	build_ast(char *str, t_node **root, int *hd_count, t_minishell *shell)
 {
 	bool				status;
 	t_parsed_data		*data;
@@ -35,9 +35,9 @@ int	build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms)
 		return (200);
 	type = data->type;
 	if (type == T_PIPE)
-		status = assemble_ast_pipe(data, root, hd_num, ms);
+		status = assemble_ast_pipe(data, root, hd_count, shell);
 	else if (type == T_COMMAND)
-		status = assemble_ast_command(data, root, hd_num, ms);
+		status = assemble_ast_command(data, root, hd_count, shell);
 	free(data);
 	if (status != SUCCESS)
 	{

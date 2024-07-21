@@ -2,24 +2,14 @@
 
 void	quote_tracker(char *str, int *i, int *quote_status)
 {
-	char cur_char = str[*i];
+	char	cur_char;
 
+	cur_char = str[*i];
 	if ((cur_char == S_QUO && *quote_status == S_QUO)
-	|| (cur_char == D_QUO && *quote_status == D_QUO))
-	{
-		//printf("kkkkk___%c\n", cur_char);
-		//printf("inside____________quotes");
-		//printf("\n");
+		|| (cur_char == D_QUO && *quote_status == D_QUO))
 		*quote_status = 0;
-		//printf("type : [%c]", *quote_status);
-	}
 	else if (cur_char == S_QUO || cur_char == D_QUO)
-	{
-		//printf("jojo___%c\n", cur_char);
-		//printf("\n");
 		*quote_status = cur_char;
-		//printf("TYPE: [%c]", *quote_status);
-	}
 }
 
 static void	copy_and_replace_with_space(char *str, char *r, int *i, int *j)

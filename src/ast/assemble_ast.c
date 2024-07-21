@@ -6,31 +6,31 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 22:46:01 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/21 22:46:02 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 00:42:27 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_num,
-		t_minishell *ms)
+int	assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_count,
+		t_minishell *shell)
 {
 	int	status;
 
-	status = build_ast(data->block_left, &((*root)->left), hd_num, ms);
+	status = build_ast(data->block_left, &((*root)->left), hd_count, shell);
 	if (status == 0)
-		status = build_ast(data->block_right, &((*root)->right), hd_num, ms);
+		status = build_ast(data->block_right, &((*root)->right), hd_count, shell);
 	return (status);
 }
 
-int	assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_num,
-		t_minishell *ms)
+int	assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_count,
+		t_minishell *shell)
 {
 	int				status;
 	t_redir			*redir_node;
 	char			**redirs;
 
-	status = prepare_redirects(data->block_left, hd_num, &redirs, ms);
+	status = prepare_redirects(data->block_left, hd_count, &redirs, shell);
 	if (status != 0)
 		return (status);
 	redir_node = init_node_redir();

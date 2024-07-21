@@ -6,11 +6,20 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 01:29:43 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/21 01:29:45 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/21 23:29:25 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+bool	is_blank_string(char *str)
+{
+	if (ft_strlen(str) == 0)
+		return (true);
+	while (ft_is_space(*str))
+		str++;
+	return (*str == NULL_TERM);
+}
 
 bool	is_alnum_or_quote(char c)
 {

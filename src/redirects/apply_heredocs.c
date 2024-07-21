@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   apply_heredocs.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/22 00:16:40 by istasheu          #+#    #+#             */
+/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-static void	handle_heredoc_line(int fd, char *line, t_minishell *ms,
+static void	handle_heredoc_line(int fd, char *line, t_minishell *shell,
 				char *limiter)
 {
 	int	status;
 
 	status = 0;
-	status = dollar_expansion(&line, ms, ms->exit_status);
+	status = dollar_expansion(&line, shell, shell->exit_status);
 	if (status == 0)
 	{
 		ft_putendl_fd(line, fd);
@@ -21,7 +33,7 @@ static void	handle_heredoc_line(int fd, char *line, t_minishell *ms,
 	}
 }
 
-static void	read_until_limiter(char *limiter, int fd, t_minishell *ms)
+static void	read_until_limiter(char *limiter, int fd, t_minishell *shell)
 {
 	char	*line;
 	int		isequal;
@@ -36,7 +48,7 @@ static void	read_until_limiter(char *limiter, int fd, t_minishell *ms)
 		}
 		isequal = ft_strcmp(limiter, line);
 		if (isequal != 0)
-			handle_heredoc_line(fd, line, ms, limiter);
+			handle_heredoc_line(fd, line, shell, limiter);
 		if (isequal == 0)
 		{
 			close(fd);
@@ -61,7 +73,7 @@ void	remove_spaces_and_quotes_hd(char *hd)
 	remove_quotes(hd, 0, 0);
 }
 
-int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
+int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *shell)
 {
 	int		status;
 	int		fd;
@@ -75,7 +87,7 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms)
 	{
 		fd = open(hd_name + 2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd != -1)
-			read_until_limiter(*limiter + 2, fd, ms);
+			read_until_limiter(*limiter + 2, fd, shell);
 		exit(GENERIC_ERROR);
 	}
 	free(*limiter);
@@ -95,13 +107,13 @@ int	apply_heredoc(char *heredoc, int *in)
 		close(*in);
 	fd = open(heredoc, O_RDONLY);
 	if (unlink(heredoc) == -1)
-		print_err_msg(heredoc, ": Can't delete file\n");
+		print_err_shellg(heredoc, ": Can't delete file\n");
 	if (fd != -1)
 		*in = fd;
 	else
 	{
 		status = GENERIC_ERROR;
-		perror_err_msg(heredoc, "");
+		perror_err_shellg(heredoc, "");
 	}
 	return (status != 0);
 }

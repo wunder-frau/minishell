@@ -6,13 +6,13 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:41:25 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/21 20:41:27 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	traverse_pipe(t_node **root, t_minishell *ms)
+int	traverse_pipe(t_node **root, t_minishell *shell)
 {
 	int		status;
 	int		pipefd[2];
@@ -22,14 +22,14 @@ int	traverse_pipe(t_node **root, t_minishell *ms)
 	node = *root;
 	if (pipe(pipefd) == -1)
 		return (PIPE_FAILURE);
-	status = traverse_lhs(&(node->left), ms, pipefd, pids);
+	status = traverse_lhs(&(node->left), shell, pipefd, pids);
 	if (status == 0)
-		status = traverse_rhs(&(node->right), ms, pipefd, pids);
+		status = traverse_rhs(&(node->right), shell, pipefd, pids);
 	status = wait_children_and_fetch_exit_status(pids, 2);
 	return (status);
 }
 
-int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
+int	traverse_lhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2])
 {
 	int	status;
 
@@ -38,7 +38,7 @@ int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 		return (FORK_FAILURE);
 	if (pids[0] == 0)
 	{
-		ms->is_parent = false;
+		shell->is_parent = false;
 		close(pipefd[0]);
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
 		{
@@ -46,7 +46,7 @@ int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 			exit(DUP_FAILURE);
 		}
 		close(pipefd[1]);
-		status = traverse_tree(node, ms);
+		status = traverse_tree(node, shell);
 		exit(status);
 	}
 	else
@@ -54,7 +54,7 @@ int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 	return (0);
 }
 
-int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
+int	traverse_rhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2])
 {
 	int	status;
 
@@ -63,14 +63,14 @@ int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2])
 		return (FORK_FAILURE);
 	if (pids[1] == 0)
 	{
-		ms->is_parent = false;
+		shell->is_parent = false;
 		if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		{
 			close(pipefd[0]);
 			exit(DUP_FAILURE);
 		}
 		close(pipefd[0]);
-		status = traverse_tree(node, ms);
+		status = traverse_tree(node, shell);
 		exit(status);
 	}
 	else

@@ -127,13 +127,17 @@ BNF_PATH = syntax_checker/
 REDIR_PATH = redirects/
 TRAVERSE_PATH = traverse_tree/
 AST_PATH = ast/
+HELPERS_PATH = helpers/
+RUN_PATH = run/
 
 LEXER_SRC = lexer.c lexer_utils.c
-BUILTINS_SRC = exit.c exit_utils.c
+BUILTINS_SRC = exit.c exit_utils.c run_builtin.c
 BNF_SRC = expression.c factor.c handle_syntax_error.c term.c
-REDIR_SRC = apply_heredocs.c apply_redirects.c heredoc_utils.c
+REDIR_SRC = apply_heredocs.c apply_redirects.c heredoc_utils.c redirect_utils.c
 TRAVERSE_SRC = traverse_command.c traverse_pipe.c
 AST_SRC = assemble_ast.c init_node.c parse_ast.c
+HELPERS_SRC = error_handling.c free_utils.c string_utils.c
+RUN_SRC = init_minishell.c main.c run_commandline.c
 
 MINISHELL_SRC = $(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
 								$(addprefix $(BUILTINS_PATH), $(BUILTINS_SRC)) \
@@ -141,15 +145,10 @@ MINISHELL_SRC = $(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
 								$(addprefix $(REDIR_PATH), $(REDIR_SRC)) \
 								$(addprefix $(TRAVERSE_PATH), $(TRAVERSE_SRC)) \
 								$(addprefix $(AST_PATH), $(AST_SRC)) \
-								utils.c \
-								main.c run_commandline.c \
+								$(addprefix $(HELPERS_PATH), $(HELPERS_SRC)) \
+								$(addprefix $(RUN_PATH), $(RUN_SRC)) \
 								dup_envp.c \
-								utils_free.c \
-								init_minishell.c \
-								error_handling.c \
-								redirect_utils.c \
-								builtins.c \
-								run_builtin.c \
+								exec_builtin.c \
 								pwd.c \
 								echo.c \
 								export_unset.c \
@@ -200,7 +199,9 @@ $(OBJ_PATH):
 				$(OBJ_PATH)syntax_checker \
 				$(OBJ_PATH)redirects \
 				$(OBJ_PATH)traverse_tree \
-				$(OBJ_PATH)ast
+				$(OBJ_PATH)ast \
+				$(OBJ_PATH)helpers \
+				$(OBJ_PATH)run
 
 clean:
 	@rm -f $(MINISHELL_OBJ)

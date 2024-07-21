@@ -155,17 +155,17 @@ enum	e_types
 void			rl_replace_line(const char *text, int clear_undo);
 /** run_commanline.c **/
 void	ft_readline(char **cmdline, char *prompt);
-void	run_commandline(t_minishell **ms);
+void	run_commandline(t_minishell **shell);
 char	**dup_envp(char **envp);
-void	terminate_minishell(t_minishell **ms, int status);
-void	init_minishell(t_minishell **ms, char **envp, t_cmd_data *cmd_data);
+void	terminate_minishell(t_minishell **shell, int status);
+void	init_minishell(t_minishell **shell, char **envp, t_cmd_data *cmd_data);
 
 /** parse_ast.c **/
 bool	parse_ast(char *str, t_parsed_data **data);
-int		build_ast(char *str, t_node **root, int *hd_num, t_minishell *ms);
-int		assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_num, t_minishell *ms);
-int	prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
-int		assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_num, t_minishell *ms);
+int		build_ast(char *str, t_node **root, int *hd_count, t_minishell *shell);
+int		assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_count, t_minishell *shell);
+int	prepare_redirects(char *redirects_line, int *hd_count, char ***redirs, t_minishell *shell);
+int		assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_count, t_minishell *shell);
 t_redir *init_node_redir(void);
 t_pipe  *init_node_pipe(void);
 t_command *init_node_cmd(void);
@@ -186,39 +186,39 @@ bool		check_redirection(char *str);
 int	convert_input_to_redirects(char *str, char **redir, int i, int j);
 
 /** prepare_redirects.c **/
-int		check_redir(char **redir, t_minishell *ms);
-void	print_err_msg(char *cmd, char *msg);
-int		prepare_redirects(char *redirects_line, int *hd_num, char ***redirs, t_minishell *ms);
-void	perror_err_msg(char *cmd, char *arg);
-char	*get_hd_name(int *hd_num);
-void	remove_hd_files(int *hd_num);
+int		check_redir(char **redir, t_minishell *shell);
+void	print_err_shellg(char *cmd, char *shellg);
+int		prepare_redirects(char *redirects_line, int *hd_count, char ***redirs, t_minishell *shell);
+void	perror_err_shellg(char *cmd, char *arg);
+char	*get_hd_name(int *hd_count);
+void	remove_hd_files(int *hd_count);
 
 /** prepare_heredocs.c **/
 void	remove_spaces_and_quotes_hd(char *hd);
-int		prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms);
+int		prepare_heredocs(char ***redirs, int *hd_count, t_minishell *shell);
 void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter);
-int		prepare_heredoc(char **limiter, char *hd_name, t_minishell *ms);
+int		prepare_heredoc(char **limiter, char *hd_name, t_minishell *shell);
 
 /** utils.c **/
 void	remove_quotes(char *str, int i, int j);
 void	remove_quotes_arr(char **arr, int i);
 bool	is_blank_string(char *str);
 char	**split_handle_quotes_and_spaces(char *str);
-int		parse_cmd(char *cmd, char ***res, t_minishell *ms);
+int		parse_cmd(char *cmd, char ***res, t_minishell *shell);
 
 /** redirects_apply.c **/
-int	apply_append(char *redir, t_minishell *ms, int *out);
+int	apply_append(char *redir, t_minishell *shell, int *out);
 int	apply_heredoc(char *heredoc, int *in);
-int	apply_redir_in(char *redir, t_minishell *ms, int *in);
-int	apply_redir_out(char *redir, t_minishell *ms, int *out);
-int	apply_redirect(char *redir, t_minishell *ms, int *in, int *out);
+int	apply_redir_in(char *redir, t_minishell *shell, int *in);
+int	apply_redir_out(char *redir, t_minishell *shell, int *out);
+int	apply_redirect(char *redir, t_minishell *shell, int *in, int *out);
 int	replace_fd(int in, int out);
-int	apply_redirects(char **redirs, t_minishell *ms);
+int	apply_redirects(char **redirs, t_minishell *shell);
 
 /** traverse_command.c **/
-int	traverse_command(char *cmd, char **redir, t_minishell *ms);
-int	run_external_with_redir(char **command, char **redir, t_minishell *ms);
-int	traverse_tree(t_node **root, t_minishell *ms);
+int	traverse_command(char *cmd, char **redir, t_minishell *shell);
+int	run_external_with_redir(char **command, char **redir, t_minishell *shell);
+int	traverse_tree(t_node **root, t_minishell *shell);
 
 /** shlvl.c **/
 int	add_to_env_list_new_env(char **envp, char ***result, int *i, int *len);
@@ -231,7 +231,7 @@ int	shlvl_init(char ***envp);
 
 /** utils_free.c **/
 void	free_arr_2d(void *ptr);
-void	free_minishell(t_minishell *ms);
+void	free_minishell(t_minishell *shell);
 void	free_ast(t_node **root);
 
 
@@ -239,13 +239,13 @@ int	exec_builtin(t_minishell *shell);
 int	find_executable(char **command, char **paths);
 int	locate_command(char	**command, char	**envp);
 bool	is_builtin(char *cmd);
-int	run_builtin(char **redir, t_minishell *ms);
-int	run_builtin_without_redir(char **command, t_minishell *ms, int cmd_type);
-int	exec_builtin_redir(char **command, char **redir, t_minishell *ms);
+int	run_builtin(char **redir, t_minishell *shell);
+int	run_builtin_without_redir(char **command, t_minishell *shell, int cmd_type);
+int	exec_builtin_redir(char **command, char **redir, t_minishell *shell);
 int	copy_std_fd(int *in_fd, int *out_fd, char *command);
 void	return_std_fd(int *in_fd, int *out_fd, int *status, char *command);
-void	run_pwd(char **arr, t_minishell *ms);
-void	print_arg_err_msg(char *cmd, char *arg, char *msg);
+void	run_pwd(char **arr, t_minishell *shell);
+void	print_arg_err_shellg(char *cmd, char *arg, char *shellg);
 
 
 t_hmap **init_hmap(char **env);
@@ -271,9 +271,9 @@ char *get_cmd_path(char **cmd_paths, char *cmd);
 void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
 
 
-int	traverse_pipe(t_node **root, t_minishell *ms);
-int	traverse_lhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
-int	traverse_rhs(t_node **node, t_minishell *ms, int pipefd[2], int pids[2]);
+int	traverse_pipe(t_node **root, t_minishell *shell);
+int	traverse_lhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2]);
+int	traverse_rhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2]);
 int	wait_children_and_fetch_exit_status(pid_t *pids, int num);
 bool is_inside_quotes(char c, int *inside_quotes);
 
@@ -302,19 +302,19 @@ void	handle_syntax_error(char *str);
 void add_shlvl(t_minishell *shell);
 
 /** dollar_expansion.c **/
-int	dollar_expansion(char **str, t_minishell *ms, int last_status);
+int	dollar_expansion(char **str, t_minishell *shell, int last_status);
 
 /** exit.c **/
-void	handle_multiple_args(char **arg, t_minishell *ms);
-void	handle_single_arg(char *arg, t_minishell *ms);
-void	ft_exit(char **arg, t_minishell *ms);
+void	handle_multiple_args(char **arg, t_minishell *shell);
+void	handle_single_arg(char *arg, t_minishell *shell);
+void	ft_exit(char **arg, t_minishell *shell);
 
 /** exit_utils.c **/
 bool	is_non_digit_space_sign(const char *str);
 bool	is_non_empty_after_trim(const char *str);
-void	exit_numeric_arg_error(t_minishell *ms, char *str);
-void	exit_amount_of_arg_error(t_minishell *ms);
-void	clean_and_exit(t_minishell *ms);
+void	exit_numeric_arg_error(t_minishell *shell, char *str);
+void	exit_amount_of_arg_error(t_minishell *shell);
+void	clean_and_exit(t_minishell *shell);
 
 
 #endif

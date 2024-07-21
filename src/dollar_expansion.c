@@ -38,7 +38,7 @@ char *get_status_string(int last_status)
     return ft_itoa(last_status);
 }
 
-char *expand_variable(const char *str, t_minishell *ms, int last_status, int *var_len)
+char *expand_variable(const char *str, t_minishell *shell, int last_status, int *var_len)
 {
     char *value;
     char *key;
@@ -58,7 +58,7 @@ char *expand_variable(const char *str, t_minishell *ms, int last_status, int *va
     }
 
     key = get_var_name(str + 1, var_len);
-    value = ft_get_env(*(ms->hashmap), key);
+    value = ft_get_env(*(shell->hashmap), key);
     free(key);
 
     if (value)
@@ -92,13 +92,13 @@ void process_double_quote(char **result, int *in_double_quotes, char c)
     append_char_to_result(result, c);
 }
 
-void process_dollar(char **result, char **str, int *i, t_minishell *ms, int last_status)
+void process_dollar(char **result, char **str, int *i, t_minishell *shell, int last_status)
 {
     char *temp;
     char *old_result;
     int var_len;
 
-    temp = expand_variable(&(*str)[*i], ms, last_status, &var_len);
+    temp = expand_variable(&(*str)[*i], shell, last_status, &var_len);
     old_result = *result;
     *result = ft_strjoin(*result, temp);
     free(old_result);
@@ -119,7 +119,7 @@ void process_other_chars(char **result, char **str, int *i)
     (*i)++;
 }
 
-void process_quotes(char **result, int *in_quotes, char **str, int *i, t_minishell *ms, int last_status)
+void process_quotes(char **result, int *in_quotes, char **str, int *i, t_minishell *shell, int last_status)
 {
     char quote_char = (*str)[*i];
     *in_quotes = !*in_quotes;
@@ -129,7 +129,7 @@ void process_quotes(char **result, int *in_quotes, char **str, int *i, t_minishe
     {
         if ((*str)[*i] == '$' && quote_char == '\"')
         {
-            process_dollar(result, str, i, ms, last_status);
+            process_dollar(result, str, i, shell, last_status);
         }
         else
         {
@@ -142,7 +142,7 @@ void process_quotes(char **result, int *in_quotes, char **str, int *i, t_minishe
     *in_quotes = !*in_quotes;
 }
 
-int dollar_expansion(char **str, t_minishell *ms, int last_status)
+int dollar_expansion(char **str, t_minishell *shell, int last_status)
 {
     char *result;
     int i;
@@ -156,13 +156,13 @@ int dollar_expansion(char **str, t_minishell *ms, int last_status)
     while ((*str)[i])
     {
         if ((*str)[i] == '\'')
-            process_quotes(&result, &in_single_quotes, str, &i, ms, last_status);
+            process_quotes(&result, &in_single_quotes, str, &i, shell, last_status);
         else if ((*str)[i] == '\"')
-            process_quotes(&result, &in_double_quotes, str, &i, ms, last_status);
+            process_quotes(&result, &in_double_quotes, str, &i, shell, last_status);
         else if ((*str)[i] == '\\' && (*str)[i + 1] == '$')
             process_backslash_dollar(&result, &i);
         else if ((*str)[i] == '$' && (in_double_quotes || !in_single_quotes))
-            process_dollar(&result, str, &i, ms, last_status);
+            process_dollar(&result, str, &i, shell, last_status);
         else
             process_other_chars(&result, str, &i);
     }

@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:45:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/21 19:45:30 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 00:42:27 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter)
 	}
 }
 
-int	prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms)
+int	prepare_heredocs(char ***redirs, int *hd_count, t_minishell *shell)
 {
 	int		i;
 	int		hd_counter;
 	int		status;
 	char	*hd_name;
 
-	hd_name = get_hd_name(hd_num);
+	hd_name = get_hd_name(hd_count);
 	if (!hd_name)
 		return (200);
 	i = 0;
@@ -58,22 +58,22 @@ int	prepare_heredocs(char ***redirs, int *hd_num, t_minishell *ms)
 		if (ft_strncmp("<<", (*redirs)[i], 2) == 0)
 		{
 			hd_counter++;
-			status = prepare_heredoc(*redirs + i, hd_name, ms);
+			status = prepare_heredoc(*redirs + i, hd_name, shell);
 		}
 		i++;
 	}
 	if (hd_counter > 0)
-		(*hd_num)++;
+		(*hd_count)++;
 	remove_hd_duplicates(redirs, hd_name, hd_counter);
 	return (status);
 }
 
-char	*get_hd_name(int *hd_num)
+char	*get_hd_name(int *hd_count)
 {
 	char	*filename;
 	char	*num;
 
-	num = ft_itoa(*hd_num);
+	num = ft_itoa(*hd_count);
 	if (!num)
 		return (NULL);
 	filename = ft_strjoin(HEREDOC_NAME, num);
@@ -81,30 +81,30 @@ char	*get_hd_name(int *hd_num)
 	return (filename);
 }
 
-void	remove_hd_files(int *hd_num)
+void	remove_hd_files(int *hd_count)
 {
 	char	*file_name;
 	char	*num;
 	int		i;
 
 	i = -1;
-	while (++i < *hd_num)
+	while (++i < *hd_count)
 	{
 		num = ft_itoa(i);
 		if (!num)
 		{
-			print_err_msg("unlink", ": malloc error occured");
+			print_err_shellg("unlink", ": malloc error occured");
 			continue ;
 		}
 		file_name = ft_strjoin(&(HEREDOC_NAME[2]), num);
 		free(num);
 		if (!file_name)
 		{
-			print_err_msg("unlink", ": malloc error occured");
+			print_err_shellg("unlink", ": malloc error occured");
 			continue ;
 		}
 		if (unlink(file_name) != 0)
-			perror_err_msg("unlink: ", file_name);
+			perror_err_shellg("unlink: ", file_name);
 		free(file_name);
 	}
 }

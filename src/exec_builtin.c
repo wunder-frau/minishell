@@ -7,12 +7,12 @@ bool	is_builtin(char *cmd)
 	if (is_blank_string(cmd))
 		return (false);
 	if (ft_strncmp(cmd, "echo", 5) == 0
-	|| ft_strncmp(cmd, "cd", 3) == 0
-	|| ft_strncmp(cmd, "pwd", 4) == 0
-	|| ft_strncmp(cmd, "export", 7) == 0
-	|| ft_strncmp(cmd, "unset", 6) == 0
-	|| ft_strncmp(cmd, "env", 4) == 0
-	|| ft_strncmp(cmd, "exit", 5) == 0)
+		|| ft_strncmp(cmd, "cd", 3) == 0
+		|| ft_strncmp(cmd, "pwd", 4) == 0
+		|| ft_strncmp(cmd, "export", 7) == 0
+		|| ft_strncmp(cmd, "unset", 6) == 0
+		|| ft_strncmp(cmd, "env", 4) == 0
+		|| ft_strncmp(cmd, "exit", 5) == 0)
 		return (true);
 	return (false);
 }
@@ -20,11 +20,7 @@ bool	is_builtin(char *cmd)
 int	exec_builtin(t_minishell *shell)
 {
 	if (ft_strncmp(shell->command[0], "echo", 5) == 0)
-	{
 		ft_echo(shell, &shell->command[0]);
-		//printf("cmd:::%s, %d\n", shell->command[0], shell->exit_status);
-		//printf("cmd:::%s\n", shell->command[1]);
-	}
 	else
 	{
 		shell->exit_status = SUCCESS;
