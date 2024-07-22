@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:16:40 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	apply_heredoc(char *heredoc, int *in)
 		close(*in);
 	fd = open(heredoc, O_RDONLY);
 	if (unlink(heredoc) == -1)
-		print_err_shellg(heredoc, ": Can't delete file\n");
+		print_err_msg(heredoc, ": Can't delete file\n");
 	if (fd != -1)
 		*in = fd;
 	else

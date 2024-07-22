@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:45:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:42:27 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,14 @@ void	remove_hd_files(int *hd_count)
 		num = ft_itoa(i);
 		if (!num)
 		{
-			print_err_shellg("unlink", ": malloc error occured");
+			print_err_msg("unlink", ": malloc error occured");
 			continue ;
 		}
 		file_name = ft_strjoin(&(HEREDOC_NAME[2]), num);
 		free(num);
 		if (!file_name)
 		{
-			print_err_shellg("unlink", ": malloc error occured");
+			print_err_msg("unlink", ": malloc error occured");
 			continue ;
 		}
 		if (unlink(file_name) != 0)

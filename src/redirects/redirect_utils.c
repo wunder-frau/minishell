@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 23:44:22 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:42:27 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	check_redir(char **redir, t_minishell *shell)
 	if (ft_size((void **)rdr) != 1)
 	{
 		status = 1;
-		print_err_shellg(*redir, ": ambiguous redirect\n");
+		print_err_msg(*redir, ": ambiguous redirect\n");
 		free_arr_2d(rdr);
 	}
 	else

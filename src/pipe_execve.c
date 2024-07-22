@@ -134,8 +134,10 @@ void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
 			if (!cmd_data->cmd_path)
 			{
 				//printf("Command not found: %s\n", argv[0]);
-				shell->exit_status = 127;
-				return;
+				print_err_msg(argv[0], ": command not found\n");
+				shell->exit_status = CMD_NF_FAILURE;
+				exit (shell->exit_status);
+				//return;
 			}
 		}
 		else
@@ -144,8 +146,9 @@ void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
 	if (check_if_executable(cmd_data->cmd_path) != 1)
 	{
 		//printf("Command not found or not executable: %s\n", cmd_data->cmd_path);
-		shell->exit_status = 127;
-		return;
+			print_err_msg(argv[0], ": No such file or directory\n");
+			shell->exit_status = CMD_NF_FAILURE;
+			exit (shell->exit_status);
 	}
 	env_array = convert_hashmap(*(shell->hashmap));
 	if (execve(cmd_data->cmd_path, argv, env_array) == -1)

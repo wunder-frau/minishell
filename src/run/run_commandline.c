@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 01:55:49 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 02:01:54 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:35:48 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	run_commandline(t_minishell **shell)
 		}
 		if (is_blank_string(cmdline))
 		{
+			printf("hello%s", cmdline);
 			free(cmdline);
 			continue ;
 		}

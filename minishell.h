@@ -187,7 +187,7 @@ int	convert_input_to_redirects(char *str, char **redir, int i, int j);
 
 /** prepare_redirects.c **/
 int		check_redir(char **redir, t_minishell *shell);
-void	print_err_shellg(char *cmd, char *shellg);
+void	print_err_msg(char *cmd, char *shellg);
 int		prepare_redirects(char *redirects_line, int *hd_count, char ***redirs, t_minishell *shell);
 void	perror_err_shellg(char *cmd, char *arg);
 char	*get_hd_name(int *hd_count);
@@ -316,5 +316,9 @@ void	exit_numeric_arg_error(t_minishell *shell, char *str);
 void	exit_amount_of_arg_error(t_minishell *shell);
 void	clean_and_exit(t_minishell *shell);
 
+
+
+/** test **/
+void command_not_found_error(t_minishell *shell);
 
 #endif

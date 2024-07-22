@@ -6,13 +6,13 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:11:20 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_err_shellg(char *cmd, char *shellg)
+void	print_err_msg(char *cmd, char *shellg)
 {
 	cmd = ft_strjoin("shell: ", cmd);
 	if (!cmd)

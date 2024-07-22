@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 22:59:44 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 09:32:16 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	run_builtin(char **redir, t_minishell *shell)
 
 	status = 0;
 	if (!redir)
+	{
+		printf("hello%s", shell->command[0]);
 		status = exec_builtin(shell);
+	}
 	else
 		status = exec_builtin_redir(shell->command, redir, shell);
 	return (status);
@@ -49,7 +52,7 @@ int	copy_std_fd(int *in_fd, int *out_fd, char *command)
 			close(*in_fd);
 		if (*out_fd != -1)
 			close(*out_fd);
-		print_err_shellg(command, ": dup() error occurred\n");
+		print_err_msg(command, ": dup() error occurred\n");
 		return (DUP_FAILURE);
 	}
 	return (0);
@@ -62,7 +65,7 @@ void	return_std_fd(int *in_fd, int *out_fd, int *status, char *command)
 	redir_status = 0;
 	if (dup2(*in_fd, STDIN_FILENO) == -1 || dup2(*out_fd, STDOUT_FILENO) == -1)
 	{
-		print_err_shellg(command, ": dup2() error occured. "
+		print_err_msg(command, ": dup2() error occured. "
 			"Correct behavior is not guaranteed anymore\n");
 		redir_status = DUP_FAILURE;
 	}

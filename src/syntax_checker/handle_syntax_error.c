@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 01:29:43 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/21 23:29:25 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 07:56:03 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	print_error_message(char *str)
 {
 	ft_putstr_fd("shell: syntax error near unexpected token `", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putendl_fd("`", STDERR_FILENO);
+	ft_putendl_fd("'", STDERR_FILENO);
 }
 
 bool	is_special_token(char *str, int *length)

@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 00:43:58 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	exit_amount_of_arg_error(t_minishell *shell)
 {
 	if (shell->is_parent)
 		ft_putstr_fd("exit\n", STDERR_FILENO);
-	print_err_shellg("exit: ", "too many arguments\n");
+	print_err_msg("exit: ", "too many arguments\n");
 	shell->exit_status = GENERIC_ERROR;
 }
 
