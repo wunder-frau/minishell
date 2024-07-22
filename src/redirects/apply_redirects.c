@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:16:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:51:50 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	apply_append(char *redir, t_minishell *shell, int *out)
 	else
 	{
 		status = GENERIC_ERROR;
-		perror_err_shellg(redir, "");
+		perror_err_msg(redir, "");
 	}
 	free(redir);
 	return (status);
@@ -54,7 +54,7 @@ int	apply_redir_in(char *redir, t_minishell *shell, int *in)
 	else
 	{
 		status = GENERIC_ERROR;
-		perror_err_shellg(redir, "");
+		perror_err_msg(redir, "");
 	}
 	free(redir);
 	return (status);
@@ -78,7 +78,7 @@ int	apply_redir_out(char *redir, t_minishell *shell, int *out)
 	else
 	{
 		status = GENERIC_ERROR;
-		perror_err_shellg(redir, "");
+		perror_err_msg(redir, "");
 	}
 	free(redir);
 	return (status);

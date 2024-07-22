@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:16:40 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:51:50 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int	apply_heredoc(char *heredoc, int *in)
 	else
 	{
 		status = GENERIC_ERROR;
-		perror_err_shellg(heredoc, "");
+		perror_err_msg(heredoc, "");
 	}
 	return (status != 0);
 }

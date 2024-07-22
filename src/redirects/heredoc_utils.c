@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 19:45:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 01:24:41 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:51:50 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,28 @@ void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_c)
 int	prepare_heredocs(char ***redirs, int *hd_c, t_minishell *shell)
 {
 	int		i;
-	int		hd_c;
+	int		hd_counter;
 	int		status;
 	char	*hd_name;
 
 	hd_name = get_hd_name(hd_c);
 	if (!hd_name)
-		return (200);
+		return (MALLOC_ERR);
 	i = 0;
-	hd_c = 0;
+	hd_counter = 0;
 	status = 0;
 	while ((*redirs)[i] && status == 0)
 	{
 		if (ft_strncmp("<<", (*redirs)[i], 2) == 0)
 		{
-			hd_c++;
+			hd_counter++;
 			status = prepare_heredoc(*redirs + i, hd_name, shell);
 		}
 		i++;
 	}
-	if (hd_c > 0)
+	if (hd_counter > 0)
 		(*hd_c)++;
-	remove_hd_duplicates(redirs, hd_name, hd_c);
+	remove_hd_duplicates(redirs, hd_name, hd_counter);
 	return (status);
 }
 
@@ -104,7 +104,7 @@ void	remove_hd_files(int *hd_c)
 			continue ;
 		}
 		if (unlink(file_name) != 0)
-			perror_err_shellg("unlink: ", file_name);
+			perror_err_msg("unlink: ", file_name);
 		free(file_name);
 	}
 }

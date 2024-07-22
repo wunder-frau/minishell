@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 00:43:58 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:52:12 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	exit_numeric_arg_error(t_minishell *shell, char *str)
 {
 	if (shell->is_parent)
 		ft_putstr_fd("exit\n", STDERR_FILENO);
-	print_arg_err_shellg("exit: ", str,
+	print_arg_err_msg("exit: ", str,
 		": numeric argument required\n");
 	shell->exit_status = UNEXPECTED_EXIT;
 	if (shell->is_parent == true)

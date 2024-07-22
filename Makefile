@@ -130,7 +130,7 @@ AST_PATH = ast/
 HELPERS_PATH = helpers/
 RUN_PATH = run/
 
-LEXER_SRC = lexer.c lexer_utils.c
+LEXER_SRC = lexer.c lexer_utils.c lexer_parse_node_data.c
 BUILTINS_SRC = exit.c exit_utils.c run_builtin.c
 BNF_SRC = expression.c factor.c handle_syntax_error.c term.c
 REDIR_SRC = apply_heredocs.c apply_redirects.c heredoc_utils.c redirect_utils.c
