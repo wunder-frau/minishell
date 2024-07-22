@@ -193,7 +193,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@echo "$(BUILD_EMOJI) $(BLUE)Compiled:$(RESET) $<"
 
 $(OBJ_PATH):
-	mkdir $(OBJ_PATH) \
+	@mkdir $(OBJ_PATH) \
 				$(OBJ_PATH)lexer \
 				$(OBJ_PATH)builtins \
 				$(OBJ_PATH)syntax_checker \

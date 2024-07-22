@@ -6,23 +6,23 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:11:20 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 01:52:12 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 10:17:54 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_err_msg(char *cmd, char *shellg)
+void	print_err_msg(char *cmd, char *msg)
 {
 	cmd = ft_strjoin("shell: ", cmd);
 	if (!cmd)
 		return ;
-	shellg = ft_strjoin(cmd, shellg);
+	msg = ft_strjoin(cmd, msg);
 	free(cmd);
-	if (!shellg)
+	if (!msg)
 		return ;
-	ft_putstr_fd(shellg, STDERR_FILENO);
-	free(shellg);
+	ft_putstr_fd(msg, STDERR_FILENO);
+	free(msg);
 }
 
 void	perror_err_msg(char *cmd, char *arg)
@@ -38,7 +38,7 @@ void	perror_err_msg(char *cmd, char *arg)
 	free(arg);
 }
 
-void	print_arg_err_msg(char *cmd, char *arg, char *shellg)
+void	print_arg_err_msg(char *cmd, char *arg, char *msg)
 {
 	cmd = ft_strjoin("shell: ", cmd);
 	if (!cmd)
@@ -47,10 +47,10 @@ void	print_arg_err_msg(char *cmd, char *arg, char *shellg)
 	free(cmd);
 	if (!arg)
 		return ;
-	shellg = ft_strjoin(arg, shellg);
+	msg = ft_strjoin(arg, msg);
 	free(arg);
-	if (!shellg)
+	if (!msg)
 		return ;
-	ft_putstr_fd(shellg, STDERR_FILENO);
-	free(shellg);
+	ft_putstr_fd(msg, STDERR_FILENO);
+	free(msg);
 }

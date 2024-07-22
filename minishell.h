@@ -187,7 +187,7 @@ int	convert_input_to_redirects(char *str, char **redir, int i, int j);
 
 /** prepare_redirects.c **/
 int		check_redir(char **redir, t_minishell *shell);
-void	print_err_msg(char *cmd, char *shellg);
+void	print_err_msg(char *cmd, char *msg);
 int		prepare_redirects(char *redirects_line, int *hd_c, char ***redirs, t_minishell *shell);
 void	perror_err_msg(char *cmd, char *arg);
 char	*get_hd_name(int *hd_c);
@@ -245,7 +245,7 @@ int	exec_builtin_redir(char **command, char **redir, t_minishell *shell);
 int	copy_std_fd(int *in_fd, int *out_fd, char *command);
 void	return_std_fd(int *in_fd, int *out_fd, int *status, char *command);
 void	run_pwd(char **arr, t_minishell *shell);
-void	print_arg_err_msg(char *cmd, char *arg, char *shellg);
+void	print_arg_err_msg(char *cmd, char *arg, char *msg);
 
 
 t_hmap **init_hmap(char **env);
