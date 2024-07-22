@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 22:59:44 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 09:32:16 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:20:58 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ int	run_builtin(char **redir, t_minishell *shell)
 
 	status = 0;
 	if (!redir)
-	{
-		printf("hello%s", shell->command[0]);
 		status = exec_builtin(shell);
-	}
 	else
 		status = exec_builtin_redir(shell->command, redir, shell);
 	return (status);

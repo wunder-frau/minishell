@@ -1,16 +1,40 @@
 #include "../minishell.h"
 
-int check_if_executable(char *cmd)
-{
-	int res;
+// int check_if_executable(char *cmd)
+// {
+// 	int res;
 
-	res = access(cmd, X_OK | F_OK);
-	if (res == 0)
-	{
-		// //printf("Executable\n");
-		return (1);
-	}
-	return (0);
+// 	res = access(cmd, X_OK | F_OK);
+// 	if (res == 0)
+// 	{
+// 		printf("TEMP path: %s\n", cmd);
+// 		printf("Executable%d\n", res);
+// 		return (1);
+// 	}
+// 	return (0);
+// }
+
+int check_if_executable(char *cmd) {
+    struct stat st;
+
+    if (access(cmd, F_OK) != 0) {
+        return CMD_NF_FAILURE;
+    }
+
+    if (stat(cmd, &st) != 0) {
+        perror("stat");
+        return CMD_NF_FAILURE;
+    }
+
+    if (access(cmd, X_OK) != 0) {
+        return CMD_PD_FAILURE;
+    }
+
+    if (S_ISDIR(st.st_mode)) {
+        return CMD_PD_FAILURE;
+    }
+
+    return 0; // Success
 }
 
 static void get_paths(t_minishell *shell, t_cmd_data *cmd_data)
@@ -59,9 +83,10 @@ char *get_cmd_path(char **cmd_paths, char *cmd)
 		free(temp_path);
 		if (!cmd_path)
 			return (NULL);
-		//printf("Trying path: %s\n", cmd_path); // Debugging print
-		if (check_if_executable(cmd_path) == 1)
+		if (check_if_executable(cmd_path) == 0)
+		{
 			return (cmd_path);
+		}
 		free(cmd_path);
 		i++;
 	}
@@ -114,49 +139,132 @@ char **convert_hashmap(t_hmap *hashmap)
 	return env_array;
 }
 
-void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
-{
-	char	**env_array;
-	////printf("Command to execute: %s\n", argv[0]);
+void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data) {
+    char **env_array;
 
-	// Check if the command is a relative or absolute path
-	if (argv[0][0] == '.' || argv[0][0] == '/')
-	{
-		cmd_data->cmd_path = argv[0];
-	}
-	else
-	{
-		// Otherwise, search for the command in the PATH directories
-		get_paths(shell, cmd_data);
-		if (cmd_data->cmd_paths)
-		{
-			cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
-			if (!cmd_data->cmd_path)
-			{
-				//printf("Command not found: %s\n", argv[0]);
-				print_err_msg(argv[0], ": command not found\n");
-				shell->exit_status = CMD_NF_FAILURE;
-				exit (shell->exit_status);
-				//return;
-			}
-		}
-		else
-			cmd_data->cmd_path = argv[0];
-	}
-	if (check_if_executable(cmd_data->cmd_path) != 1)
-	{
-		//printf("Command not found or not executable: %s\n", cmd_data->cmd_path);
-			print_err_msg(argv[0], ": No such file or directory\n");
-			shell->exit_status = CMD_NF_FAILURE;
-			exit (shell->exit_status);
-	}
-	env_array = convert_hashmap(*(shell->hashmap));
-	if (execve(cmd_data->cmd_path, argv, env_array) == -1)
-	{
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
+    // Check if the command is a relative or absolute path
+    if (argv[0][0] == '.' || argv[0][0] == '/') {
+        cmd_data->cmd_path = argv[0];
+    } else {
+        // Otherwise, search for the command in the PATH directories
+        get_paths(shell, cmd_data);
+        if (cmd_data->cmd_paths) {
+            cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
+            if (!cmd_data->cmd_path) {
+                print_err_msg(argv[0], ": command not found\n");
+                shell->exit_status = CMD_NF_FAILURE;
+                exit(shell->exit_status);
+            }
+        } else {
+            cmd_data->cmd_path = argv[0];
+        }
+    }
+    // Check if the command is executable
+    int exec_status = check_if_executable(cmd_data->cmd_path);
+    if (exec_status != 0) {
+        if (exec_status == CMD_NF_FAILURE) {
+            print_err_msg(cmd_data->cmd_path, ": No such file or directory\n");
+        } else if (exec_status == CMD_PD_FAILURE) {
+            struct stat st;
+            stat(cmd_data->cmd_path, &st);
+            if (S_ISDIR(st.st_mode)) {
+                print_err_msg(cmd_data->cmd_path, ": is a directory\n");
+            } else {
+                print_err_msg(cmd_data->cmd_path, ": Permission denied\n");
+            }
+        }
+        shell->exit_status = exec_status;
+        exit(shell->exit_status);
+    }
+    env_array = convert_hashmap(*(shell->hashmap));
+    if (execve(cmd_data->cmd_path, argv, env_array) == -1) {
+        perror("execve");
+        shell->exit_status = CMD_NF_FAILURE;
+        exit(EXIT_FAILURE);
+    }
 }
+
+// void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data) {
+//     char **env_array;
+
+//     // Check if the command is a relative or absolute path
+//     if (argv[0][0] == '.' || argv[0][0] == '/') {
+//         cmd_data->cmd_path = argv[0];
+//     } else {
+//         // Otherwise, search for the command in the PATH directories
+//         get_paths(shell, cmd_data);
+//         if (cmd_data->cmd_paths) {    
+//             cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
+//             if (!cmd_data->cmd_path) {
+//                 print_err_msg(argv[0], ": command not found\n");
+//                 shell->exit_status = CMD_NF_FAILURE;
+//                 exit (shell->exit_status);
+//             }
+//         } else {
+//             cmd_data->cmd_path = argv[0];
+//         }
+//     }
+
+//     printf("looool___[%s]\n", cmd_data->cmd_path);
+
+//     // Check if the command is executable
+//     int exec_status = check_if_executable(cmd_data->cmd_path);
+//     if (exec_status != 0) {
+//         shell->exit_status = exec_status;
+//         exit (shell->exit_status);
+//     }
+
+//     env_array = convert_hashmap(*(shell->hashmap));
+//     if (execve(cmd_data->cmd_path, argv, env_array) == -1) {
+//         perror("execve");
+//         shell->exit_status = CMD_NF_FAILURE;
+//         exit(EXIT_FAILURE);
+//     }
+// }
+
+
+// void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
+// {
+// 	char	**env_array;
+
+// 	// Check if the command is a relative or absolute path
+// 	if (argv[0][0] == '.' || argv[0][0] == '/')
+// 	{
+// 		cmd_data->cmd_path = argv[0];
+// 	}
+// 	else
+// 	{
+// 		// Otherwise, search for the command in the PATH directories
+// 		get_paths(shell, cmd_data);
+// 		if (cmd_data->cmd_paths)
+// 		{	
+// 			cmd_data->cmd_path = get_cmd_path(cmd_data->cmd_paths, argv[0]);
+// 			if (!cmd_data->cmd_path)
+// 			{
+// 				print_err_msg(argv[0], ": command not found\n");
+// 				//shell->exit_status = CMD_NF_FAILURE;
+// 				exit (shell->exit_status);
+// 				//return;
+// 			}
+// 		}
+// 		else
+// 			cmd_data->cmd_path = argv[0];
+// 	}
+// 	printf("looool___[%s]\n", cmd_data->cmd_path);
+// 	if (check_if_executable(cmd_data->cmd_path) != 0)
+// 	{
+// 		//printf("Command ??????: %d\n", check_if_executable(cmd_data->cmd_path));
+// 			//print_err_msg(argv[0], ": No such file or directory\n");
+// 			//shell->exit_status = CMD_NF_FAILURE;
+// 			exit (shell->exit_status);
+// 	}
+// 	env_array = convert_hashmap(*(shell->hashmap));
+// 	if (execve(cmd_data->cmd_path, argv, env_array) == -1)
+// 	{
+// 		perror("execve");
+// 		exit(EXIT_FAILURE);
+// 	}
+// }
 
 // void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data)
 // {

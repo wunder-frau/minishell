@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:43:34 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 11:41:54 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:22:19 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,10 @@ int	traverse_command(char *cmd, char **redir, t_minishell *shell)
 	shell->command = command;
 	if (status == 0)
 	{
-		printf("oooo__[%d]", shell->exit_status);
 		if (is_builtin(command[0]))
 			status = run_builtin(redir, shell);
 		else
-		{
-			printf("I am here!!!");
 			status = run_external_with_redir(command, redir, shell);
-		}
 	}
 	shell->exit_status = status;
 	free_arr_2d(command);
@@ -50,10 +46,7 @@ int	run_external_with_redir(char **command, char **redir, t_minishell *shell)
 			status = apply_redirects(redir, shell);
 		if (status != 0)
 			exit(status);
-		printf("kkkkk__[%d]", shell->exit_status);
 		execution(shell, &command[0], &shell->cmd_data);
-		printf("uuuuuuu__[%d]", shell->exit_status);
-
 		print_err_msg(command[0], ": execve() error occured\n");
 		exit(EXECVE_FAILURE);
 	}

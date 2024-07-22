@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 23:44:22 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 08:38:03 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:24:41 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	check_redir(char **redir, t_minishell *shell)
 	return (status);
 }
 
-int	prepare_redirects(char *redirects_line, int *hd_count, char ***redirs,
+int	prepare_redirects(char *redirects_line, int *hd_c, char ***redirs,
 		t_minishell *shell)
 {
 	int	status;
@@ -78,11 +78,11 @@ int	prepare_redirects(char *redirects_line, int *hd_count, char ***redirs,
 	if (!*redirs)
 		return (200);
 	status = 0;
-	status = prepare_heredocs(redirs, hd_count, shell);
+	status = prepare_heredocs(redirs, hd_c, shell);
 	if (status != 0)
 	{
 		free_arr_2d(*redirs);
-		remove_hd_files(hd_count);
+		remove_hd_files(hd_c);
 	}
 	if (status == SIGINT + 128)
 		status = 1;

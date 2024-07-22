@@ -1,19 +1,16 @@
 #include "../minishell.h"
 
-void command_not_found_error(t_minishell *shell)
-{    printf("cmd%s", shell->command[0]);
-   printf("cmd%s", shell->command[1]);
-    if (shell->command[0] == NULL)
-        return;
-    shell->exit_status = CMD_NF_FAILURE;
-    printf("hello%s", shell->command[0]);
-    print_err_msg(shell->command[0], ": command not found\n");
+void	command_not_found_error(t_minishell *shell)
+{
+	if (shell->command[0] == NULL)
+		return ;
+	shell->exit_status = CMD_NF_FAILURE;
+	print_err_msg(shell->command[0], ": command not found\n");
 }
 
 bool	is_builtin(char *cmd)
 {
-	printf("gggg__[%s]", cmd);
-		if (cmd == NULL)
+	if (cmd == NULL)
 		return (true);
 	if (is_blank_string(cmd))
 		return (true);
@@ -30,13 +27,8 @@ bool	is_builtin(char *cmd)
 
 int	exec_builtin(t_minishell *shell)
 {
-
-	printf("helloPPPPPP%s", shell->command[0]);
 	if (shell->command[0] == NULL || is_blank_string(shell->command[0]))
-	{
-		printf("TRYYYYY");
 		command_not_found_error(shell);
-	}
 	else if (ft_strncmp(shell->command[0], "echo", 5) == 0)
 		ft_echo(shell, &shell->command[0]);
 	else

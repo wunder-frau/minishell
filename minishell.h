@@ -162,10 +162,10 @@ void	init_minishell(t_minishell **shell, char **envp, t_cmd_data *cmd_data);
 
 /** parse_ast.c **/
 bool	parse_ast(char *str, t_parsed_data **data);
-int		build_ast(char *str, t_node **root, int *hd_count, t_minishell *shell);
-int		assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_count, t_minishell *shell);
-int	prepare_redirects(char *redirects_line, int *hd_count, char ***redirs, t_minishell *shell);
-int		assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_count, t_minishell *shell);
+int		build_ast(char *str, t_node **root, int *hd_c, t_minishell *shell);
+int		assemble_ast_pipe(t_parsed_data *data, t_node **root, int *hd_c, t_minishell *shell);
+int	prepare_redirects(char *redirects_line, int *hd_c, char ***redirs, t_minishell *shell);
+int		assemble_ast_command(t_parsed_data *data, t_node **root, int *hd_c, t_minishell *shell);
 t_redir *init_node_redir(void);
 t_pipe  *init_node_pipe(void);
 t_command *init_node_cmd(void);
@@ -188,15 +188,15 @@ int	convert_input_to_redirects(char *str, char **redir, int i, int j);
 /** prepare_redirects.c **/
 int		check_redir(char **redir, t_minishell *shell);
 void	print_err_msg(char *cmd, char *shellg);
-int		prepare_redirects(char *redirects_line, int *hd_count, char ***redirs, t_minishell *shell);
+int		prepare_redirects(char *redirects_line, int *hd_c, char ***redirs, t_minishell *shell);
 void	perror_err_shellg(char *cmd, char *arg);
-char	*get_hd_name(int *hd_count);
-void	remove_hd_files(int *hd_count);
+char	*get_hd_name(int *hd_c);
+void	remove_hd_files(int *hd_c);
 
 /** prepare_heredocs.c **/
 void	remove_spaces_and_quotes_hd(char *hd);
-int		prepare_heredocs(char ***redirs, int *hd_count, t_minishell *shell);
-void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_counter);
+int		prepare_heredocs(char ***redirs, int *hd_c, t_minishell *shell);
+void	remove_hd_duplicates(char ***redirs, char *hd_name, char hd_c);
 int		prepare_heredoc(char **limiter, char *hd_name, t_minishell *shell);
 
 /** utils.c **/

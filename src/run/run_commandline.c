@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 01:55:49 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 09:35:48 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:24:41 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	run_commandline(t_minishell **shell)
 {
 	int		status;
 	char	*cmdline = NULL;
-	int		hd_count;
+	int		hd_c;
 
 	while (1)
 	{
@@ -33,7 +33,6 @@ void	run_commandline(t_minishell **shell)
 		}
 		if (is_blank_string(cmdline))
 		{
-			printf("hello%s", cmdline);
 			free(cmdline);
 			continue ;
 		}
@@ -45,9 +44,9 @@ void	run_commandline(t_minishell **shell)
 			free(cmdline);
 			continue ;
 		}
-		hd_count = 0;
+		hd_c = 0;
 		(*shell)->root = NULL;
-		status = build_ast(cmdline, &((*shell)->root), &hd_count, *shell);
+		status = build_ast(cmdline, &((*shell)->root), &hd_c, *shell);
 		if (status != 0)
 			(*shell)->exit_status = status;
 		if (status == 0)
