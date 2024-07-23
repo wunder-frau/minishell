@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:11:35 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/23 10:24:33 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	free_minishell(t_minishell *shell)
 		free(shell->pwd);
 	if (shell->oldpwd)
 		free(shell->oldpwd);
-	if (shell->history)
-		ft_lstclear(&(shell->history), free);
 	if (shell->root)
 		free_ast(&(shell->root));
 	free(shell);
