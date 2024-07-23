@@ -27,7 +27,6 @@ void	handle_multiple_args(char **arg, t_minishell *shell)
 void	handle_single_arg(char *arg, t_minishell *shell)
 {
 	long	num;
-
 	num = ft_atol(arg);
 	if ((is_non_empty_after_trim(arg) && num == 0)
 		|| is_non_digit_space_sign(arg))

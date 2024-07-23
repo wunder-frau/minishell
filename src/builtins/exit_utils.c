@@ -42,11 +42,11 @@ bool	is_non_empty_after_trim(const char *str)
 
 void	exit_numeric_arg_error(t_minishell *shell, char *str)
 {
-	if (shell->is_parent)
-		ft_putstr_fd("exit\n", STDERR_FILENO);
-	print_arg_err_msg("exit: ", str,
-		": numeric argument required\n");
-	shell->exit_status = UNEXPECTED_EXIT;
+	// if (shell->is_parent)
+	// 	ft_putstr_fd("exit\n", STDERR_FILENO);
+	(void)str;
+	ft_putstr_fd("minishell: cd: numeric argument required\n", 2);
+	shell->exit_status = CMD_ARG_ERROR;
 	if (shell->is_parent == true)
 		clean_and_exit(shell);
 	exit(shell->exit_status);
@@ -54,9 +54,9 @@ void	exit_numeric_arg_error(t_minishell *shell, char *str)
 
 void	exit_amount_of_arg_error(t_minishell *shell)
 {
-	if (shell->is_parent)
-		ft_putstr_fd("exit\n", STDERR_FILENO);
-	print_err_msg("exit: ", "too many arguments\n");
+	// if (shell->is_parent)
+	// 	ft_putstr_fd("exit\n", STDERR_FILENO);
+	ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 	shell->exit_status = GENERIC_ERROR;
 }
 

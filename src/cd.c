@@ -7,6 +7,14 @@ void ft_cd(t_minishell *shell, char **argv)
     char *pwd;
     int ret;
 
+    // Check for too many arguments
+    if (argv[1] && argv[2])
+    {
+        ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+        shell->exit_status = 1;
+        return;
+    }
+
     home = ft_get_env(*(shell->hashmap), "HOME");
     oldpwd = getcwd(NULL, 0);
 

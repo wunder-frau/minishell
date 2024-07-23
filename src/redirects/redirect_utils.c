@@ -27,10 +27,18 @@ int	parse_cmd(char *cmd, char ***res, t_minishell *shell)
 		return (MALLOC_ERR);
 	status = 0;
 	i = 0;
+	// while (arr[i] && status == 0)
+	// {
+	// 	status = dollar_expansion(&arr[i++], shell, shell->exit_status);
+	// }
 	while (arr[i] && status == 0)
-	{
-		status = dollar_expansion(&arr[i++], shell, shell->exit_status);
-	}
+    {
+        if (arr[i][0] != '\'')
+        {
+            status = dollar_expansion(&arr[i], shell, shell->exit_status);
+        }
+        i++;
+    }
 	if (status != 0 && arr != NULL)
 		free_arr_2d(arr);
 	if (status == 0)
