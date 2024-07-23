@@ -109,37 +109,6 @@
 
 
 NAME = minishell
-MINISHELL_SRC = utils.c \
-								prepare_heredocs.c \
-								redirects_apply.c \
-								lexer_utils.c lexer.c \
-								main.c run_commandline.c \
-								parse_ast.c \
-								traverse_command.c \
-								dup_envp.c \
-								utils_free.c \
-								init_minishell.c \
-								assemble_ast.c \
-								init_node.c \
-								to_delete.c \
-								heredoc_utils.c \
-								error_handling.c \
-								redirect_utils.c \
-								builtins.c \
-								run_builtin.c \
-								pwd.c \
-								echo.c \
-								export_unset.c \
-								env.c \
-								cd.c \
-								pipe_execve.c \
-								traverse_pipe.c \
-								signals.c \
-								validation_input.c \
-								shlvl.c \
-								dollar_expansion.c \
-								exit.c
-MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
 
 # Paths
 LIBFT_DIR = libft_
@@ -149,6 +118,49 @@ CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR) -I$(shell brew --prefix readlin
 LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
 # CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
 # LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline
+
+OBJ_PATH = build/
+SRC_PATH = src/
+LEXER_PATH = lexer/
+BUILTINS_PATH = builtins/
+BNF_PATH = syntax_checker/
+REDIR_PATH = redirects/
+TRAVERSE_PATH = traverse_tree/
+AST_PATH = ast/
+HELPERS_PATH = helpers/
+RUN_PATH = run/
+
+LEXER_SRC = lexer.c lexer_utils.c lexer_parse_node_data.c
+BUILTINS_SRC = exit.c exit_utils.c run_builtin.c
+BNF_SRC = expression.c factor.c handle_syntax_error.c term.c
+REDIR_SRC = apply_heredocs.c apply_redirects.c heredoc_utils.c redirect_utils.c
+TRAVERSE_SRC = traverse_command.c traverse_pipe.c
+AST_SRC = assemble_ast.c init_node.c parse_ast.c
+HELPERS_SRC = error_handling.c free_utils.c string_utils.c
+RUN_SRC = init_minishell.c main.c run_commandline.c
+
+MINISHELL_SRC = $(addprefix $(LEXER_PATH), $(LEXER_SRC)) \
+								$(addprefix $(BUILTINS_PATH), $(BUILTINS_SRC)) \
+								$(addprefix $(BNF_PATH), $(BNF_SRC)) \
+								$(addprefix $(REDIR_PATH), $(REDIR_SRC)) \
+								$(addprefix $(TRAVERSE_PATH), $(TRAVERSE_SRC)) \
+								$(addprefix $(AST_PATH), $(AST_SRC)) \
+								$(addprefix $(HELPERS_PATH), $(HELPERS_SRC)) \
+								$(addprefix $(RUN_PATH), $(RUN_SRC)) \
+								dup_envp.c \
+								exec_builtin.c \
+								pwd.c \
+								echo.c \
+								export_unset.c \
+								env.c \
+								cd.c \
+								pipe_execve.c \
+								signals.c \
+								shlvl.c \
+								dollar_expansion.c
+
+MINISHELL_OBJ = $(MINISHELL_SRC:.c=.o)
+OBJS =	$(addprefix $(OBJ_PATH), $(MINISHELL_OBJ))
 
 # Colors and formatting
 RED = \033[0;31m
@@ -166,22 +178,34 @@ BUILD_EMOJI = 🔨
 REMOVE_EMOJI = 🗑️
 REBUILD_EMOJI = ♻️
 
-all: $(NAME)
+all: $(OBJ_PATH) $(NAME)
 
-$(NAME): $(LIBFT) $(MINISHELL_OBJ)
-	@$(CC) $(MINISHELL_OBJ) $(LDFLAGS) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJS)
+	@$(CC) $(OBJS) $(LDFLAGS) -o $(NAME)
 	@echo "$(BUILD_EMOJI) $(BLUE)Linked:$(RESET) $(NAME)"
 
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR)
 	@echo "$(BUILD_EMOJI) $(BLUE)libft built!$(RESET)"
 
-$(MINISHELL_OBJ): %.o: %.c
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "$(BUILD_EMOJI) $(BLUE)Compiled:$(RESET) $<"
 
+$(OBJ_PATH):
+	@mkdir $(OBJ_PATH) \
+				$(OBJ_PATH)lexer \
+				$(OBJ_PATH)builtins \
+				$(OBJ_PATH)syntax_checker \
+				$(OBJ_PATH)redirects \
+				$(OBJ_PATH)traverse_tree \
+				$(OBJ_PATH)ast \
+				$(OBJ_PATH)helpers \
+				$(OBJ_PATH)run
+
 clean:
 	@rm -f $(MINISHELL_OBJ)
+	@rm -rf $(OBJ_PATH)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo "$(CLEAN_EMOJI) $(PURPLE)Object files removed!$(RESET)"
 
@@ -194,3 +218,4 @@ re: fclean all
 	@echo "$(REBUILD_EMOJI) $(YELLOW)Rebuild complete!$(RESET)"
 
 .PHONY: all clean fclean re
+
