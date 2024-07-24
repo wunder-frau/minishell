@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:43:34 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 01:22:19 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 00:22:35 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	run_external_with_redir(char **command, char **redir, t_minishell *shell)
 	int		status;
 	pid_t	pid;
 
+	if (shell->is_parent == false)
+		signal_interceptor(0);
 	pid = fork();
 	if (pid == -1)
 		return (FORK_FAILURE);
@@ -44,6 +46,8 @@ int	run_external_with_redir(char **command, char **redir, t_minishell *shell)
 		status = 0;
 		if (redir != NULL)
 			status = apply_redirects(redir, shell);
+		signal_interceptor(0);
+		set_signals(1);
 		if (status != 0)
 			exit(status);
 		execution(shell, &command[0], &shell->cmd_data);

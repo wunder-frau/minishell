@@ -205,7 +205,7 @@ void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data) {
 //         }
 //     }
 
-//     printf("looool___[%s]\n", cmd_data->cmd_path);
+//     ("looool___[%s]\n", cmd_data->cmd_path);
 
 //     // Check if the command is executable
 //     int exec_status = check_if_executable(cmd_data->cmd_path);

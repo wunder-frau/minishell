@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:41:25 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 03:15:42 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	traverse_pipe(t_node **root, t_minishell *shell)
 	pid_t	pids[2];
 	t_node	*node;
 
+	if (shell->is_parent == false)
+		signal_interceptor(0);
 	node = *root;
 	if (pipe(pipefd) == -1)
 		return (PIPE_FAILURE);
@@ -38,6 +40,7 @@ int	traverse_lhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2])
 		return (FORK_FAILURE);
 	if (pids[0] == 0)
 	{
+		signal_interceptor(0);
 		shell->is_parent = false;
 		close(pipefd[0]);
 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
@@ -63,6 +66,7 @@ int	traverse_rhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2])
 		return (FORK_FAILURE);
 	if (pids[1] == 0)
 	{
+				signal_interceptor(0);
 		shell->is_parent = false;
 		if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		{

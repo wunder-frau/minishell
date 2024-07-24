@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:24:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 12:42:16 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 01:58:19 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@
 # include <string.h>
 # include <stdbool.h>
 # include <signal.h>
+#include <sys/ioctl.h> 
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
 # include "libft_/libft.h"
+
+volatile sig_atomic_t g_sigint_received;
 
 enum	e_exit_status
 {
@@ -305,7 +307,7 @@ char *get_cmd_path(char **cmd_paths, char *cmd);
 void execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
 
 /** signals.c **/
-void set_signals(void);
+//void set_signals(void);
 int ctrl_d_handler(char *input);
 
 /** shlvl.c **/
@@ -313,5 +315,16 @@ void add_shlvl(t_minishell *shell);
 
 /** dollar_expansion.c **/
 int	dollar_expansion(char **str, t_minishell *shell, int last_status);
+
+
+
+void sigint_handler(int signum);
+void set_signals(int mode);
+void	signal_interceptor(int mode);
+void set_signal_handler(int signum, void (*handler)(int));
+void signal_interceptor(int mode);
+
+
+int	get_cmdline(char **cmdline, t_minishell **ms);
 
 #endif

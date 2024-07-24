@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:16:40 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 01:51:50 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 15:06:07 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	handle_heredoc_line(int fd, char *line, t_minishell *shell,
 {
 	int	status;
 
-	status = 0;
 	status = dollar_expansion(&line, shell, shell->exit_status);
 	if (status == 0)
 	{
@@ -26,8 +25,9 @@ static void	handle_heredoc_line(int fd, char *line, t_minishell *shell,
 	}
 	else
 	{
-		ft_putstr_fd(limiter, 2);
-		ft_putendl_fd(": malloc() error occured", 2);
+		ft_putstr_fd("shell: \033[0;0m", STDERR_FILENO);
+		ft_putstr_fd(limiter, STDERR_FILENO);
+		ft_putendl_fd(": malloc() error occured", STDERR_FILENO);
 		close(fd);
 		exit(status);
 	}
@@ -44,6 +44,8 @@ static void	read_until_limiter(char *limiter, int fd, t_minishell *shell)
 		if (!line)
 		{
 			close(fd);
+			ft_printf("\033[1A");
+			ft_printf("\033[2C");
 			exit(0);
 		}
 		isequal = ft_strcmp(limiter, line);
@@ -85,6 +87,8 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *shell)
 		return (FORK_FAILURE);
 	if (pid == 0)
 	{
+		signal_interceptor(2);
+		set_signals(0);
 		fd = open(hd_name + 2, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (fd != -1)
 			read_until_limiter(*limiter + 2, fd, shell);
@@ -92,7 +96,6 @@ int	prepare_heredoc(char **limiter, char *hd_name, t_minishell *shell)
 	}
 	free(*limiter);
 	*limiter = hd_name;
-	status = 0;
 	status = wait_children_and_fetch_exit_status(&pid, 1);
 	return (status);
 }

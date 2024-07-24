@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:38:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:38:54 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 01:03:27 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_minishell(t_minishell **shell, char **envp, t_cmd_data *cmd_data)
 	(*shell)->hashmap = cmd_data->hashmap;
 	(*shell)->cmd_data = *cmd_data;
 	(*shell)->is_parent = true;
+	g_sigint_received = 0;
 	add_shlvl(*shell);
 	if (status != 0)
 		terminate_minishell(shell, status);
