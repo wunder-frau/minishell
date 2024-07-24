@@ -4,7 +4,7 @@ void sigint_handler(int signum)
 {
     if (signum == SIGINT)
     {
-			printf("Hello!");
+			//printf("Hello!");
 			// write (1, "\n", 1);
 			// rl_on_new_line();
 			// rl_replace_line("", 0);
@@ -50,7 +50,9 @@ static void	interceptor_init(void (*first_handler)(int),
 void	signal_interceptor(int mode)
 {
 	if (mode == 0)
+	{
 		interceptor_init(SIG_DFL, SIG_DFL);
+	}
 	else if (mode == 1)
 		interceptor_init(sigint_handler, SIG_IGN);
 	else if (mode == 2)

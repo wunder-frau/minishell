@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 01:55:49 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/24 11:39:01 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:14:33 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,6 @@ void	ft_readline(char **cmdline, char *prompt)
 	signal_interceptor(1);
 	set_signals(0);
 	*cmdline = readline(prompt);
-	if (!ctrl_d_handler(*cmdline)) // Handle Ctrl+D
-    {
-        free(*cmdline);
-        *cmdline = NULL;
-        return;
-    }
 	signal_interceptor(3);
 }
 
@@ -59,6 +53,7 @@ void	run_commandline(t_minishell **shell)
 			free(cmdline);
 		}
 	}
+	//signal_interceptor(3);
 }
 
 int	get_cmdline(char **cmdline, t_minishell **ms)
@@ -80,6 +75,7 @@ int	get_cmdline(char **cmdline, t_minishell **ms)
 			free(*cmdline);
 			check_signal(ms);
 			return (get_cmdline(cmdline, ms));
+			
 		}
 	if (*cmdline[0] != '\0' && *cmdline[0] != '\n')
 			add_history(*cmdline);
