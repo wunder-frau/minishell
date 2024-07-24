@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:24:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 12:42:16 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:14:25 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,7 +292,7 @@ void ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
 void ft_remove_env_hash(t_hmap **hashmap, char *key);
 
 void ft_pwd(t_minishell *shell);
-void ft_echo(t_minishell *shell, char **cmd);
+void ft_echo(char **cmd);
 void ft_export(t_minishell *shell, char **argv);
 void ft_unset(t_minishell *shell, char **argv);
 void ft_env(t_minishell *shell);
@@ -313,5 +313,40 @@ void add_shlvl(t_minishell *shell);
 
 /** dollar_expansion.c **/
 int	dollar_expansion(char **str, t_minishell *shell, int last_status);
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** dup_envp.c **/
+t_hmap	**init_hmap(char **env);
+void	add_new_var(t_hmap **v, char *akey, char *avalue);
+
+
+/** envp_utils.c **/
+void	ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
+void	ft_remove_env_hash(t_hmap **hashmap, char *key);
+void	free_hashmap(t_hmap *hashmap);
+int		key_exists(t_hmap *v, char *ekey);
+char	*return_value_hash(t_hmap *v, char *key);
+
+/** cd.c **/
+int	change_directory(t_minishell *shell, char **argv, char *home);
+void	handle_chdir_error(t_minishell *shell, char *arg, char *oldpwd);
+void	update_environment_variables(t_minishell *shell, \
+	char *oldpwd, char *pwd);
+void	ft_cd(t_minishell *shell, char **argv);
+
+/** cd_2.c **/
+void	handle_too_many_arguments(t_minishell *shell, char **argv);
+char	*get_current_directory(t_minishell *shell);
 
 #endif

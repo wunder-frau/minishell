@@ -34,7 +34,7 @@ int exec_builtin(t_minishell *shell)
     }
     else if (ft_strncmp(shell->command[0], "echo", 5) == 0)
     {
-        ft_echo(shell, &shell->command[0]);
+        ft_echo(&shell->command[0]);
     }
     else
     {
