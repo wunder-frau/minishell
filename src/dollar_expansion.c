@@ -27,6 +27,8 @@ char *get_var_name(const char *str, int *var_len)
         len++;
 
     var_name = (char *)malloc(len + 1);
+    if (!var_name)  // Check for malloc failure
+        return NULL;
     strncpy(var_name, str, len);
     var_name[len] = '\0';
 
@@ -50,20 +52,26 @@ char *expand_variable(const char *str, t_minishell *ms, int last_status, int *va
         *var_len = 1;
         return ft_strdup("$");
     }
+
     if (str[1] == '?')
     {
         status_str = get_status_string(last_status);
         *var_len = 2;
         return status_str;
     }
+
     key = get_var_name(str + 1, var_len);
+    if (!key)  // Check for malloc failure
+        return ft_strdup("");  
+
     value = ft_get_env(*(ms->hashmap), key);
     free(key);
+
     if (value)
     {
         return ft_strdup(value);
     }
-    return (ft_strdup(""));
+    return ft_strdup("");
 }
 
 void append_char_to_result(char **result, char c)
@@ -92,17 +100,19 @@ void process_double_quote(char **result, int *in_double_quotes, char c)
 
 void process_dollar(char **result, char **str, int *i, t_minishell *ms, int last_status)
 {
+    int var_len;
     char *temp;
     char *old_result;
-    int var_len;
 
     temp = expand_variable(*str + *i, ms, last_status, &var_len);
+    if (!temp)  // Check for malloc failure
+        return;
+
     old_result = *result;
     *result = ft_strjoin(*result, temp);
     free(old_result);
     free(temp);
     *i += var_len;
-
 }
 
 void process_backslash_dollar(char **result, int *i)
@@ -148,6 +158,9 @@ int dollar_expansion(char **str, t_minishell *ms, int last_status)
     int in_double_quotes;
 
     result = ft_strdup("");
+    if (!result)  // Check for malloc failure
+        return -1;
+
     i = 0;
     in_single_quotes = 0;
     in_double_quotes = 0;
