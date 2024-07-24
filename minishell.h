@@ -198,6 +198,7 @@ bool			is_inside_quotes(char c, int *inside_quotes);
 void			remove_quotes(char *str, int i, int j);
 void			remove_quotes_arr(char **arr, int i);
 char			**split_handle_quotes_and_spaces(char *str);
+void 			free_hmap(t_hmap* node);
 
 /** lexer **/
 bool			check_redirection(char *str);

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./minishell
 #include "../minishell.h"
 
 void	free_arr_2d(void *ptr)
@@ -29,7 +30,10 @@ void	free_minishell(t_minishell *shell)
 	if (!shell)
 		return ;
 	if (shell->hashmap)
-		free_arr_2d(shell->hashmap);
+	{
+		free_hmap(*(shell->hashmap));
+		free(shell->hashmap);
+	}
 	if (shell->pwd)
 		free(shell->pwd);
 	if (shell->oldpwd)
@@ -61,4 +65,17 @@ void	free_ast(t_node **root)
 	}
 	free(*root);
 	*root = NULL;
+}
+
+void free_hmap(t_hmap* node)
+{
+    while (node)
+    {
+        if (node->key)
+            free(node->key);
+        if (node->value)
+            free(node->value);
+        free(node);
+        node = node->next;
+    }
 }
