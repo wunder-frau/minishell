@@ -6,7 +6,7 @@
 /*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:30:31 by nkarpilo          #+#    #+#             */
-/*   Updated: 2024/07/24 16:31:22 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:44:45 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	ft_echo(char **cmd)
 		temp = ft_strdup(cmd[i]);
 		ft_putstr_fd(temp, 1);
 		free(temp);
-
 		if (cmd[i + 1])
 			ft_putstr_fd(" ", 1);
 		i++;
