@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:24:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 12:42:16 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:57:39 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <signal.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -116,6 +117,18 @@ typedef struct s_minishell
 	t_cmd_data			cmd_data;
 }	t_minishell;
 
+typedef struct s_expansion_state
+{
+	char **result;
+	char **str;
+	int *i;
+	int last_status;
+	t_minishell *ms;
+	int *in_single_quotes;
+	int *in_double_quotes;
+}	t_expansion_state;
+
+
 enum	e_characters
 {
 	NULL_TERM,
@@ -180,7 +193,7 @@ void			return_std_fd(int *in_fd, int *out_fd, int *status,
 /* ft_exit */
 bool			is_non_digit_space_sign(const char *str);
 bool			is_non_empty_after_trim(const char *str);
-void			exit_numeric_arg_error(t_minishell *shell, char *str);
+void			exit_numeric_arg_error(t_minishell *shell);
 void			exit_amount_of_arg_error(t_minishell *shell);
 void			clean_and_exit(t_minishell *shell);
 void			handle_multiple_args(char **arg, t_minishell *shell);
@@ -293,7 +306,7 @@ void ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
 void ft_remove_env_hash(t_hmap **hashmap, char *key);
 
 void ft_pwd(t_minishell *shell);
-void ft_echo(t_minishell *shell, char **cmd);
+void ft_echo(char **cmd);
 void ft_export(t_minishell *shell, char **argv);
 void ft_unset(t_minishell *shell, char **argv);
 void ft_env(t_minishell *shell);
@@ -312,7 +325,74 @@ int ctrl_d_handler(char *input);
 /** shlvl.c **/
 void add_shlvl(t_minishell *shell);
 
+
+
+
+
+
+
+
+
+
+
+
 /** dollar_expansion.c **/
 int	dollar_expansion(char **str, t_minishell *shell, int last_status);
+void process_quotes(t_minishell *ms, char **result, int *in_quotes, char **str, int *i, int last_status);
+
+/**dollar_expansion_2.c**/
+char	*get_var_name(const char *str, int *var_len);
+char	*get_status_string(int last_status);
+char	*expand_variable(const char *str, t_minishell *ms, \
+	int last_status, int *var_len);
+void	append_char_to_result(char **result, char c);
+
+/**dollar_expansion_3.c**/
+void process_single_quote(t_expansion_state *state, char c);
+void process_double_quote(t_expansion_state *state, char c);
+void process_dollar(t_expansion_state *state);
+void process_backslash_dollar(t_expansion_state *state);
+void process_other_chars(t_expansion_state *state);
+
+/** exec_builtin.c **/
+void	command_not_found_error(t_minishell *shell);
+bool	is_builtin(char *cmd);
+int		exec_builtin(t_minishell *shell);
+
+/**pipe_execve.c **/
+void	fill_env_array(char **env_array, t_hmap *hashmap);
+void	handle_cmd_path(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
+void	handle_exec_status(t_minishell *shell, t_cmd_data *cmd_data);
+void	execution(t_minishell *shell, char **argv, t_cmd_data *cmd_data);
+
+/**pipe_execve_2.c **/
+int		check_if_executable(char *cmd);
+char	*get_cmd_path(char **cmd_paths, char *cmd);
+char	**allocate_env_array(int count);
+int		count_hashmap_entries(t_hmap *hashmap);
+char	**convert_hashmap(t_hmap *hashmap);
+
+/** dup_envp.c **/
+t_hmap	**init_hmap(char **env);
+void	add_new_var(t_hmap **v, char *akey, char *avalue);
+
+
+/** envp_utils.c **/
+void	ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
+void	ft_remove_env_hash(t_hmap **hashmap, char *key);
+void	free_hashmap(t_hmap *hashmap);
+int		key_exists(t_hmap *v, char *ekey);
+char	*return_value_hash(t_hmap *v, char *key);
+
+/** cd.c **/
+int	change_directory(t_minishell *shell, char **argv, char *home);
+void	handle_chdir_error(t_minishell *shell, char *arg, char *oldpwd);
+void	update_environment_variables(t_minishell *shell, \
+	char *oldpwd, char *pwd);
+void	ft_cd(t_minishell *shell, char **argv);
+
+/** cd_2.c **/
+void	handle_too_many_arguments(t_minishell *shell, char **argv);
+char	*get_current_directory(t_minishell *shell);
 
 #endif

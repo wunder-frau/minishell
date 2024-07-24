@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 23:44:22 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 01:24:41 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:43:23 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,18 @@ int	parse_cmd(char *cmd, char ***res, t_minishell *shell)
 	int		i;
 
 	if (is_blank_string(cmd))
-	{
 		cmd = "";
-	}
 	arr = split_handle_quotes_and_spaces(cmd);
 	if (!arr)
 		return (MALLOC_ERR);
 	status = 0;
 	i = 0;
-	// while (arr[i] && status == 0)
-	// {
-	// 	status = dollar_expansion(&arr[i++], shell, shell->exit_status);
-	// }
 	while (arr[i] && status == 0)
-    {
-        if (arr[i][0] != '\'')
-        {
-            status = dollar_expansion(&arr[i], shell, shell->exit_status);
-        }
-        i++;
-    }
+	{
+		if (arr[i][0] != '\'')
+			status = dollar_expansion(&arr[i], shell, shell->exit_status);
+		i++;
+	}
 	if (status != 0 && arr != NULL)
 		free_arr_2d(arr);
 	if (status == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 00:42:31 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:50:01 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	handle_multiple_args(char **arg, t_minishell *shell)
 	num = ft_atol(arg[0]);
 	if ((is_non_empty_after_trim(arg[0]) && num == 0)
 		|| is_non_digit_space_sign(arg[0]))
-		exit_numeric_arg_error(shell, arg[0]);
+		exit_numeric_arg_error(shell);
 	else
 		exit_amount_of_arg_error(shell);
 }
@@ -27,10 +27,11 @@ void	handle_multiple_args(char **arg, t_minishell *shell)
 void	handle_single_arg(char *arg, t_minishell *shell)
 {
 	long	num;
+
 	num = ft_atol(arg);
 	if ((is_non_empty_after_trim(arg) && num == 0)
 		|| is_non_digit_space_sign(arg))
-		exit_numeric_arg_error(shell, arg);
+		exit_numeric_arg_error(shell);
 	else
 		shell->exit_status = (unsigned char)num;
 }

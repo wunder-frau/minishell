@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 00:43:58 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 01:52:12 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/24 19:46:17 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,8 @@ bool	is_non_empty_after_trim(const char *str)
 	return (*str != '\0');
 }
 
-void	exit_numeric_arg_error(t_minishell *shell, char *str)
+void	exit_numeric_arg_error(t_minishell *shell)
 {
-	// if (shell->is_parent)
-	// 	ft_putstr_fd("exit\n", STDERR_FILENO);
-	(void)str;
 	ft_putstr_fd("minishell: cd: numeric argument required\n", 2);
 	shell->exit_status = CMD_ARG_ERROR;
 	if (shell->is_parent == true)
@@ -54,8 +51,6 @@ void	exit_numeric_arg_error(t_minishell *shell, char *str)
 
 void	exit_amount_of_arg_error(t_minishell *shell)
 {
-	// if (shell->is_parent)
-	// 	ft_putstr_fd("exit\n", STDERR_FILENO);
 	ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 	shell->exit_status = GENERIC_ERROR;
 }
