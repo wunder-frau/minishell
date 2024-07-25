@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_execve.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:59:09 by nkarpilo          #+#    #+#             */
-/*   Updated: 2024/07/24 18:28:37 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/25 10:11:51 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ void	fill_env_array(char **env_array, t_hmap *hashmap)
 	current = hashmap;
 	while (current)
 	{
-		len = strlen(current->key) + strlen(current->value) + 2;
+		len = ft_strlen(current->key) + ft_strlen(current->value) + 2;
 		env_array[i] = (char *)malloc(len * sizeof(char));
 		if (!env_array[i])
 		{
 			perror("malloc");
 			exit(EXIT_FAILURE);
 		}
-		strcpy(env_array[i], current->key);
-		strcat(env_array[i], "=");
-		strcat(env_array[i], current->value);
+		ft_strcpy(env_array[i], current->key);
+		ft_strcat(env_array[i], "=");
+		ft_strcat(env_array[i], current->value);
 		i++;
 		current = current->next;
 	}

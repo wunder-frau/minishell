@@ -6,11 +6,10 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:11:35 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 10:24:33 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/25 07:42:47 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./minishell
 #include "../minishell.h"
 
 void	free_arr_2d(void *ptr)
@@ -67,15 +66,15 @@ void	free_ast(t_node **root)
 	*root = NULL;
 }
 
-void free_hmap(t_hmap* node)
+void	free_hmap(t_hmap *node)
 {
-    while (node)
-    {
-        if (node->key)
-            free(node->key);
-        if (node->value)
-            free(node->value);
-        free(node);
-        node = node->next;
-    }
+	while (node)
+	{
+		if (node->key)
+			free(node->key);
+		if (node->value)
+			free(node->value);
+		free(node);
+		node = node->next;
+	}
 }
