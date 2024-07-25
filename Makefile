@@ -175,7 +175,13 @@ BUILD_EMOJI = 🔨
 REMOVE_EMOJI = 🗑️
 REBUILD_EMOJI = ♻️
 
-all: $(OBJ_PATH) $(NAME)
+# Submodule initialization and update
+submodule:
+	@git submodule init
+	@git submodule update
+	@echo "$(BUILD_EMOJI) $(BLUE)Submodules initialized and updated!$(RESET)"
+
+all: submodule $(OBJ_PATH) $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(OBJS) $(LDFLAGS) -o $(NAME)
