@@ -114,8 +114,8 @@ NAME = minishell
 LIBFT_DIR = libft_
 LIBFT = $(LIBFT_DIR)/libft.a
 CC = gcc
-CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR) -I$(shell brew --prefix readline)/include
-LDFLAGS = -L$(LIBFT_DIR) -L$(shell brew --prefix readline)/lib -lft -lreadline
+CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
+LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline -no-pie
 # CFLAGS = -g -Wall -Wextra -Werror -I$(LIBFT_DIR)
 # LDFLAGS = -L$(LIBFT_DIR) -lft -lreadline
 
