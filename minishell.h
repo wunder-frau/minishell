@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:24:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/25 09:37:50 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/26 10:16:01 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@
 # include <stdbool.h>
 # include <signal.h>
 # include <fcntl.h>
+# include <sys/ioctl.h>
 # include <sys/stat.h>
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
 # include "libft_/libft.h"
+
+volatile sig_atomic_t	g_sigint_received;
 
 enum	e_exit_status
 {
@@ -49,6 +51,20 @@ enum	e_exit_status
 	FORK_FAILURE = 400,
 	PIPE_FAILURE = 500,
 	DUP_FAILURE = 600,
+};
+
+enum	e_signals
+{
+	DEFAULT,
+	INTERACTIVE,
+	HEREDOC,
+	IGNORE,
+};
+
+enum	e_signals_echo
+{
+	IMPLICIT,
+	EXPLICIT,
 };
 
 typedef struct s_node
@@ -298,6 +314,7 @@ int				traverse_lhs(t_node **node, t_minishell *shell,
 int				traverse_rhs(t_node **node, t_minishell *shell,
 					int pipefd[2], int pids[2]);
 int				wait_children_and_fetch_exit_status(pid_t *pids, int num);
+void			show_sgnl_err_msg(int status);
 
 /** env.c **/
 t_hmap			**init_hmap(char **env);
@@ -310,8 +327,10 @@ void			ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
 void			ft_remove_env_hash(t_hmap **hashmap, char *key);
 
 /** signals.c **/
-void			set_signals(void);
+void			set_signals(int mode);
+void			signal_interceptor(int mode);
 int				ctrl_d_handler(char *input);
+void			signal_status_handler(t_minishell **ms);
 
 /** shlvl.c **/
 void			add_shlvl(t_minishell *shell);

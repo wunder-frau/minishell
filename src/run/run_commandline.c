@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_commandline.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 18:33:10 by nkarpilo          #+#    #+#             */
-/*   Updated: 2024/07/24 18:36:05 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/26 02:23:42 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 
 void	ft_readline(char **cmdline, char *prompt)
 {
+	signal_interceptor(INTERACTIVE);
+	set_signals(0);
 	*cmdline = readline(prompt);
+	signal_interceptor(IGNORE);
 }
 
 void	process_command(t_minishell **shell, char *cmdline)
@@ -57,6 +60,7 @@ void	run_commandline(t_minishell **shell)
 		if (is_blank_string(cmdline))
 		{
 			free(cmdline);
+			signal_status_handler(shell);
 			continue ;
 		}
 		process_command(shell, cmdline);

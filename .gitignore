@@ -12,4 +12,5 @@ libft_/
 /minishell_tester
 minishell_tester/
 minishell_tester
+test_minishell
 test.c
