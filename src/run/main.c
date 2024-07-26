@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:18:40 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 01:47:31 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:37:16 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+volatile sig_atomic_t	g_sigint_received = 0;
 
 int	main(int argc, char **argv, char **envp)
 {

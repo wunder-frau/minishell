@@ -6,7 +6,7 @@
 /*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:24:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/24 19:57:39 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:37:35 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
 # include "libft_/libft.h"
+
+extern volatile sig_atomic_t	g_sigint_received;
 
 enum	e_exit_status
 {

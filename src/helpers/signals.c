@@ -6,13 +6,11 @@
 /*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 17:54:02 by nkarpilo          #+#    #+#             */
-/*   Updated: 2024/07/24 17:57:56 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:37:01 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	g_sigint_received = 0;
 
 void	sigint_handler(int signum)
 {
