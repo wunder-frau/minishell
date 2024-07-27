@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:18:40 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/26 17:37:16 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/27 08:14:02 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 1 || !argv)
 		return (0);
-	set_signals();
+	// set_signals();
 	init_minishell(&shell, envp, &cmd_data);
 	run_commandline(&shell);
 	rl_clear_history();

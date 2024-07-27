@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_expansion_2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 19:37:01 by nkarpilo          #+#    #+#             */
-/*   Updated: 2024/07/24 19:38:32 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/27 08:25:04 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_var_name(const char *str, int *var_len)
 	var_name = (char *)malloc(len + 1);
 	if (!var_name)
 		return (NULL);
-	strncpy(var_name, str, len);
+	ft_strncpy(var_name, str, len);
 	var_name[len] = '\0';
 	*var_len = len + 1;
 	return (var_name);
