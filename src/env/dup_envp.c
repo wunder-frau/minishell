@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dup_envp.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 16:25:21 by nkarpilo          #+#    #+#             */
-/*   Updated: 2024/07/24 16:30:04 by nkarpilo         ###   ########.fr       */
+/*   Updated: 2024/07/27 08:25:04 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_hmap	**init_hmap(char **env)
 		hash_key = malloc(j + 1);
 		if (!hash_key)
 			exit(1);
-		strncpy(hash_key, env[i], j);
+		ft_strncpy(hash_key, env[i], j);
 		hash_key[j] = '\0';
 		add_new_var(hashmap, hash_key, ft_strchr(env[i], '=') + 1);
 		free(hash_key);
