@@ -21,6 +21,7 @@ void	sigint_handler(int signum)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		ft_printf("\033[1A");
+		write(1, "\n", 1);
 	}
 }
 
