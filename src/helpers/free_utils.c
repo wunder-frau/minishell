@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: nkarpilo <nkarpilo@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:11:35 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/23 10:24:33 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/27 14:14:29 by nkarpilo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	free_ast(t_node **root)
 	free(*root);
 	*root = NULL;
 }
+
 void	free_hmap(t_hmap *node)
 {
 	while (node)
