@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:24:28 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/27 10:10:01 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/27 11:51:36 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,7 +327,7 @@ void			ft_add_env_hash(t_hmap **hashmap, char *key, char *value);
 void			ft_remove_env_hash(t_hmap **hashmap, char *key);
 
 /** signals.c **/
-void			set_signals();
+void			set_signals(int mode);
 void			signal_interceptor(int mode);
 int				ctrl_d_handler(char *input);
 void			signal_status_handler(t_minishell **ms);

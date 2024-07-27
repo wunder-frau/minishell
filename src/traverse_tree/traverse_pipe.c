@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:41:25 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/22 00:35:42 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/27 11:52:19 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	traverse_pipe(t_node **root, t_minishell *shell)
 	pid_t	pids[2];
 	t_node	*node;
 
+	if (shell->is_parent == false)
+		signal_interceptor(DEFAULT);
 	node = *root;
 	if (pipe(pipefd) == -1)
 		return (PIPE_FAILURE);
@@ -33,6 +35,8 @@ int	traverse_lhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2])
 {
 	int	status;
 
+	signal_interceptor(DEFAULT);
+	shell->is_parent = false;
 	pids[0] = fork();
 	if (pids[0] == -1)
 		return (FORK_FAILURE);
@@ -63,6 +67,7 @@ int	traverse_rhs(t_node **node, t_minishell *shell, int pipefd[2], int pids[2])
 		return (FORK_FAILURE);
 	if (pids[1] == 0)
 	{
+		signal_interceptor(DEFAULT);
 		shell->is_parent = false;
 		if (dup2(pipefd[0], STDIN_FILENO) == -1)
 		{
@@ -90,6 +95,11 @@ int	wait_children_and_fetch_exit_status(pid_t *pids, int num)
 			return (FORK_FAILURE);
 		waitpid(pids[i], &status, 0);
 		i++;
+	}
+	if (WIFSIGNALED(status))
+	{
+		show_sgnl_err_msg(status);
+		return (status + 128);
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));

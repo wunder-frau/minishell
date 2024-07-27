@@ -6,7 +6,7 @@
 /*   By: istasheu <istasheu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 00:18:40 by istasheu          #+#    #+#             */
-/*   Updated: 2024/07/27 09:58:29 by istasheu         ###   ########.fr       */
+/*   Updated: 2024/07/27 11:38:10 by istasheu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 1 || !argv)
 		return (0);
-	//signal_interceptor(IGNORE);
-	//set_signals(IMPLICIT);
+	signal_interceptor(IGNORE);
+	set_signals(IMPLICIT);
 	init_minishell(&shell, envp, &cmd_data);
 	run_commandline(&shell);
 	rl_clear_history();
